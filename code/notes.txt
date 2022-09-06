@@ -1,0 +1,13 @@
+3. Implement better shop, (maybe price changes, like a real market?).
+4. Include Fishing as part of unlockables in shop at certain lvl + money cost dont forget import assets in player!
+
+Better shop, use arrows to indicate increase in price etc (bar graphs no)
+Decrease in price if too much expenditure
+
+For fishing, make animations.
+Add Lucy to game
+
+Apples, seeds exist (need to add seeds to inventory
+
+for fishing music, turn on when player starts fishing
+
