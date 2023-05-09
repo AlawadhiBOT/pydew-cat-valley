@@ -1,6 +1,6 @@
 xp,level,max_xp,stamina,max_stamina,money
 inventory
 seed inventory
-0,0,30,200,200,200
-0, 0, 0, 0, 0
+1,0,30,200,200,200
+1, 1, 1, 2, 7
 5, 5

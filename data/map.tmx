@@ -395,7 +395,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="4" name="Fence" width="70" height="60" visible="0">
+ <layer id="4" name="Fence" width="70" height="60">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -459,7 +459,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="16" name="HouseFloor" width="70" height="60" visible="0">
+ <layer id="16" name="HouseFloor" width="70" height="60">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -523,7 +523,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="15" name="HouseWalls" width="70" height="60" visible="0">
+ <layer id="15" name="HouseWalls" width="70" height="60">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -587,7 +587,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="18" name="HouseFurnitureBottom" width="70" height="60" visible="0">
+ <layer id="18" name="HouseFurnitureBottom" width="70" height="60">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -651,7 +651,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="17" name="HouseFurnitureTop" width="70" height="60" visible="0">
+ <layer id="17" name="HouseFurnitureTop" width="70" height="60">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -715,7 +715,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="9" name="Trees" visible="0">
+ <objectgroup id="9" name="Trees">
   <object id="179" name="Large" gid="148" x="1910" y="1546" width="96" height="124"/>
   <object id="180" name="Large" gid="148" x="1992" y="1102" width="96" height="124"/>
   <object id="181" name="Large" gid="148" x="2304" y="1456" width="96" height="124"/>
@@ -791,6 +791,41 @@
   <object id="334" name="Fir Tree" gid="155" x="148" y="1569" width="104" height="130"/>
   <object id="335" name="Fir Tree" gid="155" x="464" y="1185" width="104" height="130"/>
   <object id="336" name="Fir Tree" gid="155" x="528" y="785" width="104" height="130"/>
+  <object id="51" name="Small" gid="149" x="934" y="2300" width="56" height="116"/>
+  <object id="50" name="Small" gid="149" x="798" y="2268" width="56" height="116"/>
+  <object id="27" name="Small" gid="149" x="622" y="1932" width="56" height="116"/>
+  <object id="28" name="Small" gid="149" x="814" y="1896" width="56" height="116"/>
+  <object id="29" name="Small" gid="149" x="882" y="1526" width="56" height="116"/>
+  <object id="30" name="Large" gid="148" x="672" y="1682" width="96" height="124"/>
+  <object id="31" name="Large" gid="148" x="794" y="1216" width="96" height="124"/>
+  <object id="32" name="Large" gid="148" x="764" y="976" width="96" height="124"/>
+  <object id="39" name="Large" gid="148" x="792" y="1372" width="96" height="124"/>
+  <object id="41" name="Large" gid="148" x="818" y="1024" width="96" height="124"/>
+  <object id="45" name="Small" gid="149" x="948" y="860" width="56" height="116"/>
+  <object id="46" name="Small" gid="149" x="688" y="1234" width="56" height="116"/>
+  <object id="47" name="Small" gid="149" x="860" y="1660" width="56" height="116"/>
+  <object id="48" name="Small" gid="149" x="762" y="1462" width="56" height="116"/>
+  <object id="49" name="Small" gid="149" x="660" y="2136" width="56" height="116"/>
+  <object id="52" name="Small" gid="149" x="762" y="1962" width="56" height="116"/>
+  <object id="53" name="Large" gid="148" x="834" y="2224" width="96" height="124"/>
+  <object id="54" name="Large" gid="148" x="908" y="1906" width="96" height="124"/>
+  <object id="55" name="Large" gid="148" x="784" y="1708" width="96" height="124"/>
+  <object id="33" name="Large" gid="148" x="1074" y="834" width="96" height="124"/>
+  <object id="34" name="Large" gid="148" x="1538" y="756" width="96" height="124"/>
+  <object id="35" name="Large" gid="148" x="1780" y="722" width="96" height="124"/>
+  <object id="36" name="Large" gid="148" x="1308" y="932" width="96" height="124"/>
+  <object id="37" name="Large" gid="148" x="1032" y="1110" width="96" height="124"/>
+  <object id="38" name="Large" gid="148" x="1120" y="1276" width="96" height="124"/>
+  <object id="42" name="Small" gid="149" x="1052" y="878" width="56" height="116"/>
+  <object id="43" name="Small" gid="149" x="700" y="726" width="56" height="116"/>
+  <object id="44" name="Small" gid="149" x="942" y="678" width="56" height="116"/>
+  <object id="56" name="Large" gid="148" x="1050" y="1324" width="96" height="124"/>
+  <object id="57" name="Large" gid="148" x="1684" y="894" width="96" height="124"/>
+  <object id="58" name="Large" gid="148" x="1462" y="858" width="96" height="124"/>
+  <object id="59" name="Large" gid="148" x="1606" y="942" width="96" height="124"/>
+  <object id="60" name="Small" gid="149" x="1358" y="816" width="56" height="116"/>
+  <object id="61" name="Small" gid="149" x="1200" y="718" width="56" height="116"/>
+  <object id="62" name="Small" gid="149" x="1186" y="1000" width="56" height="116"/>
  </objectgroup>
  <objectgroup id="10" name="Decoration" visible="0">
   <object id="139" class="decor" gid="147" x="1290.17" y="1665.83" width="56" height="112"/>
@@ -851,16 +886,6 @@
   <object id="269" gid="150" x="1744" y="1311" width="44" height="48"/>
   <object id="270" gid="150" x="1698" y="1162" width="44" height="48"/>
   <object id="271" gid="150" x="1682" y="1043" width="44" height="48"/>
- </objectgroup>
- <objectgroup id="12" name="Player" visible="0">
-  <object id="253" name="Start" x="2201.33" y="2412">
-   <point/>
-  </object>
-  <object id="254" name="Trader" x="1535" y="1019.67" width="192" height="131.333"/>
-  <object id="256" name="Bed" x="2048.67" y="2043.33" width="63.6667" height="66.3333"/>
-  <object id="340" name="Fishing" x="1739" y="3079" width="141" height="108"/>
- </objectgroup>
- <objectgroup id="7" name="Objects">
   <object id="2" gid="147" x="1072" y="1588" width="56" height="112"/>
   <object id="3" gid="147" x="1096" y="1666" width="56" height="112"/>
   <object id="4" gid="147" x="962" y="2420" width="56" height="112"/>
@@ -882,45 +907,20 @@
   <object id="23" gid="147" x="1058" y="3176" width="56" height="112"/>
   <object id="24" gid="147" x="1132" y="2996" width="56" height="112"/>
   <object id="26" gid="147" x="1148" y="2872" width="56" height="112"/>
-  <object id="27" gid="149" x="622" y="1932" width="56" height="116"/>
-  <object id="28" gid="149" x="814" y="1896" width="56" height="116"/>
-  <object id="29" gid="149" x="882" y="1526" width="56" height="116"/>
-  <object id="30" gid="148" x="672" y="1682" width="96" height="124"/>
-  <object id="31" gid="148" x="794" y="1216" width="96" height="124"/>
-  <object id="32" gid="148" x="764" y="976" width="96" height="124"/>
-  <object id="33" gid="148" x="1074" y="834" width="96" height="124"/>
-  <object id="34" gid="148" x="1538" y="756" width="96" height="124"/>
-  <object id="35" gid="148" x="1780" y="722" width="96" height="124"/>
-  <object id="36" gid="148" x="1308" y="932" width="96" height="124"/>
-  <object id="37" gid="148" x="1032" y="1110" width="96" height="124"/>
-  <object id="38" gid="148" x="1120" y="1276" width="96" height="124"/>
-  <object id="39" gid="148" x="792" y="1372" width="96" height="124"/>
-  <object id="41" gid="148" x="818" y="1024" width="96" height="124"/>
-  <object id="42" gid="149" x="1052" y="878" width="56" height="116"/>
-  <object id="43" gid="149" x="700" y="726" width="56" height="116"/>
-  <object id="44" gid="149" x="942" y="678" width="56" height="116"/>
-  <object id="45" gid="149" x="948" y="860" width="56" height="116"/>
-  <object id="46" gid="149" x="688" y="1234" width="56" height="116"/>
-  <object id="47" gid="149" x="860" y="1660" width="56" height="116"/>
-  <object id="48" gid="149" x="762" y="1462" width="56" height="116"/>
-  <object id="49" gid="149" x="660" y="2136" width="56" height="116"/>
-  <object id="50" gid="149" x="798" y="2268" width="56" height="116"/>
-  <object id="51" gid="149" x="934" y="2300" width="56" height="116"/>
-  <object id="52" gid="149" x="762" y="1962" width="56" height="116"/>
-  <object id="53" gid="148" x="834" y="2224" width="96" height="124"/>
-  <object id="54" gid="148" x="908" y="1906" width="96" height="124"/>
-  <object id="55" gid="148" x="784" y="1708" width="96" height="124"/>
-  <object id="56" gid="148" x="1050" y="1324" width="96" height="124"/>
-  <object id="57" gid="148" x="1684" y="894" width="96" height="124"/>
-  <object id="58" gid="148" x="1462" y="858" width="96" height="124"/>
-  <object id="59" gid="148" x="1606" y="942" width="96" height="124"/>
-  <object id="60" gid="149" x="1358" y="816" width="56" height="116"/>
-  <object id="61" gid="149" x="1200" y="718" width="56" height="116"/>
-  <object id="62" gid="149" x="1186" y="1000" width="56" height="116"/>
+ </objectgroup>
+ <objectgroup id="12" name="Player" visible="0">
+  <object id="253" name="Start" x="2201.33" y="2412">
+   <point/>
+  </object>
+  <object id="254" name="Trader" x="1535" y="1019.67" width="192" height="131.333"/>
+  <object id="256" name="Bed" x="2048.67" y="2043.33" width="63.6667" height="66.3333"/>
+  <object id="340" name="Fishing" x="1739" y="3079" width="141" height="108"/>
+ </objectgroup>
+ <objectgroup id="7" name="Objects">
   <object id="78" gid="149" x="2386" y="1262" width="56" height="116" visible="0"/>
   <object id="95" gid="144" x="1602" y="1082" width="56" height="68"/>
  </objectgroup>
- <layer id="14" name="Collision" width="70" height="60" opacity="0.21">
+ <layer id="14" name="Collision" width="70" height="60" visible="0" opacity="0.21">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

@@ -20,6 +20,7 @@ class Interaction(Generic):
         super().__init__(pos, surf, groups)
         self.name = name
 
+
 class Water(Generic):
     def __init__(self, pos, frames, groups):
         # animation

@@ -49,6 +49,7 @@ class Level:
         self.music.set_volume(0.3)
         self.music.play(loops=-1)
         self.night_music = pygame.mixer.Sound('../audio/nighttime.wav')
+        self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
 
 
     def setup(self):
@@ -162,6 +163,7 @@ class Level:
         # sky
         self.sky.start_color = [255, 255, 255]
         # night to day
+        self.music.stop()
         self.music.play()
         self.night_music.stop()
         self.sky.night = False

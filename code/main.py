@@ -25,6 +25,9 @@ class Game:
                 if keys[pygame.K_c]:
                     self.level.music.set_volume(0.3)
 
+                if keys[pygame.K_p]:
+                    print(self.level.player.seed_inventory)
+
 
             dt = self.clock.tick(60) / 1000
             self.level.run(dt)

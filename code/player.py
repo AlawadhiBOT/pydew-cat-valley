@@ -1,8 +1,11 @@
+import random
+
 import pygame
 from settings import *
 from support import *
 from timer import Timer
 from support import get_stats
+from fishing import Fishing
 
 
 class Player(pygame.sprite.Sprite):
@@ -25,6 +28,9 @@ class Player(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 200
 
+        # fishing
+        self.fishing = Fishing(self, False)
+
         # collision
         self.hitbox = self.rect.copy().inflate((-126, -70))
         self.collision_sprites = collision_sprites
@@ -35,10 +41,11 @@ class Player(pygame.sprite.Sprite):
             'tool switch': Timer(200),
             'seed use': Timer(350, self.use_seed),
             'seed switch': Timer(200),
+            'fishing timer': Timer(450)
         }
 
         # tools
-        self.tools = ['hoe', 'axe', 'water']
+        self.tools = ['hoe', 'axe', 'water', 'fishing']
         self.tool_index = 0
         self.selected_tool = self.tools[self.tool_index]
 
@@ -81,6 +88,8 @@ class Player(pygame.sprite.Sprite):
         # sound
         self.watering = pygame.mixer.Sound('../audio/water.mp3')
         self.watering.set_volume(0.2)
+        self.throw_bob = pygame.mixer.Sound('../audio/fishing.wav')
+        self.throw_bob.set_volume(0.2)
 
     def use_tool(self):
         if self.selected_tool == 'hoe':
@@ -101,6 +110,10 @@ class Player(pygame.sprite.Sprite):
             self.watering.play()
             self.xp += PLAYER_LEVEL_STATS['water']
             self.stamina -= PLAYER_STAMINA_STATS['water']
+
+        if self.selected_tool == 'fishing':
+            self.throw_bob.play()
+            self.fishing.fishing_start()
 
     def get_target_pos(self):
 
@@ -123,7 +136,9 @@ class Player(pygame.sprite.Sprite):
                            'right_axe': [], 'left_axe': [], 'up_axe': [],
                            'down_axe': [],
                            'right_water': [], 'left_water': [], 'up_water': [],
-                           'down_water': [], 'right_fish': []}
+                           'down_water': [],
+                           'right_fishing': [], 'left_fishing': [],
+                           'up_fishing': [], 'down_fishing': []}
 
         for animation in self.animations.keys():
             full_path = '../graphics/character/' + animation
@@ -132,7 +147,10 @@ class Player(pygame.sprite.Sprite):
     def animate(self, dt):
         self.frame_index += 4 * dt
         if self.frame_index >= len(self.animations[self.status]):
-            self.frame_index = 0
+            if self.fishing.fishing_status:
+                self.frame_index = len(self.animations[self.status]) - 1
+            else:
+                self.frame_index = 0
 
         self.image = self.animations[self.status][int(self.frame_index)]
 
@@ -204,8 +222,11 @@ class Player(pygame.sprite.Sprite):
 
     def get_status(self):
         # idle
-        if self.direction.magnitude() == 0:
+        if self.direction.magnitude() == 0 and not self.fishing.fishing_status:
             self.status = self.status.split('_')[0] + '_idle'
+
+        if self.fishing.fishing_status:
+            self.image = self.animations[self.status][int(self.frame_index)]
 
         # tool use
         if self.timers['tool use'].active:
@@ -273,11 +294,14 @@ class Player(pygame.sprite.Sprite):
                 f'{self.stamina},{self.max_stamina},'
                 f'{self.money}\n')
         f.write(f'{str(self.item_inventory.values())[13:-2]}\n')
-        f.write(f'{str(self.seed_inventory.values())[13:-2]}')  # how to make it print in csv format
+        f.write(f'{str(self.seed_inventory.values())[13:-2]}')
         f.close()
 
     def update(self, dt):
-        self.input()
+        if self.fishing.fishing_status:
+            self.fishing.update()
+        else:
+            self.input()
         self.get_status()
         self.update_timers()
         self.get_target_pos()
