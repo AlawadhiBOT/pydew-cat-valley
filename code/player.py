@@ -36,6 +36,10 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.rect.copy().inflate((-126, -70))
         self.collision_sprites = collision_sprites
 
+        # text for player
+        self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
+        self.display_text = []
+
         # timers
         self.timers = {
             'tool use': Timer(350, self.use_tool),
@@ -194,6 +198,14 @@ class Player(pygame.sprite.Sprite):
                 self.tool_index = self.tool_index if \
                     self.tool_index < len(self.tools) else 0
                 self.selected_tool = self.tools[self.tool_index]
+                tool_swp_surf = self.font.render(
+                                 f'{GAME_MESSAGES["TEXT_CHOICES"][0]} '
+                                 f'{self.selected_tool}', False, 'Black')
+                tool_swp_rect = tool_swp_surf.get_rect(topright=
+                                                       GAME_MESSAGES["TXT_BEG"])
+                tool_timer = Timer(GAME_MESSAGES["TEXT_TIMER"])
+                tool_timer.activate()
+                self.display_text = [(tool_swp_surf, tool_swp_rect, tool_timer)]
 
             # seed
             if keys[pygame.K_LCTRL]:

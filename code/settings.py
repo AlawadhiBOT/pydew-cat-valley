@@ -80,7 +80,6 @@ PLAYER_STAMINA_STATS = {
     "sell": 1
 }
 
-
 INVENTORY_OFFSETS = {
     0: (42, 116),
     1: (89, 89),
@@ -88,4 +87,11 @@ INVENTORY_OFFSETS = {
     3: (38 + 19, 76),
     4: (800, 76),
     5: 19
+}
+
+GAME_MESSAGES = {
+    "TXT_BEG": (SCREEN_WIDTH - 30, SCREEN_HEIGHT - SCREEN_HEIGHT // 7),
+    "TEXT_SPACE": 10,
+    "TEXT_TIMER": 700,
+    "TEXT_CHOICES": ["SWAPPED TOOL"]
 }

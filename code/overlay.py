@@ -46,3 +46,7 @@ class Overlay:
         pygame.draw.rect(self.display_surface, 'White',
                          sta_rect.inflate(10, 10), 0, 6)
         self.display_surface.blit(sta_surf, sta_rect)
+        for text in self.player.display_text:
+            text[2].update()
+            if text[2].active:
+                self.display_surface.blit(text[0], text[1])
