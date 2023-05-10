@@ -1,6 +1,6 @@
 xp,level,max_xp,stamina,max_stamina,money
-inventory
+wood, apples, corn, tomato, fish
 seed inventory
 1,0,30,200,200,200
-1, 1, 1, 2, 7
+1, 1, 1, 2, 0
 5, 5

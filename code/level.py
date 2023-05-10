@@ -21,6 +21,7 @@ class Level:
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.tree_sprites = pygame.sprite.Group()
+        self.water_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
 
         self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
@@ -76,7 +77,7 @@ class Level:
         water_frames = import_folder('../graphics/water')
         for x, y, surf in tmx_data.get_layer_by_name('Water').tiles():
             Water((x * TILE_SIZE, y * TILE_SIZE), water_frames,
-                  self.all_sprites)
+                  [self.all_sprites, self.water_sprites])
 
         # # Port
         # for x,y, surf in tmx_data.get_layer_by_name('Port').tiles():
@@ -109,6 +110,7 @@ class Level:
                                      group=self.all_sprites,
                                      collision_sprites=self.collision_sprites,
                                      tree_sprites=self.tree_sprites,
+                                     water_sprites=self.water_sprites,
                                      interaction=self.interaction_sprites,
                                      soil_layer=self.soil_layer,
                                      toggle_shop=self.toggle_shop,

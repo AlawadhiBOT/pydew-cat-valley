@@ -11,7 +11,8 @@ from fishing import Fishing
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos, group, collision_sprites, tree_sprites,
-                 interaction, soil_layer, toggle_shop, toggle_inventory):
+                 water_sprites,  interaction, soil_layer, toggle_shop,
+                 toggle_inventory):
         super().__init__(group)
 
         self.import_assets()
@@ -79,6 +80,7 @@ class Player(pygame.sprite.Sprite):
 
         # interaction
         self.tree_sprites = tree_sprites
+        self.water_sprites = water_sprites
         self.interaction = interaction
         self.sleep = False
         self.soil_layer = soil_layer
@@ -112,8 +114,10 @@ class Player(pygame.sprite.Sprite):
             self.stamina -= PLAYER_STAMINA_STATS['water']
 
         if self.selected_tool == 'fishing':
-            self.throw_bob.play()
-            self.fishing.fishing_start()
+            for water in self.water_sprites:
+                if water.rect.collidepoint(self.target_pos):
+                    self.throw_bob.play()
+                    self.fishing.fishing_start()
 
     def get_target_pos(self):
 

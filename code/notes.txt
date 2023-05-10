@@ -1,5 +1,4 @@
 1. Fix drawing for rod. Add noise for reeling in. Add animation for bubble/splash
-2. Check if player fishing on water
 3. Include Fishing as part of unlockables in shop at certain lvl + money cost dont forget import assets in player!
 
 4. Implement better shop, (maybe price changes, like a real market?).
