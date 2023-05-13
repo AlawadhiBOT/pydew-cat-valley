@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.1" name="Objects" tilewidth="104" tileheight="130" tilecount="12" columns="0">
+<tileset version="1.10" tiledversion="1.10.1" name="Objects" tilewidth="128" tileheight="130" tilecount="24" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="64" height="60" source="../../graphics/objects/bush.png"/>
@@ -36,5 +36,41 @@
  </tile>
  <tile id="13">
   <image width="64" height="80" source="../../graphics/objects/stump_fir.png"/>
+ </tile>
+ <tile id="15">
+  <image width="128" height="128" source="../../graphics/objects/orange_tree.png"/>
+ </tile>
+ <tile id="16">
+  <image width="128" height="128" source="../../graphics/objects/darker_green_tree.png"/>
+ </tile>
+ <tile id="17">
+  <image width="128" height="128" source="../../graphics/objects/green_tree.png"/>
+ </tile>
+ <tile id="18">
+  <image width="128" height="128" source="../../graphics/objects/red_tree.png"/>
+ </tile>
+ <tile id="19">
+  <image width="64" height="64" source="../../graphics/objects/orange_bush_thin.png"/>
+ </tile>
+ <tile id="20">
+  <image width="64" height="64" source="../../graphics/objects/orange_bush_wide.png"/>
+ </tile>
+ <tile id="21">
+  <image width="64" height="64" source="../../graphics/objects/red_bush_thin.png"/>
+ </tile>
+ <tile id="22">
+  <image width="64" height="64" source="../../graphics/objects/red_bush_wide.png"/>
+ </tile>
+ <tile id="23">
+  <image width="64" height="64" source="../../graphics/objects/dark_green_bush_thin.png"/>
+ </tile>
+ <tile id="24">
+  <image width="64" height="64" source="../../graphics/objects/dark_green_bush_wide.png"/>
+ </tile>
+ <tile id="25">
+  <image width="64" height="64" source="../../graphics/objects/green_bush_thin.png"/>
+ </tile>
+ <tile id="26">
+  <image width="64" height="64" source="../../graphics/objects/green_bush_wide.png"/>
  </tile>
 </tileset>

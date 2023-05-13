@@ -233,6 +233,8 @@ class Player(pygame.sprite.Sprite):
                 if collided_interaction_sprites:
                     if collided_interaction_sprites[0].name == 'Trader':
                         self.toggle_shop()
+                    elif collided_interaction_sprites[0].name == 'Forest':
+                        self.level.setup(1)
                     else:
                         self.auto_save_night()
 

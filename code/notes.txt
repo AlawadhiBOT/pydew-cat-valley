@@ -11,3 +11,6 @@ Add Lucy to game
 Apples, seeds exist (need to add seeds to inventory)
 
 for fishing music, turn on when player starts fishing
+
+Make Forest map, add slimes.
+not sure what slimes drop yet. Sword at level 8, fishing rod at level 5
