@@ -25,6 +25,7 @@ class Level:
         self.interaction_sprites = pygame.sprite.Group()
 
         self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
+        self.level_no = [0]
         self.setup()
         self.overlay = Overlay(self.player)
         self.transition = Transition(self.reset, self.player)
@@ -52,14 +53,13 @@ class Level:
         self.night_music = pygame.mixer.Sound('../audio/nighttime.wav')
         self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
 
-    def setup(self, level_no=0):
+    def setup(self):
         """
         Sets up the world using TMX
         :param level_no: This refers to the current location, by default is 0
         1 will be used for forest map
         """
-        # if level_no == 0:
-        if True:
+        if self.level_no[0] == 0:
             tmx_data = load_pygame('../data/map.tmx')
 
             # house
@@ -122,12 +122,18 @@ class Level:
                                          interaction=self.interaction_sprites,
                                          soil_layer=self.soil_layer,
                                          toggle_shop=self.toggle_shop,
-                                         toggle_inventory=self.toggle_inventory)
+                                         toggle_inventory=self.toggle_inventory,
+                                         map_lvl=[[self.level_no, ],
+                                                  self.setup])
                 if obj.name == 'Bed':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
 
                 if obj.name == 'Trader':
+                    Interaction((obj.x, obj.y), (obj.width, obj.height),
+                                self.interaction_sprites, obj.name)
+
+                if obj.name == 'Forest':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
 
@@ -137,15 +143,55 @@ class Level:
                     '../graphics/world/ground 2.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
         else:
-            tmx_data = load_pygame('../data/Forest.tmx')
+            tmx_data = load_pygame('../data/Tilesets/Forest.tmx')
 
+            self.all_sprites = CameraGroup()
+            self.collision_sprites = pygame.sprite.Group()
+            self.tree_sprites = pygame.sprite.Group()
+            self.water_sprites = pygame.sprite.Group()
+            self.interaction_sprites = pygame.sprite.Group()
+
+            # fences
             for x, y, surf in tmx_data.get_layer_by_name('Fence').tiles():
                 Generic((x * TILE_SIZE, y * TILE_SIZE), surf,
                         [self.all_sprites, self.collision_sprites])
 
+            # Trees
+            for obj in tmx_data.get_layer_by_name('Trees'):
+                Tree(
+                    pos=(obj.x, obj.y),
+                    surf=obj.image,
+                    groups=[self.all_sprites, self.collision_sprites,
+                            self.tree_sprites],
+                    name=obj.name,
+                    player_add=self.player_add)
+
+            # collision tiles
             for x, y, surf in tmx_data.get_layer_by_name('Collision').tiles():
                 Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface(
                     (TILE_SIZE, TILE_SIZE)), self.collision_sprites)
+
+            # Player
+            for obj in tmx_data.get_layer_by_name('Player'):
+                if obj.name == 'Start':
+                    self.player = Player(pos=(obj.x, obj.y),
+                                         group=self.all_sprites,
+                                         collision_sprites=self.collision_sprites,
+                                         tree_sprites=self.tree_sprites,
+                                         water_sprites=self.water_sprites,
+                                         interaction=self.interaction_sprites,
+                                         soil_layer=self.soil_layer,
+                                         toggle_shop=self.toggle_shop,
+                                         toggle_inventory=self.toggle_inventory,
+                                         map_lvl=[[self.level_no, ],
+                                                  self.setup])
+
+            # world
+            Generic(
+                pos=(0, 0),
+                surf=pygame.image.load(
+                    '../graphics/world/Forest.png').convert_alpha(),
+                groups=self.all_sprites, z=LAYERS['ground'])
 
     def player_add(self, item):
 

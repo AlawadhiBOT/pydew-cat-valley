@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos, group, collision_sprites, tree_sprites,
                  water_sprites,  interaction, soil_layer, toggle_shop,
-                 toggle_inventory):
+                 toggle_inventory, map_lvl):
         super().__init__(group)
 
         self.import_assets()
@@ -39,6 +39,8 @@ class Player(pygame.sprite.Sprite):
         # text for player
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
         self.display_text = []
+        
+        self.map_lvl = map_lvl
 
         # timers
         self.timers = {
@@ -234,7 +236,8 @@ class Player(pygame.sprite.Sprite):
                     if collided_interaction_sprites[0].name == 'Trader':
                         self.toggle_shop()
                     elif collided_interaction_sprites[0].name == 'Forest':
-                        self.level.setup(1)
+                        self.map_lvl[0][0][0] = 1
+                        self.map_lvl[1]()
                     else:
                         self.auto_save_night()
 
