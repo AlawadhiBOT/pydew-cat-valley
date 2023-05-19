@@ -3,6 +3,7 @@ from settings import *
 from player import Player
 from overlay import Overlay
 from sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
+from mobs import Slime
 from pytmx.util_pygame import load_pygame
 from support import *
 from transition import Transition
@@ -23,6 +24,7 @@ class Level:
         self.tree_sprites = pygame.sprite.Group()
         self.water_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
+        self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
 
         self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
         self.level_no = [0]
@@ -52,6 +54,9 @@ class Level:
         self.music.play(loops=-1)
         self.night_music = pygame.mixer.Sound('../audio/nighttime.wav')
         self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
+
+        # mobs stuff
+        self.mob_area = {}
 
     def setup(self):
         """
@@ -150,6 +155,7 @@ class Level:
             self.tree_sprites = pygame.sprite.Group()
             self.water_sprites = pygame.sprite.Group()
             self.interaction_sprites = pygame.sprite.Group()
+            self.slime_sprites = pygame.sprite.Group()
 
             # fences
             for x, y, surf in tmx_data.get_layer_by_name('Fence').tiles():
@@ -171,6 +177,22 @@ class Level:
                 Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface(
                     (TILE_SIZE, TILE_SIZE)), self.collision_sprites)
 
+            # slime area
+            self.mob_area["slime"] = [[], []]
+            max_area = [0, 0]
+            min_area = [5000, 5000]
+            for obj in tmx_data.get_layer_by_name('Slime_detect'):
+                if obj.x > max_area[0]:
+                    max_area[0] = obj.x
+                if obj.x < min_area[0]:
+                    min_area[0] = obj.x
+                if obj.y > max_area[1]:
+                    max_area[1] = obj.y
+                if obj.y < min_area[1]:
+                    min_area[1] = obj.y
+
+            self.mob_area["slime"] = [min_area, max_area]
+
             # Player
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
@@ -186,12 +208,37 @@ class Level:
                                          map_lvl=[[self.level_no, ],
                                                   self.setup])
 
+                elif obj.name == 'Slime':
+                    slime_frames = {"death": import_folder('../graphics/slime/'
+                                                           'death'),
+                                    "hit": import_folder('../graphics/slime/'
+                                                         'hit'),
+                                    "hit_p": import_folder('../graphics/slime/'
+                                                           'hit-landing'),
+                                    "idle": import_folder('../graphics/slime'
+                                                          '/idle'),
+                                    "jump": import_folder('../graphics/slime/'
+                                                          '/jump'),
+                                    "move": import_folder('../graphics/slime/'
+                                                          '/move')}
+
+                    Slime(pos=(obj.x + TILE_SIZE//4, obj.y + TILE_SIZE//4),
+                          frames=slime_frames,
+                          groups=self.all_sprites,
+                          z=LAYERS['main'],
+                          player_pos=self.player.get_pos,
+                          detection_area=self.mob_area["slime"])
+
             # world
             Generic(
                 pos=(0, 0),
                 surf=pygame.image.load(
                     '../graphics/world/Forest.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
+
+            # sets-up overlay and inventory again
+            self.overlay = Overlay(self.player)
+            self.inventory = Inventory(self.player, self.toggle_inventory)
 
     def player_add(self, item):
 

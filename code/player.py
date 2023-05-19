@@ -253,6 +253,14 @@ class Player(pygame.sprite.Sprite):
         if self.timers['tool use'].active:
             self.status = self.status.split('_')[0] + '_' + self.selected_tool
 
+    def get_pos(self):
+        """
+        Gives the position of the player
+        :return: tuple containing x and y coordinates of player
+        """
+
+        return (self.pos.x, self.pos.y)
+
     def update_timers(self):
         for timer in self.timers.values():
             timer.update()
