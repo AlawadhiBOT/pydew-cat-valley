@@ -129,7 +129,8 @@ class Level:
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
-                                                  self.setup])
+                                                  self.setup],
+                                         slime_sprites=self.slime_sprites)
                 if obj.name == 'Bed':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
@@ -206,7 +207,8 @@ class Level:
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
-                                                  self.setup])
+                                                  self.setup],
+                                         slime_sprites=self.slime_sprites)
 
                 elif obj.name == 'Slime':
                     slime_frames = {"death": import_folder('../graphics/slime/'
@@ -224,10 +226,11 @@ class Level:
 
                     Slime(pos=(obj.x + TILE_SIZE//4, obj.y + TILE_SIZE//4),
                           frames=slime_frames,
-                          groups=self.all_sprites,
+                          groups=[self.all_sprites, self.slime_sprites],
                           z=LAYERS['main'],
                           player_pos=self.player.get_pos,
-                          detection_area=self.mob_area["slime"])
+                          detection_area=self.mob_area["slime"],
+                          reduce_player_hp=self.player.reduce_hp)
 
             # world
             Generic(

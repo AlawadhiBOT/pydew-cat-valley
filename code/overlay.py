@@ -38,7 +38,10 @@ class Overlay:
         sta_surf = self.font.render(f'LVL:{self.player.level}\n'
                                     f'STA:{self.player.stamina}/'
                                     f'{self.player.max_stamina}\n'
-                                    f'XP:{self.player.xp}/{self.player.max_xp}',
+                                    f'XP:{self.player.xp}/'
+                                    f'{self.player.max_xp}\n'
+                                    f'HP:{self.player.hp}/'
+                                    f'{self.player.max_hp}',
                                     False, 'Black')
         sta_rect = sta_surf.get_rect(
             topleft=OVERLAY_POSITIONS['stamina'])

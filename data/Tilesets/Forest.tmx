@@ -227,15 +227,15 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="15" name="Slime_detect" visible="0">
-  <object id="164" name="slime_topleft" x="1592" y="1963">
+ <objectgroup id="15" name="Slime_detect">
+  <object id="164" name="slime_topleft" x="1474" y="1865">
    <point/>
   </object>
-  <object id="165" name="slime_bottomright" x="1935" y="2178">
+  <object id="165" name="slime_bottomright" x="1993" y="2246">
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="9" name="Trees" visible="0">
+ <objectgroup id="9" name="Trees">
   <object id="4" name="green_tree" gid="508" x="1800" y="2308" width="128" height="128"/>
   <object id="5" name="green_tree" gid="508" x="1606.67" y="2240" width="128" height="128"/>
   <object id="6" name="green_tree" gid="508" x="1286.67" y="2286.67" width="128" height="128"/>
@@ -364,7 +364,7 @@
   <object id="53" gid="517" x="1413.33" y="2176" width="64" height="64"/>
   <object id="70" gid="516" x="1425.33" y="2066.67" width="64" height="64"/>
  </objectgroup>
- <objectgroup id="10" name="Player" visible="0">
+ <objectgroup id="10" name="Player">
   <object id="151" name="Start" x="1958.75" y="2333">
    <point/>
   </object>
@@ -372,7 +372,7 @@
    <point/>
   </object>
  </objectgroup>
- <layer id="11" name="Collision" width="40" height="40" visible="0" opacity="0.45">
+ <layer id="11" name="Collision" width="40" height="40" opacity="0.45">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

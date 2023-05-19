@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos, group, collision_sprites, tree_sprites,
                  water_sprites,  interaction, soil_layer, toggle_shop,
-                 toggle_inventory, map_lvl):
+                 toggle_inventory, map_lvl, slime_sprites):
         super().__init__(group)
 
         self.import_assets()
@@ -39,8 +39,11 @@ class Player(pygame.sprite.Sprite):
         # text for player
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
         self.display_text = []
-        
+
         self.map_lvl = map_lvl
+
+        # hp
+        self.hp = self.max_hp = 20
 
         # timers
         self.timers = {
@@ -87,6 +90,7 @@ class Player(pygame.sprite.Sprite):
         # interaction
         self.tree_sprites = tree_sprites
         self.water_sprites = water_sprites
+        self.slime_sprites = slime_sprites
         self.interaction = interaction
         self.sleep = False
         self.soil_layer = soil_layer
@@ -112,6 +116,12 @@ class Player(pygame.sprite.Sprite):
                     if tree.health == 0:
                         self.xp += PLAYER_LEVEL_STATS['wood']
                     self.stamina -= PLAYER_STAMINA_STATS['tree']
+
+            for slime in self.slime_sprites.sprites():
+
+                if slime.rect.collidepoint(self.target_pos):
+                    print("slime hit")
+                    slime.damage()
 
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
@@ -253,13 +263,22 @@ class Player(pygame.sprite.Sprite):
         if self.timers['tool use'].active:
             self.status = self.status.split('_')[0] + '_' + self.selected_tool
 
-    def get_pos(self):
+    def get_pos(self) -> tuple[float, float]:
         """
-        Gives the position of the player
+        Gives the position of the player.
+        This function was originally created for the slime.
         :return: tuple containing x and y coordinates of player
         """
 
-        return (self.pos.x, self.pos.y)
+        return self.pos.x, self.pos.y
+
+    def reduce_hp(self):
+        """
+        Reduces hp of the player by 1.
+        This function was originally created for the slime
+        """
+        self.hp -= 1
+
 
     def update_timers(self):
         for timer in self.timers.values():
