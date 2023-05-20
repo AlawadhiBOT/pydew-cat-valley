@@ -8,6 +8,9 @@ from random import randint, choice
 
 
 class Sky:
+    """
+    This class is used to darken the map when it becomes dark
+    """
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -31,6 +34,9 @@ class Sky:
 
 
 class Drop(Generic):
+    """
+    This class is used to simulate rain in the air
+    """
     def __init__(self, surf, pos, moving, groups, z):
 
         # general setup
@@ -57,7 +63,9 @@ class Drop(Generic):
 
 
 class Rain:
-
+    """
+    This class is used to simulate rain drops (on the ground)
+    """
     def __init__(self, all_sprites):
         self.all_sprites = all_sprites
         self.rain_drops = import_folder('../graphics/rain/drops/')

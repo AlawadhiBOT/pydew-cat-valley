@@ -28,7 +28,6 @@ class Game:
                 if keys[pygame.K_p]:
                     print(self.level.player.seed_inventory)
 
-
             dt = self.clock.tick(60) / 1000
             self.level.run(dt)
             pygame.display.update()

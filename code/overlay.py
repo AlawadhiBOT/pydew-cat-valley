@@ -3,6 +3,12 @@ from settings import *
 
 
 class Overlay:
+    """
+    This function is used to display the overlay, which includes the following:
+    - Seeds and tool used on the bottom left
+    - Levels, xp, stamina, and hp
+    - Displays the selected tool in text on the bottom right
+    """
     def __init__(self, player):
         # general setup
         self.display_surface = pygame.display.get_surface()

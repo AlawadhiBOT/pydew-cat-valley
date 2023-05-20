@@ -6,7 +6,9 @@ from random import randint
 
 
 class Fishing:
-
+    """
+    This class is used to handle the fishing activity by the player
+    """
     def __init__(self, player, fishing_status, fishing_theme):
         # check that you are not making a new object each time
         self.player = player
@@ -14,13 +16,12 @@ class Fishing:
 
         # timer for fish to plop
         self.fishing_timer = Timer(randint(1000, 2000), self.play_plop)
-
         # timer for reeling on time
         self.reel_on_time = Timer(500)
-
         # extra timer that reels for me
         self.extra_time = Timer(500)
 
+        # splash sound
         self.splash = pygame.mixer.Sound('../audio/fish flap.wav')
 
         self.fishing_theme = fishing_theme
@@ -46,11 +47,18 @@ class Fishing:
             self.end_fishing()
 
     def fishing_start(self):
+        """
+        Begins the fishing activity
+        :return: None
+        """
         self.fishing_timer.activate()
         self.fishing_status = True
         self.fishing_theme()
 
     def play_plop(self):
+        """
+        Plays a splash sound
+        """
         self.splash.play()
 
     def end_fishing(self):

@@ -3,6 +3,9 @@ from timer import Timer
 
 
 class Slime(pygame.sprite.Sprite):
+    """
+    This is the Slime class, originally developed for the forest area
+    """
     def __init__(self, pos, frames, groups, z, player_pos, detection_area,
                  reduce_player_hp):
         self.frames = frames

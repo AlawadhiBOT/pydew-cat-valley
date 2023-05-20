@@ -56,6 +56,7 @@ class Level:
         self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
         self.forest_theme = pygame.mixer.Sound('../audio/bg.mp3')
         self.active_music = self.music
+        self.fishing_theme_on = False
 
         # mobs stuff
         self.mob_area = {}
@@ -230,7 +231,7 @@ class Level:
                                     "move": import_folder('../graphics/slime/'
                                                           '/move')}
 
-                    Slime(pos=(obj.x + TILE_SIZE//4, obj.y + TILE_SIZE//4),
+                    Slime(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
                           frames=slime_frames,
                           groups=[self.all_sprites, self.slime_sprites],
                           z=LAYERS['main'],
@@ -258,33 +259,50 @@ class Level:
         Plays the fishing theme, this function is passed as an argument
         to the player
         """
-        if self.player.fishing.fishing_status:
+        if self.player.fishing.fishing_status and \
+                not self.fishing_theme_on:
+            self.fishing_theme_on = True
             self.active_music.stop()
             self.active_music = self.fishing_theme
             self.active_music.play()
-        else:
+        elif self.sky.night and not self.sky.music_swap and \
+                not self.fishing_theme_on:
             self.active_music.stop()
-            if self.sky.night and not self.sky.music_swap:
-                self.active_music = self.night_music
-            else:
-                self.active_music = self.music
+            self.active_music = self.night_music
+        elif not self.sky.night and not self.fishing_theme_on:
+            self.active_music.stop()
             self.active_music.play()
 
-
-    def player_add(self, item):
+    def player_add(self, item: str):
+        """
+        Adds an item to the player's inventory
+        :param item: string containing relevant item
+        :return: None
+        """
 
         self.player.item_inventory[item] += 1
         self.success.play()
 
     def toggle_shop(self):
+        """
+        Changes the bool value for the shop being active
+        :return: None
+        """
 
         self.shop_active = not self.shop_active
 
     def toggle_inventory(self):
-
+        """
+        Changes the bool value for the inventory being active
+        :return: None
+        """
         self.inventory_active = not self.inventory_active
 
     def reset(self):
+        """
+        This function is used to reset the day-night transition
+        :return: None
+        """
         # plants
         self.soil_layer.update_plants()
 
@@ -307,12 +325,17 @@ class Level:
         # sky
         self.sky.start_color = [255, 255, 255]
         # night to day
-        self.music.stop()
-        self.music.play()
-        self.night_music.stop()
+        self.active_music.stop()
+        self.active_music = self.music
+        self.active_music.play()
         self.sky.night = False
+        self.fishing_theme_on = False
 
     def plant_collision(self):
+        """
+        Code to change a land to being plowed
+        :return: None
+        """
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites.sprites():
                 if plant.harvestable and \
@@ -325,7 +348,12 @@ class Level:
                     y = plant.rect.centerx // TILE_SIZE
                     self.soil_layer.grid[x][y].remove('P')
 
-    def run(self, dt):
+    def run(self, dt: float):
+        """
+        Run part of the level
+        :param dt: float for delta time
+        :return: None
+        """
 
         # drawing logic
         self.display_surface.fill("black")
@@ -352,6 +380,7 @@ class Level:
             self.active_music.stop()
             self.active_music = self.night_music
             self.active_music.play()
+            self.fishing_theme_on = False
             self.sky.music_swap = True
 
         # transition
@@ -360,6 +389,9 @@ class Level:
 
 
 class CameraGroup(pygame.sprite.Group):
+    """
+    This class is used to show the area in the players immediate vicinity
+    """
 
     def __init__(self):
         super().__init__()
