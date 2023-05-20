@@ -912,7 +912,7 @@
   <object id="253" template="Start.tx" name="Start" x="1333.66" y="772"/>
   <object id="254" name="Forest" x="1279" y="377.003" width="130.667" height="196.666"/>
   <object id="256" name="Bed" x="2048.67" y="2043.33" width="63.6667" height="66.3333"/>
-  <object id="340" name="Fishing" x="1739" y="3079" width="141" height="108"/>
+  <object id="340" name="Fishing" x="1167" y="3133" width="757" height="240"/>
   <object id="343" name="Trader" x="1517.33" y="989" width="192" height="131.333"/>
  </objectgroup>
  <objectgroup id="7" name="Objects">

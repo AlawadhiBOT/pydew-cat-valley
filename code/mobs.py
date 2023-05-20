@@ -29,6 +29,9 @@ class Slime(pygame.sprite.Sprite):
         self.player_dmg_timer = Timer(1000)
         self.animation_lock = False
 
+        # sounds
+        self.axe_sound = pygame.mixer.Sound('../audio/axe.mp3')
+
     def animate(self, dt):
         self.frame_index += 5 * dt
         if self.frame_index >= len(self.frames[self.status]):
@@ -83,10 +86,12 @@ class Slime(pygame.sprite.Sprite):
 
     def damage(self):
         if self.health > 0:
+
             self.health -= 1
 
             self.status = "hit"
             self.animation_lock = True
+            self.axe_sound.play()
         else:
             self.status = "death"
 

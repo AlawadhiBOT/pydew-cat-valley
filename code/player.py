@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos, group, collision_sprites, tree_sprites,
                  water_sprites,  interaction, soil_layer, toggle_shop,
-                 toggle_inventory, map_lvl, slime_sprites):
+                 toggle_inventory, map_lvl, slime_sprites, play_fishing_theme):
         super().__init__(group)
 
         self.import_assets()
@@ -30,7 +30,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
 
         # fishing
-        self.fishing = Fishing(self, False)
+        self.fishing_theme = play_fishing_theme
+        self.fishing = Fishing(self, False, self.fishing_theme)
 
         # collision
         self.hitbox = self.rect.copy().inflate((-126, -70))
@@ -120,8 +121,8 @@ class Player(pygame.sprite.Sprite):
             for slime in self.slime_sprites.sprites():
 
                 if slime.rect.collidepoint(self.target_pos):
-                    print("slime hit")
                     slime.damage()
+
 
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
@@ -134,6 +135,7 @@ class Player(pygame.sprite.Sprite):
                 if water.rect.collidepoint(self.target_pos):
                     self.throw_bob.play()
                     self.fishing.fishing_start()
+
 
     def get_target_pos(self):
 

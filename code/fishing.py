@@ -7,7 +7,7 @@ from random import randint
 
 class Fishing:
 
-    def __init__(self, player, fishing_status):
+    def __init__(self, player, fishing_status, fishing_theme):
         # check that you are not making a new object each time
         self.player = player
         self.fishing_status = fishing_status
@@ -22,6 +22,8 @@ class Fishing:
         self.extra_time = Timer(500)
 
         self.splash = pygame.mixer.Sound('../audio/fish flap.wav')
+
+        self.fishing_theme = fishing_theme
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -46,6 +48,7 @@ class Fishing:
     def fishing_start(self):
         self.fishing_timer.activate()
         self.fishing_status = True
+        self.fishing_theme()
 
     def play_plop(self):
         self.splash.play()
@@ -58,6 +61,9 @@ class Fishing:
         self.reel_on_time.complete = False
         self.extra_time.complete = False
         self.fishing_status = False
+        # self.fishing_theme()
+
+
 
     def update(self):
         self.fishing_timer.update()

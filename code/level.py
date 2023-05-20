@@ -54,6 +54,8 @@ class Level:
         self.music.play(loops=-1)
         self.night_music = pygame.mixer.Sound('../audio/nighttime.wav')
         self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
+        self.forest_theme = pygame.mixer.Sound('../audio/bg.mp3')
+        self.active_music = self.music
 
         # mobs stuff
         self.mob_area = {}
@@ -130,7 +132,9 @@ class Level:
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
                                                   self.setup],
-                                         slime_sprites=self.slime_sprites)
+                                         slime_sprites=self.slime_sprites,
+                                         play_fishing_theme=
+                                         self.play_fishing_theme)
                 if obj.name == 'Bed':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
@@ -208,7 +212,9 @@ class Level:
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
                                                   self.setup],
-                                         slime_sprites=self.slime_sprites)
+                                         slime_sprites=self.slime_sprites,
+                                         play_fishing_theme=
+                                         self.play_fishing_theme)
 
                 elif obj.name == 'Slime':
                     slime_frames = {"death": import_folder('../graphics/slime/'
@@ -242,6 +248,28 @@ class Level:
             # sets-up overlay and inventory again
             self.overlay = Overlay(self.player)
             self.inventory = Inventory(self.player, self.toggle_inventory)
+            self.active_music.stop()
+            self.active_music = self.forest_theme
+            self.active_music.set_volume(0.5)
+            self.active_music.play()
+
+    def play_fishing_theme(self):
+        """
+        Plays the fishing theme, this function is passed as an argument
+        to the player
+        """
+        if self.player.fishing.fishing_status:
+            self.active_music.stop()
+            self.active_music = self.fishing_theme
+            self.active_music.play()
+        else:
+            self.active_music.stop()
+            if self.sky.night and not self.sky.music_swap:
+                self.active_music = self.night_music
+            else:
+                self.active_music = self.music
+            self.active_music.play()
+
 
     def player_add(self, item):
 
@@ -321,8 +349,9 @@ class Level:
         self.sky.display(dt)
         # nighttime
         if self.sky.night and not self.sky.music_swap:
-            self.music.stop()
-            self.night_music.play()
+            self.active_music.stop()
+            self.active_music = self.night_music
+            self.active_music.play()
             self.sky.music_swap = True
 
         # transition
