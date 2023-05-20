@@ -1,3 +1,5 @@
+from typing import Callable
+
 import pygame
 from settings import *
 from pytmx.util_pygame import load_pygame
@@ -7,7 +9,8 @@ from random import choice
 
 class SoilTile(pygame.sprite.Sprite):
 
-    def __init__(self, pos, surf, groups):
+    def __init__(self, pos, surf: pygame.surface,
+                 groups: list[pygame.sprite.Group]):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
@@ -15,7 +18,7 @@ class SoilTile(pygame.sprite.Sprite):
 
 
 class WaterTile(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups):
+    def __init__(self, pos, surf: pygame.surface, groups: pygame.sprite.Group):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
@@ -23,7 +26,8 @@ class WaterTile(pygame.sprite.Sprite):
 
 
 class Plant(pygame.sprite.Sprite):
-    def __init__(self, plant_type, groups, soil, check_watered):
+    def __init__(self, plant_type, groups: list[pygame.sprite.Group],
+                 soil, check_watered: Callable):
         super().__init__(groups)
 
         # setup
@@ -65,7 +69,8 @@ class Plant(pygame.sprite.Sprite):
 
 
 class SoilLayer:
-    def __init__(self, all_sprites, collision_sprites):
+    def __init__(self, all_sprites: pygame.sprite.Group,
+                 collision_sprites: pygame.sprite.Group):
         # sprite groups
         self.all_sprites = all_sprites
         self.collision_sprites = collision_sprites

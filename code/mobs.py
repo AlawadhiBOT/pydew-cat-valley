@@ -1,3 +1,5 @@
+from typing import Callable
+
 import pygame
 from timer import Timer
 
@@ -6,8 +8,9 @@ class Slime(pygame.sprite.Sprite):
     """
     This is the Slime class, originally developed for the forest area
     """
-    def __init__(self, pos, frames, groups, z, player_pos, detection_area,
-                 reduce_player_hp):
+    def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
+                 player_pos: Callable, detection_area: list,
+                 reduce_player_hp: Callable):
         self.frames = frames
         self.frame_index = 0
 
@@ -35,7 +38,7 @@ class Slime(pygame.sprite.Sprite):
         # sounds
         self.axe_sound = pygame.mixer.Sound('../audio/axe.mp3')
 
-    def animate(self, dt):
+    def animate(self, dt: float):
         self.frame_index += 5 * dt
         if self.frame_index >= len(self.frames[self.status]):
             if self.health <= 0:

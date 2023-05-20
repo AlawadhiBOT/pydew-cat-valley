@@ -1,4 +1,5 @@
 import random
+from typing import Callable
 
 import pygame
 from settings import *
@@ -10,9 +11,16 @@ from fishing import Fishing
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, pos, group, collision_sprites, tree_sprites,
-                 water_sprites,  interaction, soil_layer, toggle_shop,
-                 toggle_inventory, map_lvl, slime_sprites, play_fishing_theme):
+    def __init__(self, pos, group: pygame.sprite.Group,
+                 collision_sprites: pygame.sprite.Group,
+                 tree_sprites: pygame.sprite.Group,
+                 water_sprites: pygame.sprite.Group,
+                 interaction: pygame.sprite.Group,
+                 soil_layer: pygame.sprite.Group,
+                 toggle_shop: Callable, toggle_inventory: Callable,
+                 map_lvl: tuple,
+                 slime_sprites: pygame.sprite.Group,
+                 play_fishing_theme: Callable):
         super().__init__(group)
 
         self.import_assets()

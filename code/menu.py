@@ -1,10 +1,10 @@
 import pygame
 from settings import *
 from timer import Timer
-
+from player import Player
 
 class Menu:
-    def __init__(self, player, toggle_menu):
+    def __init__(self, player: Player, toggle_menu: bool):
 
         # general setup
         self.player = player

@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from player import Player
 
 
 class Overlay:
@@ -9,7 +10,8 @@ class Overlay:
     - Levels, xp, stamina, and hp
     - Displays the selected tool in text on the bottom right
     """
-    def __init__(self, player):
+
+    def __init__(self, player: Player):
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = player

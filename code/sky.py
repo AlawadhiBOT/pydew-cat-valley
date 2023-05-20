@@ -20,7 +20,7 @@ class Sky:
         self.night = False
         self.music_swap = False
 
-    def display(self, dt):
+    def display(self, dt: float):
         for index, value in enumerate(self.end_color):
             if self.start_color[index] > value:
                 self.start_color[index] -= 2 * dt
@@ -51,7 +51,7 @@ class Drop(Generic):
             self.direction = pygame.math.Vector2(-2, 4)
             self.speed = randint(200, 250)
 
-    def update(self, dt):
+    def update(self, dt: float):
         # movement
         if self.moving:
             self.pos += self.direction * self.speed * dt
@@ -66,7 +66,7 @@ class Rain:
     """
     This class is used to simulate rain drops (on the ground)
     """
-    def __init__(self, all_sprites):
+    def __init__(self, all_sprites: pygame.sprite.Group):
         self.all_sprites = all_sprites
         self.rain_drops = import_folder('../graphics/rain/drops/')
         self.rain = import_folder('../graphics/rain/floor/')

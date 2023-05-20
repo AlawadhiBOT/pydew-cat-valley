@@ -1,6 +1,6 @@
 # added because I am not sure how complicated fishing can get
 import pygame.key
-
+from player import Player
 from timer import Timer
 from random import randint
 
@@ -9,7 +9,9 @@ class Fishing:
     """
     This class is used to handle the fishing activity by the player
     """
-    def __init__(self, player, fishing_status, fishing_theme):
+
+    def __init__(self, player: Player, fishing_status: bool,
+                 fishing_theme: pygame.mixer.Sound):
         # check that you are not making a new object each time
         self.player = player
         self.fishing_status = fishing_status
@@ -71,8 +73,6 @@ class Fishing:
         self.fishing_status = False
         # self.fishing_theme()
 
-
-
     def update(self):
         self.fishing_timer.update()
         self.input()
@@ -94,4 +94,3 @@ class Fishing:
                     self.extra_time.activate()  # not complete, activate
                 else:
                     self.end_fishing()
-
