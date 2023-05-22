@@ -1,14 +1,25 @@
-1. Fix drawing for rod. Add noise for reeling in. Add animation for bubble/splash
-3. Include Fishing as part of unlockables in shop at certain lvl + money cost dont forget import assets in player!
+Fishing:
+- Fix rod drawing
+- Add noise for reeling in.
+- Add animation for bubble/splash
 
-4. Implement better shop, (maybe price changes, like a real market?).
+Shop:
+- Rod unlockable (current suggestion, level 2, cost not decided
+- Sword
+- Prices of stuff needs to fluctuate
+    + Use arrows to indicate increase in price etc
+    + Decrease in price if too much expenditure
 
-Better shop, use arrows to indicate increase in price etc (bar graphs no)
-Decrease in price if too much expenditure
+General Game stuff:
+- Needs more seeds + plants.
+- Add Lucy to game
+- Slimes drops undecided
+- Sword level undecided, but should have a bigger hitbox
+- Game needs some hints or signs
+- Add ability to go back to home map
 
-Add Lucy to game
+Crafting:
+- Need a crafting system
 
-Apples, seeds exist (need to add seeds to inventory)
-
-not sure what slimes drop yet. Sword at level 8, fishing rod at level 5
-Comment every function.
+Inventory:
+- Add seeds to inventory
