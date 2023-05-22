@@ -120,20 +120,21 @@ class Level:
                     (TILE_SIZE, TILE_SIZE)), self.collision_sprites)
 
             # Player
+            sprite_dict = {"group": self.all_sprites,
+                           "collision_sprites": self.collision_sprites,
+                           "tree_sprites": self.tree_sprites,
+                           "water_sprites": self.water_sprites,
+                           "interaction": self.interaction_sprites,
+                           "soil_layer": self.soil_layer,
+                           "slime_sprites": self.slime_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
                     self.player = Player(pos=(obj.x, obj.y),
-                                         group=self.all_sprites,
-                                         collision_sprites=self.collision_sprites,
-                                         tree_sprites=self.tree_sprites,
-                                         water_sprites=self.water_sprites,
-                                         interaction=self.interaction_sprites,
-                                         soil_layer=self.soil_layer,
+                                         sprite_dict=sprite_dict,
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
                                                   self.setup],
-                                         slime_sprites=self.slime_sprites,
                                          play_fishing_theme=
                                          self.play_fishing_theme)
                 if obj.name == 'Bed':
@@ -200,20 +201,21 @@ class Level:
             self.mob_area["slime"] = [min_area, max_area]
 
             # Player
+            sprite_dict = {"group": self.all_sprites,
+                           "collision_sprites": self.collision_sprites,
+                           "tree_sprites": self.tree_sprites,
+                           "water_sprites": self.water_sprites,
+                           "interaction": self.interaction_sprites,
+                           "soil_layer": self.soil_layer,
+                           "slime_sprites": self.slime_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
                     self.player = Player(pos=(obj.x, obj.y),
-                                         group=self.all_sprites,
-                                         collision_sprites=self.collision_sprites,
-                                         tree_sprites=self.tree_sprites,
-                                         water_sprites=self.water_sprites,
-                                         interaction=self.interaction_sprites,
-                                         soil_layer=self.soil_layer,
+                                         sprite_dict=sprite_dict,
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
                                          map_lvl=[[self.level_no, ],
                                                   self.setup],
-                                         slime_sprites=self.slime_sprites,
                                          play_fishing_theme=
                                          self.play_fishing_theme)
 
@@ -279,7 +281,6 @@ class Level:
         :param item: string containing relevant item
         :return: None
         """
-
         self.player.item_inventory[item] += 1
         self.success.play()
 

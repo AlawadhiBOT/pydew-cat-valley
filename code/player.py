@@ -11,17 +11,11 @@ from fishing import Fishing
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, pos, group: pygame.sprite.Group,
-                 collision_sprites: pygame.sprite.Group,
-                 tree_sprites: pygame.sprite.Group,
-                 water_sprites: pygame.sprite.Group,
-                 interaction: pygame.sprite.Group,
-                 soil_layer: pygame.sprite.Group,
+    def __init__(self, pos, sprite_dict,
                  toggle_shop: Callable, toggle_inventory: Callable,
-                 map_lvl: tuple,
-                 slime_sprites: pygame.sprite.Group,
+                 map_lvl: list,
                  play_fishing_theme: Callable):
-        super().__init__(group)
+        super().__init__(sprite_dict["group"])
 
         self.import_assets()
         self.status = 'down_idle'
@@ -39,11 +33,11 @@ class Player(pygame.sprite.Sprite):
 
         # fishing
         self.fishing_theme = play_fishing_theme
-        self.fishing = Fishing(self, False, self.fishing_theme)
+        self.fishing = Fishing(self.player_add, False, self.fishing_theme)
 
         # collision
         self.hitbox = self.rect.copy().inflate((-126, -70))
-        self.collision_sprites = collision_sprites
+        self.collision_sprites = sprite_dict["collision_sprites"]
 
         # text for player
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
@@ -97,12 +91,12 @@ class Player(pygame.sprite.Sprite):
         }
 
         # interaction
-        self.tree_sprites = tree_sprites
-        self.water_sprites = water_sprites
-        self.slime_sprites = slime_sprites
-        self.interaction = interaction
+        self.tree_sprites = sprite_dict["tree_sprites"]
+        self.water_sprites = sprite_dict["water_sprites"]
+        self.slime_sprites = sprite_dict["slime_sprites"]
+        self.interaction = sprite_dict["interaction"]
         self.sleep = False
-        self.soil_layer = soil_layer
+        self.soil_layer = sprite_dict["soil_layer"]
         self.toggle_shop = toggle_shop
         self.toggle_inventory = toggle_inventory
 
@@ -289,6 +283,14 @@ class Player(pygame.sprite.Sprite):
         """
         self.hp -= 1
 
+    def player_add(self, item: str):
+        """
+        Copy of a function used in level. Added here for files such as
+        fishing.py
+        :param item to be increased in counter
+        :return: None
+        """
+        self.item_inventory[item] += 1
 
     def update_timers(self):
         for timer in self.timers.values():

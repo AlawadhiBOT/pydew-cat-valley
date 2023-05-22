@@ -1,6 +1,6 @@
 # added because I am not sure how complicated fishing can get
+from typing import Callable
 import pygame.key
-from player import Player
 from timer import Timer
 from random import randint
 
@@ -10,10 +10,10 @@ class Fishing:
     This class is used to handle the fishing activity by the player
     """
 
-    def __init__(self, player: Player, fishing_status: bool,
-                 fishing_theme: pygame.mixer.Sound):
+    def __init__(self, player_add: Callable, fishing_status: bool,
+                 fishing_theme: pygame.mixer.music):
         # check that you are not making a new object each time
-        self.player = player
+        self.player_add = player_add
         self.fishing_status = fishing_status
 
         # timer for fish to plop
@@ -36,7 +36,7 @@ class Fishing:
 
             # pulled reel on time or not
             if self.fishing_timer.complete and self.reel_on_time.active:
-                self.player.item_inventory['fish'] += 1
+                self.player_add('fish')
                 # cancel the reel timer and complete it
                 self.end_fishing()
 

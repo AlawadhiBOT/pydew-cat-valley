@@ -2,7 +2,6 @@ import pygame
 import sys
 from settings import *
 from level import Level
-import time
 
 
 class Game:
