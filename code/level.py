@@ -27,7 +27,7 @@ class Level:
         self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
 
         self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
-        self.level_no = [0]
+        self.level_no = 0
         self.setup()
         self.overlay = Overlay(self.player)
         self.transition = Transition(self.reset, self.player)
@@ -67,7 +67,7 @@ class Level:
         :param level_no: This refers to the current location, by default is 0
         1 will be used for forest map
         """
-        if self.level_no[0] == 0:
+        if self.level_no == 0:
             tmx_data = load_pygame('../data/map.tmx')
 
             # house
@@ -133,8 +133,8 @@ class Level:
                                          sprite_dict=sprite_dict,
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
-                                         map_lvl=[[self.level_no, ],
-                                                  self.setup],
+                                         get_map_level=self.get_map_number,
+                                         set_map_level=self.set_map_number,
                                          play_fishing_theme=
                                          self.play_fishing_theme)
                 if obj.name == 'Bed':
@@ -214,8 +214,8 @@ class Level:
                                          sprite_dict=sprite_dict,
                                          toggle_shop=self.toggle_shop,
                                          toggle_inventory=self.toggle_inventory,
-                                         map_lvl=[[self.level_no, ],
-                                                  self.setup],
+                                         get_map_level=self.get_map_number,
+                                         set_map_level=self.set_map_number,
                                          play_fishing_theme=
                                          self.play_fishing_theme)
 
@@ -234,12 +234,12 @@ class Level:
                                                           '/move')}
 
                     Slime(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
-                          frames=slime_frames,
-                          groups=[self.all_sprites, self.slime_sprites],
-                          z=LAYERS['main'],
-                          player_pos=self.player.get_pos,
-                          detection_area=self.mob_area["slime"],
-                          reduce_player_hp=self.player.reduce_hp)
+                               frames=slime_frames,
+                               groups=[self.all_sprites, self.slime_sprites],
+                               z=LAYERS['main'],
+                               player_pos=self.player.get_pos,
+                               detection_area=self.mob_area["slime"],
+                               reduce_player_hp=self.player.reduce_hp)
 
             # world
             Generic(
@@ -274,6 +274,20 @@ class Level:
         elif not self.sky.night and not self.fishing_theme_on:
             self.active_music.stop()
             self.active_music.play()
+
+    def get_map_number(self):
+        """
+        :return: int representing current map number
+        """
+        return self.level_no
+
+    def set_map_number(self, level_no):
+        """
+        Sets the map number
+        :return: None
+        """
+        self.level_no = level_no
+        self.setup()
 
     def player_add(self, item: str):
         """
@@ -411,6 +425,13 @@ class CameraGroup(pygame.sprite.Group):
                     self.display_surface.blit(sprite.image, offset_rect)
 
                     # analytics
+                    # slime = getattr(sprite, "slime", None)
+                    # if callable(slime):
+                    #     offset_rect = slime()
+                    #     offset_rect.center -= self.offset
+                    #     pygame.draw.rect(self.display_surface, 'red',
+                    #                      offset_rect, 5)
+                    #
                     # if sprite == player:
                     #     pygame.draw.rect(self.display_surface, 'red',
                     #                      offset_rect, 5)

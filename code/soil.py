@@ -46,7 +46,7 @@ class Plant(pygame.sprite.Sprite):
         self.image = self.frames[self.age]
         self.y_offset = -16 if plant_type == "corn" else -8
         self.rect = self.image.get_rect(midbottom=soil.rect.midbottom +
-                                        pygame.math.Vector2(0, self.y_offset))
+                                                  pygame.math.Vector2(0, self.y_offset))
         self.z = LAYERS['ground plant']
 
     def grow(self):
@@ -64,11 +64,13 @@ class Plant(pygame.sprite.Sprite):
 
             self.image = self.frames[int(self.age)]
             self.rect = self.image.get_rect(midbottom=self.soil.rect.midbottom +
-                                            pygame.math.Vector2
-                                            (0, self.y_offset))
+                                                      pygame.math.Vector2
+                                                      (0, self.y_offset))
 
 
 class SoilLayer:
+    grid: list[list[str]]
+
     def __init__(self, all_sprites: pygame.sprite.Group,
                  collision_sprites: pygame.sprite.Group):
         # sprite groups
@@ -84,6 +86,7 @@ class SoilLayer:
 
         self.create_soil_grid()
         self.create_hit_rects()
+
 
         # sounds
         self.hoe_sound = pygame.mixer.Sound('../audio/hoe.wav')
@@ -169,7 +172,13 @@ class SoilLayer:
         is_watered = 'W' in cell
         return is_watered
 
-    def plant_seed(self, target_pos, selected_seed):
+    def plant_seed(self, target_pos, selected_seed: str):
+        """
+        Plants a seed in the relevant soil tile
+        :param target_pos: target location of seed planting
+        :param selected_seed: the seed type which will be planted
+        :return: None
+        """
         for soil_sprite in self.soil_sprites:
             if soil_sprite.rect.collidepoint(target_pos):
                 self.plant_sound.play()
@@ -188,10 +197,18 @@ class SoilLayer:
         return False
 
     def update_plants(self):
+        """
+        Grows the plants, originally used for night cycle
+        :return: None
+        """
         for plant in self.plant_sprites.sprites():
             plant.grow()
 
     def create_soil_tiles(self):
+        """
+        Sets the tile of soil based on what other soil tiles there are beside it
+        :return: None
+        """
         self.soil_sprites.empty()
         for index_row, row in enumerate(self.grid):
             for index_col, cell in enumerate(row):
@@ -205,30 +222,49 @@ class SoilLayer:
 
                     tile_type = 'o'
 
-                    # all sides
-                    if all((t, r, b, l)): tile_type = 'x'
+                    # switch case rather than if statement (added 27-05-2023)
+                    match (t, l, b, r):
+                        # all sides
+                        case (True, True, True, True):
+                            tile_type = 'x'
 
-                    # horizontal tiles only
-                    if l and not any(((t, r, b))): tile_type = 'r'
-                    if r and not any(((t, l, b))): tile_type = 'l'
-                    if l and r and not any(((t, b))): tile_type = 'lr'
+                        # horizontal tiles only
+                        case (False, True, False, False):
+                            tile_type = 'r'
 
-                    # vertical tiles only
-                    if t and not any(((r, l, b))): tile_type = 'b'
-                    if b and not any(((t, r, l))): tile_type = 't'
-                    if t and b and not any(((r, l))): tile_type = 'tb'
+                        case (False, False, False, True):
+                            tile_type = 'l'
 
-                    # corners
-                    if l and b and not any(((t, r))): tile_type = 'tr'
-                    if r and b and not any(((t, l))): tile_type = 'tl'
-                    if l and t and not any(((b, r))): tile_type = 'br'
-                    if r and t and not any(((b, l))): tile_type = 'bl'
+                        case (False, True, False, True):
+                            tile_type = 'lr'
 
-                    # T shapes
-                    if all((t, b, r)) and not l: tile_type = 'tbr'
-                    if all((t, b, l)) and not r: tile_type = 'tbl'
-                    if all((t, l, r)) and not b: tile_type = 'lrb'
-                    if all((l, b, r)) and not t: tile_type = 'lrt'
+                        # vertical tiles only
+                        case (True, False, False, False):
+                            tile_type = 'b'
+                        case (False, False, True, False):
+                            tile_type = 't'
+                        case (True, False, True, False):
+                            tile_type = 'tb'
+
+                        # corners
+                        case (False, True, True, False):
+                            tile_type = 'tr'
+                        case (False, False, True, True):
+                            tile_type = 'tl'
+                        case (True, True, False, False):
+                            tile_type = 'br'
+                        case (True, False, False, True):
+                            tile_type = 'bl'
+
+                        # T shapes
+                        case (True, False, True, True):
+                            tile_type = 'tbr'
+                        case (True, True, True, False):
+                            tile_type = 'tbl'
+                        case (True, True, False, True):
+                            tile_type = 'lrb'
+                        case (False, True, True, True):
+                            tile_type = 'lrt'
 
                     SoilTile(pos=(index_col * TILE_SIZE, index_row * TILE_SIZE),
                              surf=self.soil_surfs[tile_type],

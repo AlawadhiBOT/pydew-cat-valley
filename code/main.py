@@ -2,6 +2,7 @@ import pygame
 import sys
 from settings import *
 from level import Level
+from time import sleep
 
 
 class Game:
@@ -25,7 +26,7 @@ class Game:
                     self.level.music.set_volume(0.3)
 
                 if keys[pygame.K_p]:
-                    print(self.level.player.seed_inventory)
+                    print(self.level.level_no)
 
             dt = self.clock.tick(60) / 1000
             self.level.run(dt)

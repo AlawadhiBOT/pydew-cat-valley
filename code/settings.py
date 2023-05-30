@@ -96,3 +96,8 @@ GAME_MESSAGES = {
     "TEXT_TIMER": 700,
     "TEXT_CHOICES": ["SWAPPED TOOL"]
 }
+
+MAP_NUMBERS = {
+    "Starting": 0,
+    "Forest": 1,
+}

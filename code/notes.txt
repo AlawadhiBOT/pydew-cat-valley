@@ -1,10 +1,11 @@
 Fishing:
 - Fix rod drawing
 - Add noise for reeling in.
-- Add animation for bubble/splash
+- Add animation for bubble/splash (when fish pops up)
+- Fishing overall still needs work on it to make it fun
 
 Shop:
-- Rod unlockable (current suggestion, level 2, cost not decided
+- Rod unlockable (current suggestion, level 2, cost not decided)
 - Sword
 - Prices of stuff needs to fluctuate
     + Use arrows to indicate increase in price etc
@@ -17,9 +18,12 @@ General Game stuff:
 - Sword level undecided, but should have a bigger hitbox
 - Game needs some hints or signs
 - Add ability to go back to home map
+- Add seasons
+- Make an area where you can make a certain type of building, like a farm
 
 Crafting:
 - Need a crafting system
 
 Inventory:
 - Add seeds to inventory
+- Change UI for level, xp, etc.

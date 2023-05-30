@@ -17,8 +17,8 @@ class Slime(pygame.sprite.Sprite):
         self.image = self.frames["idle"][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
         self.z = z
-        self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2,
-                                               -self.rect.height * 0.75)
+        self.hitbox = self.rect.copy().inflate(self.rect.width * 0.2,
+                                               self.rect.height * 0.75)
 
         super().__init__(groups)
 
@@ -100,6 +100,15 @@ class Slime(pygame.sprite.Sprite):
             self.axe_sound.play()
         else:
             self.status = "death"
+
+    def slime(self):
+        """
+        Added this function in order for it to be easier for the player to hit the slime.
+        :return: pygame rect which has the hitbox of the slime
+        """
+        self.hitbox = self.rect.copy().inflate(self.rect.width * 0.2,
+                                               self.rect.height * 0.75)
+        return self.hitbox
 
     def update(self, dt):
         self.player_dmg_timer.update()

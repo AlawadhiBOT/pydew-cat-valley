@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos, sprite_dict,
                  toggle_shop: Callable, toggle_inventory: Callable,
-                 map_lvl: list,
+                 get_map_level: Callable, set_map_level: Callable,
                  play_fishing_theme: Callable):
         super().__init__(sprite_dict["group"])
 
@@ -43,7 +43,8 @@ class Player(pygame.sprite.Sprite):
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
         self.display_text = []
 
-        self.map_lvl = map_lvl
+        self.get_map_level = get_map_level
+        self.set_map_level = set_map_level
 
         # hp
         self.hp = self.max_hp = 20
@@ -78,15 +79,15 @@ class Player(pygame.sprite.Sprite):
 
         # inventory
         self.item_inventory = {
-            'wood':   stats[1][0],
-            'apple':  stats[1][1],
-            'corn':   stats[1][2],
+            'wood': stats[1][0],
+            'apple': stats[1][1],
+            'corn': stats[1][2],
             'tomato': stats[1][3],
             'fish': stats[1][4]
         }
         # seed inventory
         self.seed_inventory = {
-            'corn':   stats[2][0],
+            'corn': stats[2][0],
             'tomato': stats[2][1]
         }
 
@@ -121,10 +122,9 @@ class Player(pygame.sprite.Sprite):
                     self.stamina -= PLAYER_STAMINA_STATS['tree']
 
             for slime in self.slime_sprites.sprites():
-
-                if slime.rect.collidepoint(self.target_pos):
+                slime.slime()
+                if slime.hitbox.collidepoint(self.target_pos):
                     slime.damage()
-
 
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
@@ -141,6 +141,15 @@ class Player(pygame.sprite.Sprite):
 
     def get_target_pos(self):
 
+        self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[
+            self.status.split('_')[0]]
+
+
+    def get_bigger_target_pos(self):
+        """
+        Intended to be 3 points rather than one (in get_target_pos it is one), which should help in combating mobs
+        :return:
+        """
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[
             self.status.split('_')[0]]
 
@@ -215,8 +224,8 @@ class Player(pygame.sprite.Sprite):
                     self.tool_index < len(self.tools) else 0
                 self.selected_tool = self.tools[self.tool_index]
                 tool_swp_surf = self.font.render(
-                                 f'{GAME_MESSAGES["TEXT_CHOICES"][0]} '
-                                 f'{self.selected_tool}', False, 'Black')
+                    f'{GAME_MESSAGES["TEXT_CHOICES"][0]} '
+                    f'{self.selected_tool}', False, 'Black')
                 tool_swp_rect = tool_swp_surf.get_rect(topright=
                                                        GAME_MESSAGES["TXT_BEG"])
                 tool_timer = Timer(GAME_MESSAGES["TEXT_TIMER"])
@@ -250,8 +259,7 @@ class Player(pygame.sprite.Sprite):
                     if collided_interaction_sprites[0].name == 'Trader':
                         self.toggle_shop()
                     elif collided_interaction_sprites[0].name == 'Forest':
-                        self.map_lvl[0][0][0] = 1
-                        self.map_lvl[1]()
+                        self.set_map_level(1)
                     else:
                         self.auto_save_night()
 
