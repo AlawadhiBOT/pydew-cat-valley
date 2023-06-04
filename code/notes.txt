@@ -12,7 +12,7 @@ Shop:
     + Decrease in price if too much expenditure
 
 General Game stuff:
-- Needs more seeds + plants.
+- Needs more seeds + plants
 - Add Lucy to game
 - Slimes drops undecided
 - Sword level undecided, but should have a bigger hitbox

@@ -256,12 +256,17 @@ class Player(pygame.sprite.Sprite):
                 collided_interaction_sprites = pygame.sprite.spritecollide(
                     self, self.interaction, False)
                 if collided_interaction_sprites:
-                    if collided_interaction_sprites[0].name == 'Trader':
-                        self.toggle_shop()
-                    elif collided_interaction_sprites[0].name == 'Forest':
-                        self.set_map_level(1)
-                    else:
-                        self.auto_save_night()
+                    map_no = self.get_map_level()
+                    if map_no == MAP_NUMBERS["Starting"]:
+                        if collided_interaction_sprites[0].name == 'Trader':
+                            self.toggle_shop()
+                        elif collided_interaction_sprites[0].name == 'Forest':
+                            self.set_map_level(MAP_NUMBERS["Forest"])
+                        else:
+                            self.auto_save_night()
+                    elif map_no == MAP_NUMBERS["Forest"]:
+                        if collided_interaction_sprites[0].name == "Starting":
+                            self.set_map_level(MAP_NUMBERS["Starting"])
 
     def get_status(self):
         # idle

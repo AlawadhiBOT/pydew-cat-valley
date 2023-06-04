@@ -241,6 +241,10 @@ class Level:
                                detection_area=self.mob_area["slime"],
                                reduce_player_hp=self.player.reduce_hp)
 
+                if obj.name == 'Starting':
+                    Interaction((obj.x, obj.y), (obj.width, obj.height),
+                                self.interaction_sprites, obj.name)
+
             # world
             Generic(
                 pos=(0, 0),

@@ -1,10 +1,12 @@
+from typing import Callable
+
 import pygame
 from settings import *
 from timer import Timer
 from player import Player
 
 class Menu:
-    def __init__(self, player: Player, toggle_menu: bool):
+    def __init__(self, player: Player, toggle_menu: Callable):
 
         # general setup
         self.player = player
