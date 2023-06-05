@@ -68,6 +68,13 @@ class Level:
         1 will be used for forest map
         """
         if self.level_no == 0:
+            self.all_sprites = CameraGroup()
+            self.collision_sprites = pygame.sprite.Group()
+            self.tree_sprites = pygame.sprite.Group()
+            self.water_sprites = pygame.sprite.Group()
+            self.interaction_sprites = pygame.sprite.Group()
+            self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
+
             tmx_data = load_pygame('../data/map.tmx')
 
             # house

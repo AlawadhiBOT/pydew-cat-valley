@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
 
         # timers
         self.timers = {
-            'tool use': Timer(350, self.use_tool),
+            'tool use': Timer(1500, self.use_tool),
             'tool switch': Timer(200),
             'seed use': Timer(350, self.use_seed),
             'seed switch': Timer(200),
@@ -138,12 +138,10 @@ class Player(pygame.sprite.Sprite):
                     self.throw_bob.play()
                     self.fishing.fishing_start()
 
-
     def get_target_pos(self):
 
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[
             self.status.split('_')[0]]
-
 
     def get_bigger_target_pos(self):
         """
@@ -178,7 +176,7 @@ class Player(pygame.sprite.Sprite):
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt):
-        self.frame_index += 4 * dt
+        self.frame_index += 8 * dt
         if self.frame_index >= len(self.animations[self.status]):
             if self.fishing.fishing_status:
                 self.frame_index = len(self.animations[self.status]) - 1
