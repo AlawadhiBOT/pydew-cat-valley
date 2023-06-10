@@ -27,3 +27,6 @@ Crafting:
 Inventory:
 - Add seeds to inventory
 - Change UI for level, xp, etc.
+
+Overlay:
+- Fix overlay bug when returning from forest

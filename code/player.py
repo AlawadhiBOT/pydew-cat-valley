@@ -145,7 +145,8 @@ class Player(pygame.sprite.Sprite):
 
     def get_bigger_target_pos(self):
         """
-        Intended to be 3 points rather than one (in get_target_pos it is one), which should help in combating mobs
+        Intended to be 3 points rather than one (in get_target_pos it is one),
+        which should help in combating mobs
         :return:
         """
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[
@@ -176,7 +177,7 @@ class Player(pygame.sprite.Sprite):
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt):
-        self.frame_index += 8 * dt
+        self.frame_index += 5 * dt
         if self.frame_index >= len(self.animations[self.status]):
             if self.fishing.fishing_status:
                 self.frame_index = len(self.animations[self.status]) - 1
