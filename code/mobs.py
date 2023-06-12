@@ -2,7 +2,7 @@ from typing import Callable
 
 import pygame
 from timer import Timer
-
+from random import choice, randint, random
 
 class NeutralMob(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
@@ -133,6 +133,9 @@ class Cow(NeutralMob):
         self.detection_area = ((self.rect.x - 500, self.rect.y - 500),
                                (self.rect.x + 500, self.rect.y + 500))
 
+        self.speed = self.default_speed = 40
+        self.pathing = False
+
         # need to make attribute multiplier so that I can more accurately
         # calculate delta time for each action
 
@@ -140,12 +143,17 @@ class Cow(NeutralMob):
         # maybe randint is a good choice for what actions I can do, but
         # obviously need to account for the fact that I need to stand up if
         # the cow is sleeping before starting to move.
+        self.action_indices = {"idle": 0, "move_left": 1, "move_right": 2,
+                               "sit": 3, "sit_idle": 4, "sleep": 5,
+                               "stand_up": 6, "grass_find": 7, "munch": 8}
 
 
     def animate(self, dt):
         self.frame_index += 0.5 * dt * len(self.frames[self.status])
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
+            if not self.pathing:
+                self.action_picker()
 
         self.image = self.frames[self.status][int(self.frame_index)]
 
@@ -155,6 +163,24 @@ class Cow(NeutralMob):
         # Vertical Movement
         self.rect.y += self.direction.y * self.speed * dt
 
+    def action_picker(self):
+        if self.action_indices[self.status] <= 2 or \
+                self.action_indices[self.status] == 6:
+            # random.choice
+            self.status = choice(["idle", "move_left", "move_right",
+                                  "sit"])
+            if self.status == "move_left":
+                self.direction.x = randint(-1, 0)
+                self.direction.y = randint(-1, 1)
+            elif self.status == "move_right":
+                self.direction.x = randint(0, 1)
+                self.direction.y = randint(-1, 1)
+            else:
+                self.direction.x = self.direction.y = 0
+
+        elif 3 <= self.action_indices[self.status] <= 5:
+            self.status = choice(["sit_idle", "sleep", "stand_up"])
+
     def move(self):
         player_pos = self.player_pos_func()
         if self.detection_area[0][0] < \
@@ -162,6 +188,7 @@ class Cow(NeutralMob):
                 self.detection_area[0][1] < \
                 player_pos[1] < self.detection_area[1][1] and \
                 self.health > 0:
+            self.pathing = True
 
             if player_pos[0] > self.rect.x:  # slime is to the left of player
                 self.direction.x = 1
@@ -174,11 +201,8 @@ class Cow(NeutralMob):
                 self.direction.y = 1
             else:  # slime is the above the player
                 self.direction.y = -1
-
         else:
-            self.status = "idle"
-            self.direction.x = 0
-            self.direction.y = 0
+            self.pathing = False
 
     def cow(self):
         """
@@ -190,7 +214,7 @@ class Cow(NeutralMob):
         return self.hitbox
 
     def update(self, dt):
-        self.player_dmg_timer.update()
+        # self.player_dmg_timer.update()
         self.move()
         self.animate(dt)
 
