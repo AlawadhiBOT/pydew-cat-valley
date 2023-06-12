@@ -136,6 +136,9 @@ class Cow(NeutralMob):
         self.speed = self.default_speed = 40
         self.pathing = False
 
+        self.speed = self.default_speed = 40
+        self.pathing = False
+
         # need to make attribute multiplier so that I can more accurately
         # calculate delta time for each action
 
