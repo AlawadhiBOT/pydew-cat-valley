@@ -130,7 +130,59 @@ class Cow(NeutralMob):
                  player_pos: Callable):
         super().__init__(pos, frames, groups, z, player_pos)
 
-        self.detection_area = [(self.rect.x - 500, self.rect.y - 500),
-                               (self.rect.x + 500, self.rect.y + 500)]
+        self.detection_area = ((self.rect.x - 500, self.rect.y - 500),
+                               (self.rect.x + 500, self.rect.y + 500))
+
+    def animate(self, dt):
+        self.frame_index += 0.5 * dt * len(self.frames[self.status])
+        if self.frame_index >= len(self.frames[self.status]):
+            self.frame_index = 0
+
+        self.image = self.frames[self.status][int(self.frame_index)]
+
+        # Horizontal
+        self.rect.x += self.direction.x * self.speed * dt
+
+        # Vertical Movement
+        self.rect.y += self.direction.y * self.speed * dt
+
+    def move(self):
+        player_pos = self.player_pos_func()
+        if self.detection_area[0][0] < \
+                player_pos[0] < self.detection_area[1][0] and \
+                self.detection_area[0][1] < \
+                player_pos[1] < self.detection_area[1][1] and \
+                self.health > 0:
+
+            if player_pos[0] > self.rect.x:  # slime is to the left of player
+                self.direction.x = 1
+                self.status = "move_right"
+            else:  # slime is the right of player
+                self.direction.x = -1
+                self.status = "move_left"
+
+            if player_pos[1] > self.rect.y:  # slime is below the player
+                self.direction.y = 1
+            else:  # slime is the above the player
+                self.direction.y = -1
+
+        else:
+            self.status = "idle"
+            self.direction.x = 0
+            self.direction.y = 0
+
+    def cow(self):
+        """
+        Added this function in order to see hitbox of cow
+        :return: pygame rect which has the hitbox of the Cow
+        """
+        self.hitbox = self.rect.copy().inflate(self.rect.width * 0.2,
+                                               self.rect.height * 0.75)
+        return self.hitbox
+
+    def update(self, dt):
+        self.player_dmg_timer.update()
+        self.move()
+        self.animate(dt)
 
 

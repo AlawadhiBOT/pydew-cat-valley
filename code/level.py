@@ -3,7 +3,7 @@ from settings import *
 from player import Player
 from overlay import Overlay
 from sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
-from mobs import Slime
+from mobs import Slime, Cow
 from pytmx.util_pygame import load_pygame
 from support import *
 from transition import Transition
@@ -74,6 +74,7 @@ class Level:
             self.water_sprites = pygame.sprite.Group()
             self.interaction_sprites = pygame.sprite.Group()
             self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
+            self.cow_sprites = pygame.sprite.Group()
 
             self.soil_layer = SoilLayer(self.all_sprites,
                                         self.collision_sprites)
@@ -136,7 +137,8 @@ class Level:
                            "water_sprites": self.water_sprites,
                            "interaction": self.interaction_sprites,
                            "soil_layer": self.soil_layer,
-                           "slime_sprites": self.slime_sprites}
+                           "slime_sprites": self.slime_sprites,
+                           "cow_sprites": self.cow_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
                     self.player = Player(pos=(obj.x, obj.y),
@@ -147,17 +149,34 @@ class Level:
                                          set_map_level=self.set_map_number,
                                          play_fishing_theme=
                                          self.play_fishing_theme)
-                if obj.name == 'Bed':
+                elif obj.name == 'Bed':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
 
-                if obj.name == 'Trader':
+                elif obj.name == 'Trader':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
 
-                if obj.name == 'Forest':
+                elif obj.name == 'Forest':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
+
+                elif obj.name == 'Cow':
+                    cow_frames = {"idle": import_folder('../graphics/big_cow/'
+                                                        'idle'),
+                                  "move_left": import_folder(
+                                                        '../graphics/big_cow/'
+                                                        'move_left'),
+                                  "move_right": import_folder(
+                                      '../graphics/big_cow/'
+                                      'move_right'),
+                                  }
+
+                    Cow(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
+                        frames=cow_frames,
+                        groups=[self.all_sprites, self.cow_sprites],
+                        z=LAYERS['main'],
+                        player_pos=self.player.get_pos)
 
             Generic(
                 pos=(0, 0),
@@ -173,6 +192,7 @@ class Level:
             self.water_sprites = pygame.sprite.Group()
             self.interaction_sprites = pygame.sprite.Group()
             self.slime_sprites = pygame.sprite.Group()
+            self.cow_sprites = pygame.sprite.Group()
 
             # fences
             for x, y, surf in tmx_data.get_layer_by_name('Fence').tiles():
@@ -244,12 +264,12 @@ class Level:
                                                           '/move')}
 
                     Slime(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
-                               frames=slime_frames,
-                               groups=[self.all_sprites, self.slime_sprites],
-                               z=LAYERS['main'],
-                               player_pos=self.player.get_pos,
-                               detection_area=self.mob_area["slime"],
-                               reduce_player_hp=self.player.reduce_hp)
+                          frames=slime_frames,
+                          groups=[self.all_sprites, self.slime_sprites],
+                          z=LAYERS['main'],
+                          player_pos=self.player.get_pos,
+                          detection_area=self.mob_area["slime"],
+                          reduce_player_hp=self.player.reduce_hp)
 
                 if obj.name == 'Starting':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
@@ -442,6 +462,12 @@ class CameraGroup(pygame.sprite.Group):
                     # slime = getattr(sprite, "slime", None)
                     # if callable(slime):
                     #     offset_rect = slime()
+                    #     offset_rect.center -= self.offset
+                    #     pygame.draw.rect(self.display_surface, 'red',
+                    #                      offset_rect, 5)
+                    # cow = getattr(sprite, "cow", None)
+                    # if callable(cow):
+                    #     offset_rect = cow()
                     #     offset_rect.center -= self.offset
                     #     pygame.draw.rect(self.display_surface, 'red',
                     #                      offset_rect, 5)
