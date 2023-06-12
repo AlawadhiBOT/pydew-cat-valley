@@ -4,13 +4,9 @@ import pygame
 from timer import Timer
 
 
-class Slime(pygame.sprite.Sprite):
-    """
-    This is the Slime class, originally developed for the forest area
-    """
+class NeutralMob(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
-                 player_pos: Callable, detection_area: list,
-                 reduce_player_hp: Callable):
+                 player_pos: Callable):
         self.frames = frames
         self.frame_index = 0
 
@@ -29,11 +25,22 @@ class Slime(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.player_pos_func = player_pos
         self.status = "idle"
+        self.player_dmg_timer = Timer(1000)
+        self.animation_lock = False
+
+
+class Slime(NeutralMob):
+    """
+    This is the Slime class, originally developed for the forest area
+    """
+    def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
+                 player_pos: Callable, detection_area: list,
+                 reduce_player_hp: Callable):
+        super().__init__(pos=pos, frames=frames, z=z, groups=groups,
+                         player_pos=player_pos)
 
         self.detection_area = detection_area
         self.reduce_player_hp = reduce_player_hp
-        self.player_dmg_timer = Timer(1000)
-        self.animation_lock = False
 
         # sounds
         self.axe_sound = pygame.mixer.Sound('../audio/axe.mp3')
@@ -48,6 +55,7 @@ class Slime(pygame.sprite.Sprite):
 
         self.image = self.frames[self.status][int(self.frame_index)]
 
+        # Horizontal
         self.rect.x += self.direction.x * self.speed * dt
 
         # Vertical Movement
@@ -114,3 +122,15 @@ class Slime(pygame.sprite.Sprite):
         self.player_dmg_timer.update()
         self.move()
         self.animate(dt)
+
+
+class Cow(NeutralMob):
+
+    def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
+                 player_pos: Callable):
+        super().__init__(pos, frames, groups, z, player_pos)
+
+        self.detection_area = [(self.rect.x - 500, self.rect.y - 500),
+                               (self.rect.x + 500, self.rect.y + 500)]
+
+

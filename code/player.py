@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
 
         # timers
         self.timers = {
-            'tool use': Timer(1500, self.use_tool),
+            'tool use': Timer(600, self.use_tool),
             'tool switch': Timer(200),
             'seed use': Timer(350, self.use_seed),
             'seed switch': Timer(200),
@@ -177,7 +177,7 @@ class Player(pygame.sprite.Sprite):
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt):
-        self.frame_index += 5 * dt
+        self.frame_index += 13 * dt
         if self.frame_index >= len(self.animations[self.status]):
             if self.fishing.fishing_status:
                 self.frame_index = len(self.animations[self.status]) - 1
