@@ -170,6 +170,18 @@ class Level:
                                   "move_right": import_folder(
                                       '../graphics/big_cow/'
                                       'move_right'),
+                                  "sit": import_folder(
+                                      '../graphics/big_cow/'
+                                      'sit'),
+                                  "sit_idle": import_folder(
+                                      '../graphics/big_cow/'
+                                      'sit_idle'),
+                                  "sleep": import_folder(
+                                      '../graphics/big_cow/'
+                                      'sleep'),
+                                  "stand_up": import_folder(
+                                      '../graphics/big_cow/'
+                                      'stand_up'),
                                   }
 
                     Cow(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
