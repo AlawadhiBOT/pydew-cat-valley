@@ -26,7 +26,7 @@ class Level:
         self.interaction_sprites = pygame.sprite.Group()
         self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
 
-        self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
+        self.soil_layer = None
         self.level_no = 0
         self.setup()
         self.overlay = Overlay(self.player)
@@ -74,6 +74,9 @@ class Level:
             self.water_sprites = pygame.sprite.Group()
             self.interaction_sprites = pygame.sprite.Group()
             self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
+
+            self.soil_layer = SoilLayer(self.all_sprites,
+                                        self.collision_sprites)
 
             tmx_data = load_pygame('../data/map.tmx')
 
