@@ -133,6 +133,15 @@ class Cow(NeutralMob):
         self.detection_area = ((self.rect.x - 500, self.rect.y - 500),
                                (self.rect.x + 500, self.rect.y + 500))
 
+        # need to make attribute multiplier so that I can more accurately
+        # calculate delta time for each action
+
+        # Also need some precomputed randomizer of actions
+        # maybe randint is a good choice for what actions I can do, but
+        # obviously need to account for the fact that I need to stand up if
+        # the cow is sleeping before starting to move.
+
+
     def animate(self, dt):
         self.frame_index += 0.5 * dt * len(self.frames[self.status])
         if self.frame_index >= len(self.frames[self.status]):
