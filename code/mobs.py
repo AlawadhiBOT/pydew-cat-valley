@@ -4,6 +4,7 @@ import pygame
 from timer import Timer
 from random import choice, randint, random
 
+
 class NeutralMob(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
                  player_pos: Callable):
@@ -111,7 +112,8 @@ class Slime(NeutralMob):
 
     def slime(self):
         """
-        Added this function in order for it to be easier for the player to hit the slime.
+        Added this function in order for it to be easier for the player to hit
+        the slime.
         :return: pygame rect which has the hitbox of the slime
         """
         self.hitbox = self.rect.copy().inflate(self.rect.width * 0.2,
@@ -133,10 +135,7 @@ class Cow(NeutralMob):
         self.detection_area = ((self.rect.x - 250, self.rect.y - 250),
                                (self.rect.x + 250, self.rect.y + 250))
 
-        self.speed = self.default_speed = 40
-        self.pathing = False
-
-        self.speed = self.default_speed = 40
+        self.speed = self.default_speed = 50
         self.pathing = False
 
         # need to make attribute multiplier so that I can more accurately
@@ -150,9 +149,13 @@ class Cow(NeutralMob):
                                "sit": 3, "sit_idle": 4, "sleep": 5,
                                "stand_up": 6, "grass_find": 7, "munch": 8}
 
-
-    def animate(self, dt):
-        self.frame_index += 0.5 * dt * len(self.frames[self.status])
+    def animate(self, dt: float):
+        """
+        Animates the cow
+        :param dt: delta time
+        :return: None
+        """
+        self.frame_index += 0.5 * len(self.frames[self.status]) * dt
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
             if not self.pathing:
@@ -167,17 +170,23 @@ class Cow(NeutralMob):
         self.rect.y += self.direction.y * self.speed * dt
 
     def action_picker(self):
+        """
+        Picks the next action for the cow to perform
+        :return: None
+        """
         if self.action_indices[self.status] <= 2 or \
-                self.action_indices[self.status] == 6:
+                self.action_indices[self.status] >= 6:
             # random.choice
             self.status = choice(["idle", "move_left", "move_right",
-                                  "sit"])
+                                  "sit", "grass_find", "munch"])
             if self.status == "move_left":
-                self.direction.x = randint(-1, 0)
+                self.direction.x = -1
                 self.direction.y = randint(-1, 1)
+                self.speed = (self.default_speed - 20) * random() + 30
             elif self.status == "move_right":
-                self.direction.x = randint(0, 1)
+                self.direction.x = 1
                 self.direction.y = randint(-1, 1)
+                self.speed = (self.default_speed - 20) * random() + 20
             else:
                 self.direction.x = self.direction.y = 0
 
@@ -185,6 +194,10 @@ class Cow(NeutralMob):
             self.status = choice(["sit_idle", "sleep", "stand_up"])
 
     def move(self):
+        """
+        When the player approaches the cow, the cow begins pathing towards the player
+        :return: None
+        """
         player_pos = self.player_pos_func()
         if self.detection_area[0][0] < \
                 player_pos[0] < self.detection_area[1][0] and \
@@ -216,9 +229,12 @@ class Cow(NeutralMob):
                                                self.rect.height * 0.75)
         return self.hitbox
 
-    def update(self, dt):
+    def update(self, dt:float ):
+        """
+        Update method, which happens every frame
+        :param dt: delta time
+        :return: None
+        """
         # self.player_dmg_timer.update()
         self.move()
         self.animate(dt)
-
-

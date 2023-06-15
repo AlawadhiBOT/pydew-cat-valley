@@ -6,8 +6,8 @@ SCREEN_HEIGHT = 810
 TILE_SIZE = 64
 
 OVERLAY_POSITIONS = {
-    'tool': (40, SCREEN_HEIGHT - 15),
-    'seed': (70, SCREEN_HEIGHT - 5),
+    'tool': (SCREEN_WIDTH / 35, SCREEN_HEIGHT - 15),
+    'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
     'stamina': (15, 15),
     'xp': (15, 50)}
 
@@ -39,9 +39,13 @@ APPLE_POS = {
     "green_tree": [(30, 24), (60, 65), (50, 50), (16, 40), (45, 50), (42, 70)],
 }
 
+# tomato originally 0.7
 GROW_SPEED = {
+    'wheat': 1,
+    'tomato': 1,
     'corn': 1,
-    'tomato': 0.7
+    'carrot': 1,
+    'cabbage': 1
 }
 
 SALE_PRICES = {

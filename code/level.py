@@ -182,6 +182,12 @@ class Level:
                                   "stand_up": import_folder(
                                       '../graphics/big_cow/'
                                       'stand_up'),
+                                  "grass_find": import_folder(
+                                      '../graphics/big_cow/'
+                                      'grass_find'),
+                                  "munch": import_folder(
+                                      '../graphics/big_cow/'
+                                      'munch'),
                                   }
 
                     Cow(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),

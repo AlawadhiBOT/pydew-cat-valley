@@ -17,7 +17,6 @@ General Game stuff:
 - Slimes drops undecided
 - Sword level undecided, but should have a bigger hitbox
 - Game needs some hints or signs
-- Add ability to go back to home map
 - Add seasons
 - Make an area where you can make a certain type of building, like a farm
 

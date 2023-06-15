@@ -64,7 +64,7 @@ class Player(pygame.sprite.Sprite):
         self.selected_tool = self.tools[self.tool_index]
 
         # seeds
-        self.seeds = ['corn', 'tomato']
+        self.seeds = ['wheat', 'tomato', 'corn', 'carrot', 'cabbage']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
 
@@ -86,10 +86,9 @@ class Player(pygame.sprite.Sprite):
             'fish': stats[1][4]
         }
         # seed inventory
-        self.seed_inventory = {
-            'corn': stats[2][0],
-            'tomato': stats[2][1]
-        }
+        self.seed_inventory = {}
+        for ind, element in enumerate(self.seeds):
+            self.seed_inventory[element] = stats[2][ind]
 
         # interaction
         self.tree_sprites = sprite_dict["tree_sprites"]
