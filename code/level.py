@@ -25,6 +25,7 @@ class Level:
         self.water_sprites = pygame.sprite.Group()
         self.interaction_sprites = pygame.sprite.Group()
         self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
+        self.cow_sprites = pygame.sprite.Group()
 
         self.soil_layer = None
         self.level_no = 0
@@ -34,7 +35,7 @@ class Level:
 
         # sky
         self.rain = Rain(self.all_sprites)
-        self.raining = randint(0, 10) > 7
+        self.raining = randint(0, 10) > -1
         self.soil_layer.raining = self.raining
         self.sky = Sky()
 
@@ -44,7 +45,7 @@ class Level:
 
         # inventory
         self.inventory_active = False
-        self.inventory = Inventory(self.player, self.toggle_inventory)
+        #self.inventory = Inventory(self.player, self.toggle_inventory)
 
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')
@@ -69,12 +70,12 @@ class Level:
         """
         if self.level_no == 0:
             self.all_sprites = CameraGroup()
-            self.collision_sprites = pygame.sprite.Group()
-            self.tree_sprites = pygame.sprite.Group()
-            self.water_sprites = pygame.sprite.Group()
-            self.interaction_sprites = pygame.sprite.Group()
-            self.slime_sprites = pygame.sprite.Group()  # used in forest, for now
-            self.cow_sprites = pygame.sprite.Group()
+            self.collision_sprites.empty()
+            self.tree_sprites.empty()
+            self.water_sprites.empty()
+            self.interaction_sprites.empty()
+            self.slime_sprites.empty()  # used in forest, for now
+            self.cow_sprites.empty()
 
             self.soil_layer = SoilLayer(self.all_sprites,
                                         self.collision_sprites)
@@ -205,12 +206,12 @@ class Level:
             tmx_data = load_pygame('../data/Tilesets/Forest.tmx')
 
             self.all_sprites = CameraGroup()
-            self.collision_sprites = pygame.sprite.Group()
-            self.tree_sprites = pygame.sprite.Group()
-            self.water_sprites = pygame.sprite.Group()
-            self.interaction_sprites = pygame.sprite.Group()
-            self.slime_sprites = pygame.sprite.Group()
-            self.cow_sprites = pygame.sprite.Group()
+            self.collision_sprites.empty()
+            self.tree_sprites.empty()
+            self.water_sprites.empty()
+            self.interaction_sprites.empty()
+            self.slime_sprites.empty()  # used in forest, for now
+            self.cow_sprites.empty()
 
             # fences
             for x, y, surf in tmx_data.get_layer_by_name('Fence').tiles():
@@ -302,7 +303,7 @@ class Level:
 
             # sets-up overlay and inventory again
             self.overlay = Overlay(self.player)
-            self.inventory = Inventory(self.player, self.toggle_inventory)
+            # self.inventory = Inventory(self.player, self.toggle_inventory)
             self.active_music.stop()
             self.active_music = self.forest_theme
             self.active_music.set_volume(0.5)
@@ -382,8 +383,13 @@ class Level:
 
         # apples on trees
         for tree in self.tree_sprites.sprites():
-            for apple in tree.apple_sprites.sprites():
-                apple.kill()
+            try:
+                for apple in tree.apple_sprites.sprites():
+                    apple.kill()
+                    # TODO Fix bug
+            except AttributeError:
+                print(tree)
+                print(tree.pos)
             if tree.alive:
                 tree.create_fruit()
             else:
@@ -414,6 +420,7 @@ class Level:
                     x = plant.rect.centery // TILE_SIZE
                     y = plant.rect.centerx // TILE_SIZE
                     self.soil_layer.grid[x][y].remove('P')
+
 
     def run(self, dt: float):
         """

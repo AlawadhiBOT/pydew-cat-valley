@@ -17,6 +17,23 @@ PLAYER_TOOL_OFFSET = {
     'up': Vector2(0, -10),
     'down': Vector2(0, 50)}
 
+PLANT_OFFSET = {
+    'wheat': -16,
+    'tomato': -8,
+    'corn': -16,
+    'cabbage': -16,
+    'carrot': -16
+}
+
+# works as an adjustment to deal with tall plants
+BIG_PLANT_OFFSET = {
+    'wheat': 0,
+    'tomato': 0,
+    'corn': 16,
+    'cabbage': 0,
+    'carrot': 0
+}
+
 LAYERS = {
     'water': 0,
     'ground': 1,

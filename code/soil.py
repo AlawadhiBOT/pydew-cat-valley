@@ -44,7 +44,7 @@ class Plant(pygame.sprite.Sprite):
 
         # sprite setup
         self.image = self.frames[self.age]
-        self.y_offset = -16 if plant_type == "corn" else -8
+        self.y_offset = PLANT_OFFSET[self.plant_type]
         self.rect = self.image.get_rect(midbottom=soil.rect.midbottom +
                                                   pygame.math.Vector2(0, self.y_offset))
         self.z = LAYERS['ground plant']
@@ -63,11 +63,21 @@ class Plant(pygame.sprite.Sprite):
                 self.harvestable = True
 
             self.image = self.frames[int(self.age)]
-            self.rect = self.image.get_rect(midbottom=self.soil.rect.midbottom +
-                                                      pygame.math.Vector2
-                                                      (0, self.y_offset))
+            if self.age > 2:
+                self.rect = self.image.get_rect(midbottom=
+                                                self.soil.rect.midbottom +
+                                                pygame.math.Vector2
+                                                (0, self.y_offset))
+            else:
+                self.rect = self.image.get_rect(midbottom=
+                                                self.soil.rect.midbottom +
+                                                pygame.math.Vector2
+                                                (0, self.y_offset +
+                                                 BIG_PLANT_OFFSET
+                                                 [self.plant_type]))
 
 
+# noinspection PyCompatibility
 class SoilLayer:
     grid: list[list[str]]
 
@@ -177,7 +187,7 @@ class SoilLayer:
         Plants a seed in the relevant soil tile
         :param target_pos: target location of seed planting
         :param selected_seed: the seed type which will be planted
-        :return: None
+        :return: boolean indicating success or fail in planting
         """
         for soil_sprite in self.soil_sprites:
             if soil_sprite.rect.collidepoint(target_pos):
