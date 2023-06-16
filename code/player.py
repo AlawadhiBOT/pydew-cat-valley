@@ -64,6 +64,8 @@ class Player(pygame.sprite.Sprite):
         self.selected_tool = self.tools[self.tool_index]
 
         # seeds
+        # if you make a change here, remember that it may not reflect on the
+        # csv
         self.seeds = ['wheat', 'tomato', 'corn', 'carrot', 'cabbage']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
@@ -78,13 +80,17 @@ class Player(pygame.sprite.Sprite):
         self.money = stats[0][4]
 
         # inventory
+        # manually initiate these, if other things need to be added,
+        # remember to adjust the csv accordingly
         self.item_inventory = {
             'wood': stats[1][0],
-            'apple': stats[1][1],
-            'corn': stats[1][2],
-            'tomato': stats[1][3],
-            'fish': stats[1][4]
+            'fish': stats[1][1],
+            'apple': stats[1][2],
         }
+        # now do loop for the rest
+        for ind, element in enumerate(self.seeds):
+            self.item_inventory[element] = stats[1][ind]
+
         # seed inventory
         self.seed_inventory = {}
         for ind, element in enumerate(self.seeds):
@@ -360,12 +366,21 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
         f = open('../data/player_info.csv', 'w')
         f.write('xp,level,max_xp,stamina,max_stamina,money\n')
-        f.write('inventory\nseed inventory\n')
+
+        items = "".join([f'{key},' for key in self.item_inventory.keys()])
+        f.write(items[:-1]+"\n")
+        seeds = "".join([f'{key} seed,' for key in self.seed_inventory.keys()])
+        f.write(seeds[:-1]+"\n")
+
         f.write(f'{self.xp},{self.level},{self.max_xp},'
                 f'{self.stamina},{self.max_stamina},'
                 f'{self.money}\n')
-        f.write(f'{str(self.item_inventory.values())[13:-2]}\n')
-        f.write(f'{str(self.seed_inventory.values())[13:-2]}')
+
+        item_vals = "".join([f'{val},' for val in self.item_inventory.values()])
+        f.write(item_vals[:-1] + "\n")
+        seed_vals = "".join([f'{val},' for val in self.seed_inventory.values()])
+        f.write(seed_vals[:-1] + "\n")
+
         f.close()
 
     def update(self, dt):
