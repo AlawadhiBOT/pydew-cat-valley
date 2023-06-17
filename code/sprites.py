@@ -80,7 +80,9 @@ class Tree(Generic):
         self.stump_surf = pygame.image.load(stump_path).convert_alpha()
 
         # apples
-        self.apple_surf = pygame.image.load('../graphics/fruit/apple.png')
+        self.fruit_type = choice(["apple", "orange", "pear", "peach"])
+        self.apple_surf = pygame.image.load(f'../graphics/fruit/'
+                                            f'{self.fruit_type}.png')
         self.apple_pos = APPLE_POS[name]
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
@@ -111,7 +113,7 @@ class Tree(Generic):
                 surf=random_apple.image,
                 groups=self.groups()[0],
                 z=LAYERS['fruit'])
-            self.player_add('apple')
+            self.player_add(self.fruit_type)
             random_apple.kill()
 
     def create_fruit(self):

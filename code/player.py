@@ -88,10 +88,14 @@ class Player(pygame.sprite.Sprite):
             'wood': stats[1][0],
             'fish': stats[1][1],
             'apple': stats[1][2],
+            'orange': stats[1][3],
+            'pear': stats[1][4],
+            'peach': stats[1][5],
         }
         # now do loop for the rest
         for ind, element in enumerate(self.seeds):
-            self.item_inventory[element] = stats[1][ind]
+            if ind > 5:
+                self.item_inventory[element] = stats[1][ind]
 
         # seed inventory
         self.seed_inventory = {}
