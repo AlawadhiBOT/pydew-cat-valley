@@ -1,6 +1,6 @@
-xp
-wood,fish,apple,wheat,tomato,corn,carrot,cabbage
-wheat seed,tomato seed,corn seed,carrot seed,cabbage seed,
+xp,level,max_xp,stamina,max_stamina,money
+wood,fish,apple,wheat,tomato,corn,carrot,cabbage,overgine,tulip,lettuce,pumpkin,turnip,bell_pepper,beetroot,blue_star,edamame
+wheat seed,tomato seed,corn seed,carrot seed,cabbage seed,overgine seed,tulip seed,lettuce seed,pumpkin seed,turnip seed,bell_pepper seed,beetroot seed,blue_star seed,edamame seed
 37,4,62,200,200,200
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1
+1,1,1,1,1,1,1,1,1,1,1,1,1
