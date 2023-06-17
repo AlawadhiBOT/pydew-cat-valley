@@ -68,7 +68,7 @@ class Level:
         :param level_no: This refers to the current location, by default is 0
         1 will be used for forest map
         """
-        if self.level_no == 0:
+        if self.level_no == MAP_NUMBERS["Starting"]:
             self.all_sprites = CameraGroup()
             self.collision_sprites.empty()
             self.tree_sprites.empty()

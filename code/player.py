@@ -65,8 +65,10 @@ class Player(pygame.sprite.Sprite):
 
         # seeds
         # if you make a change here, remember that it may not reflect on the
-        # csv
-        self.seeds = ['wheat', 'tomato', 'corn', 'carrot', 'cabbage']
+        # csv and in settings
+        self.seeds = ['wheat', 'tomato', 'corn', 'carrot', 'cabbage',
+                      'overgine', 'tulip', 'lettuce', 'pumpkin', 'turnip',
+                      'bell_pepper', 'beetroot', 'blue_star', 'edamame']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
 

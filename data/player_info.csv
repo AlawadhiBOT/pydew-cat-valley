@@ -1,6 +1,6 @@
-xp,level,max_xp,stamina,max_stamina,money
+xp
 wood,fish,apple,wheat,tomato,corn,carrot,cabbage
-wheat seed,tomato seed,corn seed,carrot seed,cabbage seed
+wheat seed,tomato seed,corn seed,carrot seed,cabbage seed,
 37,4,62,200,200,200
-0,0,0,0,0,0,0,0
-2,2,2,2,3
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1

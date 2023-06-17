@@ -10,7 +10,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),
                                               pygame.RESIZABLE)
-        pygame.display.set_caption('Sprout land')
+        pygame.display.set_caption('PyDew Cat Valley')
         self.clock = pygame.time.Clock()
         self.level = Level()
 

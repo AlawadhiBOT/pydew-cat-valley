@@ -22,7 +22,16 @@ PLANT_OFFSET = {
     'tomato': -8,
     'corn': -16,
     'cabbage': -16,
-    'carrot': -16
+    'carrot': -16,
+    'overgine': -16,
+    'tulip': -16,
+    'lettuce': -16,
+    'pumpkin': -16,
+    'turnip': -16,
+    'bell_pepper': -16,
+    'beetroot': -16,
+    'blue_star': -16,
+    'edamame': -16
 }
 
 # works as an adjustment to deal with tall plants
@@ -31,7 +40,16 @@ BIG_PLANT_OFFSET = {
     'tomato': 0,
     'corn': 16,
     'cabbage': 0,
-    'carrot': 0
+    'carrot': 0,
+    'overgine': 0,
+    'tulip': 0,
+    'lettuce': 0,
+    'pumpkin': 0,
+    'turnip': 0,
+    'bell_pepper': 0,
+    'beetroot': 0,
+    'blue_star': 0,
+    'edamame': 0
 }
 
 LAYERS = {
@@ -59,10 +77,19 @@ APPLE_POS = {
 # tomato originally 0.7
 GROW_SPEED = {
     'wheat': 1,
-    'tomato': 1,
+    'tomato': 0.7,
     'corn': 1,
     'carrot': 1,
-    'cabbage': 1
+    'cabbage': 1,
+    'overgine': 1,
+    'tulip': 1,
+    'lettuce': 1,
+    'pumpkin': 1,
+    'turnip': 1,
+    'bell_pepper': 1,
+    'beetroot': 1,
+    'blue_star': 1,
+    'edamame': 1
 }
 
 SALE_PRICES = {
