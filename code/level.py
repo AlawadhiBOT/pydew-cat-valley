@@ -29,23 +29,6 @@ class Level:
 
         self.soil_layer = None
         self.level_no = 0
-        self.setup()
-        self.overlay = Overlay(self.player)
-        self.transition = Transition(self.reset, self.player)
-
-        # sky
-        self.rain = Rain(self.all_sprites)
-        self.raining = randint(0, 10) > -1
-        self.soil_layer.raining = self.raining
-        self.sky = Sky()
-
-        # shop
-        self.shop_active = False
-        self.menu = Menu(self.player, self.toggle_shop)
-
-        # inventory
-        self.inventory_active = False
-        #self.inventory = Inventory(self.player, self.toggle_inventory)
 
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')
@@ -61,6 +44,9 @@ class Level:
 
         # mobs stuff
         self.mob_area = {}
+
+        # setup
+        self.setup()
 
     def setup(self):
         """
@@ -166,8 +152,8 @@ class Level:
                     cow_frames = {"idle": import_folder('../graphics/big_cow/'
                                                         'idle'),
                                   "move_left": import_folder(
-                                                        '../graphics/big_cow/'
-                                                        'move_left'),
+                                      '../graphics/big_cow/'
+                                      'move_left'),
                                   "move_right": import_folder(
                                       '../graphics/big_cow/'
                                       'move_right'),
@@ -202,6 +188,29 @@ class Level:
                 surf=pygame.image.load(
                     '../graphics/world/ground 2.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
+
+            self.active_music.stop()
+            self.active_music = self.music
+            self.active_music.set_volume(0.3)
+            self.active_music.play()
+
+            self.overlay = Overlay(self.player)
+            self.transition = Transition(self.reset, self.player)
+
+            # sky
+            self.rain = Rain(self.all_sprites)
+            self.raining = randint(0, 10) > -1
+            self.soil_layer.raining = self.raining
+            self.sky = Sky()
+
+            # shop
+            self.shop_active = False
+            self.menu = Menu(self.player, self.toggle_shop)
+
+            # inventory
+            self.inventory_active = False
+            # self.inventory = Inventory(self.player, self.toggle_inventory)
+
         else:
             tmx_data = load_pygame('../data/Tilesets/Forest.tmx')
 
@@ -301,13 +310,27 @@ class Level:
                     '../graphics/world/Forest.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
 
-            # sets-up overlay and inventory again
-            self.overlay = Overlay(self.player)
-            # self.inventory = Inventory(self.player, self.toggle_inventory)
             self.active_music.stop()
             self.active_music = self.forest_theme
             self.active_music.set_volume(0.5)
             self.active_music.play()
+
+            self.overlay = Overlay(self.player)
+            self.transition = Transition(self.reset, self.player)
+
+            # sky
+            self.rain = Rain(self.all_sprites)
+            self.raining = randint(0, 10) > -1
+            self.soil_layer.raining = self.raining
+            self.sky = Sky()
+
+            # shop
+            self.shop_active = False
+            self.menu = Menu(self.player, self.toggle_shop)
+
+            # inventory
+            self.inventory_active = False
+            # self.inventory = Inventory(self.player, self.toggle_inventory)
 
     def play_fishing_theme(self):
         """
@@ -420,7 +443,6 @@ class Level:
                     x = plant.rect.centery // TILE_SIZE
                     y = plant.rect.centerx // TILE_SIZE
                     self.soil_layer.grid[x][y].remove('P')
-
 
     def run(self, dt: float):
         """
