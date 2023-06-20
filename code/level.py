@@ -321,7 +321,7 @@ class Level:
             self.active_music.set_volume(0.5)
             self.active_music.play()
 
-            self.overlay = Overlay(self.player)
+            self.overlay = Overlay(self.player, self.held_items)
             self.transition = Transition(self.reset, self.player)
 
             # sky
