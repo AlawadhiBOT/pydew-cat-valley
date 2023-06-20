@@ -5,6 +5,7 @@ from settings import *
 from timer import Timer
 from player import Player
 
+
 class Menu:
     def __init__(self, player: Player, toggle_menu: Callable):
 
@@ -69,8 +70,8 @@ class Menu:
                                      self.height)
 
         # buy/sell text surface
-        self.buy_text = self.font.render(' '*6 + 'buy', False, 'Black')
-        self.sell_text = self.font.render(' '*7 + 'sell', False, 'Black')
+        self.buy_text = self.font.render(' ' * 6 + 'buy', False, 'Black')
+        self.sell_text = self.font.render(' ' * 7 + 'sell', False, 'Black')
 
     def input(self):
         # get the input and then if the player presses esc, close the menu
@@ -163,9 +164,11 @@ class Menu:
 
 
 class Inventory:
-    def __init__(self, player, toggle_inventory):
+    def __init__(self, player, toggle_inventory, items: list):
         self.player = player
         self.toggle_inventory = toggle_inventory
+        self.items = items
+
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
 
@@ -180,8 +183,12 @@ class Inventory:
         self.item_surfs = {key: '' for key in
                            self.player.item_inventory.keys()}
 
-        self.inventory_image = \
-            pygame.image.load('../graphics/menus/inventory.png').convert_alpha()
+        self.inventory_image = pygame.image.load('../graphics/'
+                                                 'menus/extended UI'
+                                                 '.png').convert_alpha()
+        self.inventory_rect = self.inventory_image.get_rect(midbottom=
+                                                       OVERLAY_POSITIONS
+                                                       ['mini_inven'])
 
         self.import_surfs()
 
@@ -207,23 +214,22 @@ class Inventory:
 
     def update(self):
         self.input()
-        posx = (SCREEN_WIDTH / 2 - self.inventory_image.get_width() / 2)
-        posy = (SCREEN_HEIGHT / 2 - self.inventory_image.get_height() / 2)
-        self.display_surface.blit(self.inventory_image, (posx, posy))
+        self.display_surface.blit(self.inventory_image, self.inventory_rect)
 
-        for i, key in enumerate(self.item_surfs.keys()):
-            offset_x = posx + self.square_top_x + \
-                       (self.square_len_x + self.square_offset) * i + \
-                       self.square_len_x / 2 - \
-                       self.item_surfs[key].get_width() / 2
-            offset_y = posy + self.square_top_y + \
-                       self.square_len_y / 2 - \
-                       self.item_surfs[key].get_height() / 2
+        x_offset = -1
+        for index, key in enumerate(self.item_surfs.keys()):
+            x_offset += 1
+            if x_offset == 5:
+                x_offset = 0
+            surf = self.item_surfs[key]
+            location = self.inventory_rect.topleft + \
+                       Vector2(40 + x_offset *
+                               (surf.get_width() * 3),
+                               39 + (index // 5) * (surf.get_height() * 3))
+
+            item_rect = surf.get_rect(topleft=location)
+            self.display_surface.blit(surf, item_rect)
             text_surf = self.font.render(str(self.player.item_inventory[key]),
-                                         False, 'Black')
-            text_surf_x = posx + self.square_top_x + \
-                          (self.square_len_x + self.square_offset) * i + 5
-            text_surf_y = posy + self.square_top_y - 5
-            self.display_surface.blit(self.item_surfs[key],
-                                      (offset_x, offset_y))
-            self.display_surface.blit(text_surf, (text_surf_x, text_surf_y))
+                                         False, 'White')
+            text_rect = item_rect.bottomright + Vector2(-3, -8)
+            self.display_surface.blit(text_surf, text_rect)

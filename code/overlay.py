@@ -11,36 +11,63 @@ class Overlay:
     - Displays the selected tool in text on the bottom right
     """
 
-    def __init__(self, player: Player):
+    def __init__(self, player: Player, items: list):
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = player
+        self.items = items
 
         # imports
         overlay_path = '../graphics/overlay/'
-        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}{tool}'
-                                                   f'.png').convert_alpha()
+        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}/tools/'
+                                                   f'{tool}.png'
+                                                   ).convert_alpha()
                            for tool in player.tools}
         self.seeds_surf = {seed: pygame.image.load(f'{overlay_path}{seed}'
                                                    f'.png').convert_alpha()
                            for seed in player.seeds}
 
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
-        # options
-        self.width = 400
-        self.space = 10
-        self.padding = 8
+
+        # overlay
+        self.overlay_surf = pygame.image.load('../graphics/overlay/tools/'
+                                              'tools.png').convert_alpha()
+        self.overlay_rect = self.overlay_surf.get_rect(midbottom=
+                                                       OVERLAY_POSITIONS
+                                                       ['mini_inven'])
 
     def display(self):
+        # inventory
+        self.display_surface.blit(self.overlay_surf, self.overlay_rect)
+
+        for index, item in enumerate(self.items):
+            if item in self.player.tools:
+                # for the calculation, perhaps it may be best to use the size of
+                # each box (52x52)
+                surf = self.tools_surf[item]
+                location = self.overlay_rect.topleft + \
+                           Vector2(30 + index * (20 + surf.get_width()),
+                                   29)
+
+            elif item in self.player.seeds:
+                surf = self.seeds_surf[item]
+                location = self.overlay_rect.topleft + \
+                           Vector2(30 + index * (20 + surf.get_width()),
+                                   29)
+
+            item_rect = surf.get_rect(topleft=location)
+            self.display_surface.blit(surf, item_rect)
+
         # tools
-        tools_surf = self.tools_surf[self.player.selected_tool]
-        tool_rect = tools_surf.get_rect(midbottom=OVERLAY_POSITIONS['tool'])
-        self.display_surface.blit(tools_surf, tool_rect)
+        # tools_surf = self.tools_surf[self.player.selected_tool]
+        # tool_rect = tools_surf.get_rect(topleft=self.overlay_rect.topleft +
+        #                                         Vector2(30, 29))
+        # self.display_surface.blit(tools_surf, tool_rect)
 
         # seeds
-        seed_surf = self.seeds_surf[self.player.selected_seed]
-        seed_rect = seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
-        self.display_surface.blit(seed_surf, seed_rect)
+        # seed_surf = self.seeds_surf[self.player.selected_seed]
+        # seed_rect = seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
+        # self.display_surface.blit(seed_surf, seed_rect)
 
         # stamina bar
         sta_surf = self.font.render(f'LVL:{self.player.level}\n'

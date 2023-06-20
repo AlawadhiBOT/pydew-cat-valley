@@ -6,8 +6,9 @@ SCREEN_HEIGHT = 810
 TILE_SIZE = 64
 
 OVERLAY_POSITIONS = {
-    'tool': (SCREEN_WIDTH / 35, SCREEN_HEIGHT - 15),
     'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
+    'mini_inven': (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10),
+    'tool': (SCREEN_WIDTH / 2 + 10, SCREEN_HEIGHT - 10 + 10),
     'stamina': (15, 15),
     'xp': (15, 50)}
 

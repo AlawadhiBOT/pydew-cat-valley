@@ -30,6 +30,11 @@ class Level:
         self.soil_layer = None
         self.level_no = 0
 
+        # inventory
+        self.inventory = None
+        self.overlay = None
+        self.held_items = ['hoe', 'axe', 'water', 'fishing']
+
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')
         self.success.set_volume(0.3)
@@ -194,7 +199,7 @@ class Level:
             self.active_music.set_volume(0.3)
             self.active_music.play()
 
-            self.overlay = Overlay(self.player)
+            self.overlay = Overlay(self.player, self.held_items)
             self.transition = Transition(self.reset, self.player)
 
             # sky
@@ -209,7 +214,8 @@ class Level:
 
             # inventory
             self.inventory_active = False
-            # self.inventory = Inventory(self.player, self.toggle_inventory)
+            self.inventory = Inventory(self.player, self.toggle_inventory,
+                                       self.held_items)
 
         else:
             tmx_data = load_pygame('../data/Tilesets/Forest.tmx')
