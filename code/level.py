@@ -412,13 +412,8 @@ class Level:
 
         # apples on trees
         for tree in self.tree_sprites.sprites():
-            try:
-                for apple in tree.apple_sprites.sprites():
-                    apple.kill()
-                    # TODO Fix bug
-            except AttributeError:
-                print(tree)
-                print(tree.pos)
+            for apple in tree.apple_sprites.sprites():
+                apple.kill()
             if tree.alive:
                 tree.create_fruit()
             else:
@@ -469,9 +464,9 @@ class Level:
         else:
             self.all_sprites.update(dt)
             self.plant_collision()
+            self.overlay.display()
 
         # weather
-        self.overlay.display()
         if self.raining and not self.shop_active and not self.inventory_active:
             self.rain.update()
 

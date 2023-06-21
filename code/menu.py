@@ -7,6 +7,10 @@ from player import Player
 
 
 class Menu:
+    """
+    This class is used for the shop, accessed by pressing "ENTER" near the
+    trader, which is the brown cat sprite.
+    """
     def __init__(self, player: Player, toggle_menu: Callable):
 
         # general setup
@@ -164,6 +168,10 @@ class Menu:
 
 
 class Inventory:
+    """
+    This class is used for the inventory, accessed by pressing "i" and exited
+    by pressing "ESCAPE".
+    """
     def __init__(self, player, toggle_inventory, items: list):
         self.player = player
         self.toggle_inventory = toggle_inventory
@@ -171,13 +179,6 @@ class Inventory:
 
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
-
-        self.inventory_rows = 7
-        self.inventory_cols = 5
-
-        self.square_top_x, self.square_top_y = INVENTORY_OFFSETS[0]
-        self.square_len_x, self.square_len_y = INVENTORY_OFFSETS[1]
-        self.square_offset = INVENTORY_OFFSETS[2]
 
         # corn and tomato x2, say it's seeds
         self.item_surfs = {key: '' for key in
@@ -198,7 +199,7 @@ class Inventory:
     def import_surfs(self):
         for item in self.item_surfs.keys():
             full_path = f'../graphics/menus/inventory/{item}.png'
-            image_surf = pygame.image.load(full_path).convert()
+            image_surf = pygame.image.load(full_path).convert_alpha()
             image_surf.set_colorkey((0, 0, 0))
             self.item_surfs[item] = image_surf
 
@@ -216,16 +217,12 @@ class Inventory:
         self.input()
         self.display_surface.blit(self.inventory_image, self.inventory_rect)
 
-        x_offset = -1
         for index, key in enumerate(self.item_surfs.keys()):
-            x_offset += 1
-            if x_offset == 5:
-                x_offset = 0
             surf = self.item_surfs[key]
             location = self.inventory_rect.topleft + \
-                       Vector2(40 + x_offset *
+                       Vector2(40 + (index % 5) *
                                (surf.get_width() * 3),
-                               39 + (index // 5) * (surf.get_height() * 3))
+                               35 + (index // 5 + 1) * (surf.get_height() * 2.6))
 
             item_rect = surf.get_rect(topleft=location)
             self.display_surface.blit(surf, item_rect)
