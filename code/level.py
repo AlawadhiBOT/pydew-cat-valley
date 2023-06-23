@@ -274,6 +274,8 @@ class Level:
                            "slime_sprites": self.slime_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
+                    # TODO make a new function for the player so that it is
+                    # not re-initialized every time
                     self.player = Player(pos=(obj.x, obj.y),
                                          sprite_dict=sprite_dict,
                                          toggle_shop=self.toggle_shop,
@@ -326,7 +328,7 @@ class Level:
 
             # sky
             self.rain = Rain(self.all_sprites)
-            self.raining = randint(0, 10) > -1
+            self.raining = randint(0, 10) > -7
             self.soil_layer.raining = self.raining
             self.sky = Sky()
 

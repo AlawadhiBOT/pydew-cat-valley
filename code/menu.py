@@ -202,7 +202,7 @@ class Inventory:
                                                  '.png').convert_alpha()
         self.inventory_rect = self.inventory_image.get_rect(midbottom=
                                                             OVERLAY_POSITIONS
-                                                            ['mini_inven'])
+                                                            ['inven'])
         # selection rectangle
         self.box_img = pygame.image.load('../graphics/menus'
                                          '/selector.png')

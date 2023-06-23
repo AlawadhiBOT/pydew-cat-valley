@@ -7,10 +7,12 @@ TILE_SIZE = 64
 
 OVERLAY_POSITIONS = {
     'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
-    'mini_inven': (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10),
+    'inven': (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10),
     'tool': (SCREEN_WIDTH / 2 + 10, SCREEN_HEIGHT - 10 + 10),
     'stamina': (15, 15),
-    'xp': (15, 50)}
+    'xp': (15, 50),
+    'heart': (6, 6)
+}
 
 PLAYER_TOOL_OFFSET = {
     'left': Vector2(-50, 50),

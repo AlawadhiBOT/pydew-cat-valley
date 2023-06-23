@@ -29,12 +29,31 @@ class Overlay:
 
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
 
-        # overlay
+        # toolbox overlay
         self.overlay_surf = pygame.image.load('../graphics/overlay/tools/'
                                               'tools.png').convert_alpha()
         self.overlay_rect = self.overlay_surf.get_rect(midbottom=
                                                        OVERLAY_POSITIONS
-                                                       ['mini_inven'])
+                                                       ['inven'])
+
+        # stats overlay
+        self.stats_overlay_surf = pygame.image.load('../graphics/overlay/'
+                                                    'stats/hp_gold.png')
+        self.stats_overlay_rect = self.stats_overlay_surf.get_rect(topleft=
+                                                                   (0, 0))
+        # heart surf
+        self.f_heart_surfs = [pygame.image.load('../graphics/overlay/'
+                                                'stats/heart.png')
+                              for _ in range(self.player.max_hp)]
+        self.f_heart_rects = [heart.get_rect() for heart in self.f_heart_surfs]
+        self.h_heart_surfs = [pygame.image.load('../graphics/overlay/'
+                                                'stats/half_heart.png')
+                              for _ in range(self.player.max_hp)]
+        self.h_heart_rects = [heart.get_rect() for heart in self.h_heart_surfs]
+        self.e_heart_surfs = [pygame.image.load('../graphics/overlay/'
+                                                'stats/empty_heart.png')
+                              for _ in range(self.player.max_hp)]
+        self.e_heart_rects = [heart.get_rect() for heart in self.e_heart_surfs]
 
     def display(self):
         # inventory
@@ -67,33 +86,58 @@ class Overlay:
                 text_rect = item_rect.bottomright + Vector2(-12, -24)
                 self.display_surface.blit(text_surf, text_rect)
 
-
-        # tools
-        # tools_surf = self.tools_surf[self.player.selected_tool]
-        # tool_rect = tools_surf.get_rect(topleft=self.overlay_rect.topleft +
-        #                                         Vector2(30, 29))
-        # self.display_surface.blit(tools_surf, tool_rect)
-
-        # seeds
-        # seed_surf = self.seeds_surf[self.player.selected_seed]
-        # seed_rect = seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
-        # self.display_surface.blit(seed_surf, seed_rect)
-
         # stamina bar
-        sta_surf = self.font.render(f'LVL:{self.player.level}\n'
-                                    f'STA:{self.player.stamina}/'
-                                    f'{self.player.max_stamina}\n'
-                                    f'XP:{self.player.xp}/'
-                                    f'{self.player.max_xp}\n'
-                                    f'HP:{self.player.hp}/'
-                                    f'{self.player.max_hp}',
-                                    False, 'Black')
-        sta_rect = sta_surf.get_rect(
-            topleft=OVERLAY_POSITIONS['stamina'])
+        self.display_surface.blit(self.stats_overlay_surf,
+                                  self.stats_overlay_rect)
+        # heart top left is 6, 6 and 27, 6
+        # heart width is 18, height is 20, so second heart comes 3 px after
+        # heart to make look good.
+        last_tl = OVERLAY_POSITIONS['heart']
 
-        pygame.draw.rect(self.display_surface, 'White',
-                         sta_rect.inflate(10, 10), 0, 6)
-        self.display_surface.blit(sta_surf, sta_rect)
+        adder = 0
+        for i in range(self.player.hp // 2):
+            calc = last_tl + Vector2((self.f_heart_surfs[i].get_width() + 3) *
+                                     (i % 9),
+                                     (self.f_heart_surfs[i].get_height() + 3)
+                                     * (i // 9))
+            self.f_heart_rects[i].topleft = calc
+            self.display_surface.blit(self.f_heart_surfs[i],
+                                      self.f_heart_rects[i])
+        adder += self.player.hp // 2
+        for i in range(self.player.hp % 2):
+            calc = last_tl + Vector2((self.h_heart_surfs[i].get_width() + 3)
+                                     * ((i + adder) % 9),
+                                     (self.h_heart_surfs[0].get_height() + 3)
+                                     * ((i + adder) // 9))
+            self.h_heart_rects[i].topleft = calc
+            self.display_surface.blit(self.h_heart_surfs[i],
+                                      self.h_heart_rects[i])
+
+        adder += self.player.hp % 2
+        for i in range((self.player.max_hp - self.player.hp) // 2):
+            calc = last_tl + Vector2((self.e_heart_surfs[i].get_width() + 3)
+                                     * ((i + adder) % 9),
+                                     (self.e_heart_surfs[i].get_height() + 3)
+                                     * ((i + adder) // 9))
+            self.e_heart_rects[i].topleft = calc
+            self.display_surface.blit(self.e_heart_surfs[i],
+                                      self.e_heart_rects[i])
+
+        # sta_surf = self.font.render(f'LVL:{self.player.level}\n'
+        #                             f'STA:{self.player.stamina}/'
+        #                             f'{self.player.max_stamina}\n'
+        #                             f'XP:{self.player.xp}/'
+        #                             f'{self.player.max_xp}\n'
+        #                             f'HP:{self.player.hp}/'
+        #                             f'{self.player.max_hp}',
+        #                             False, 'Black')
+        # sta_rect = sta_surf.get_rect(
+        #     topleft=OVERLAY_POSITIONS['stamina'])
+        #
+        # pygame.draw.rect(self.display_surface, 'White',
+        #                  sta_rect.inflate(10, 10), 0, 6)
+        # self.display_surface.blit(sta_surf, sta_rect)
+
         for text in self.player.display_text:
             text[2].update()
             if text[2].active:
