@@ -250,17 +250,19 @@ class Level:
 
             # slime area
             self.mob_area["slime"] = [[], []]
+            # I swapped these for h, and I commented a block of code
             max_area = [0, 0]
             min_area = [5000, 5000]
-            for obj in tmx_data.get_layer_by_name('Slime_detect'):
-                if obj.x > max_area[0]:
-                    max_area[0] = obj.x
-                if obj.x < min_area[0]:
-                    min_area[0] = obj.x
-                if obj.y > max_area[1]:
-                    max_area[1] = obj.y
-                if obj.y < min_area[1]:
-                    min_area[1] = obj.y
+            max_area, min_area = min_area, max_area
+            # for obj in tmx_data.get_layer_by_name('Slime_detect'):
+            #     if obj.x > max_area[0]:
+            #         max_area[0] = obj.x
+            #     if obj.x < min_area[0]:
+            #         min_area[0] = obj.x
+            #     if obj.y > max_area[1]:
+            #         max_area[1] = obj.y
+            #     if obj.y < min_area[1]:
+            #         min_area[1] = obj.y
 
             self.mob_area["slime"] = [min_area, max_area]
 

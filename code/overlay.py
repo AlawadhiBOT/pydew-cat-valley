@@ -149,9 +149,22 @@ class Overlay:
         self.display_surface.blit(self.gold_img, self.gold_rect)
         self.display_surface.blit(self.gold_txt_surf, self.gold_txt_rect)
 
+        # This is for h
+        self.hp_bar = self.font.render(f'HP:{self.player.hp}/'
+                                       f'{self.player.max_hp}',
+                                       False, 'Black')
+        self.hp_rect = self.hp_bar.get_rect(
+            topleft=self.stats_overlay_rect.topright + Vector2(10, 0))
+
+        # more things for h
+        pygame.draw.rect(self.display_surface, 'White',
+                         self.hp_rect.inflate(10, 10), 0, 6)
+        self.display_surface.blit(self.hp_bar, self.hp_rect)
+
     def display(self):
         self.toolbox_display()
         self.heart_gold_display()
+
         # sta_surf = self.font.render(f'LVL:{self.player.level}\n'
         #                             f'STA:{self.player.stamina}/'
         #                             f'{self.player.max_stamina}\n'
