@@ -11,6 +11,7 @@ class Menu:
     This class is used for the shop, accessed by pressing "ENTER" near the
     trader, which is the brown cat sprite.
     """
+
     def __init__(self, player: Player, toggle_menu: Callable):
 
         # general setup
@@ -204,13 +205,21 @@ class Inventory:
                                                             ['mini_inven'])
         # selection rectangle
         self.box_img = pygame.image.load('../graphics/menus'
-                                                   '/selector.png')
+                                         '/selector.png')
         self.box_rect = self.box_img.get_rect(topleft=
                                               self.inventory_rect.topleft +
                                               Vector2(26, 25))
 
         # timer
         self.timer = Timer(250)
+
+        self.item_array = [[] for _ in range((len(self.item_surfs) +
+                                              len(self.tools_surf)) // 5 + 1)]
+        for i, key in enumerate(self.tools_surf):
+            self.item_array[i // 5].append(key)
+        for i, key in enumerate(self.item_surfs):
+            self.item_array[(i + len(self.tools_surf) + 1) // 5].append(key)
+        self.curr_ind = [0, 0]
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -225,25 +234,49 @@ class Inventory:
                 self.inventory_rect[0] += 1
                 self.box_rect.left += 52 + 8
                 self.inventory_rect.left -= 1
+                self.curr_ind[0] += 1
+
                 self.timer.activate()
 
             if keys[pygame.K_a]:
                 self.inventory_rect[0] -= 1
                 self.box_rect.left -= 52 + 8
                 self.inventory_rect.left += 1
+                self.curr_ind[0] -= 1
+
                 self.timer.activate()
 
             if keys[pygame.K_w]:
                 self.inventory_rect[1] -= 1
                 self.box_rect.top -= 52 + 8
                 self.inventory_rect.top += 1
+                self.curr_ind[1] -= 1
+
                 self.timer.activate()
 
             if keys[pygame.K_s]:
                 self.inventory_rect[1] += 1
                 self.box_rect.top += 52 + 8
                 self.inventory_rect.top -= 1
+                self.curr_ind[1] += 1
+
                 self.timer.activate()
+
+        if keys[pygame.K_1]:
+            self.held_items[0] = self.item_array[
+                self.curr_ind[1]][self.curr_ind[0]]
+        if keys[pygame.K_2]:
+            self.held_items[1] = self.item_array[
+                self.curr_ind[1]][self.curr_ind[0]]
+        if keys[pygame.K_3]:
+            self.held_items[2] = self.item_array[
+                self.curr_ind[1]][self.curr_ind[0]]
+        if keys[pygame.K_4]:
+            self.held_items[3] = self.item_array[
+                self.curr_ind[1]][self.curr_ind[0]]
+        if keys[pygame.K_5]:
+            self.held_items[4] = self.item_array[
+                self.curr_ind[1]][self.curr_ind[0]]
 
         if keys[pygame.K_ESCAPE]:
             self.toggle_inventory()
@@ -258,6 +291,17 @@ class Inventory:
         self.display_surface.blit(self.inventory_image,
                                   self.inventory_rect)
 
+        # draws the tools in the inventory
+        for index, key in enumerate(self.tools_surf.keys()):
+            if key not in self.held_items:
+                surf = self.tools_surf[key]
+                location = self.inventory_rect.topleft + \
+                           Vector2(30 + index * (surf.get_width() * 1.5),
+                                   29)
+                item_rect = surf.get_rect(topleft=location)
+                self.display_surface.blit(surf, item_rect)
+
+        # draws the items in the inventory.
         for index, key in enumerate(self.item_surfs.keys()):
             surf = self.item_surfs[key]
             location = self.inventory_rect.topleft + \
@@ -273,6 +317,8 @@ class Inventory:
             text_rect = item_rect.bottomright + Vector2(-3, -8)
             self.display_surface.blit(text_surf, text_rect)
 
+        # draws the bottom of the inventory, which is what is by the player
+        # on hand.
         for index, item in enumerate(self.held_items):
             num = -71
             if item in self.player.tools:
@@ -282,15 +328,21 @@ class Inventory:
                 location = self.inventory_rect.bottomleft + \
                            Vector2(30 + index * (20 + surf.get_width()),
                                    num)
+                item_rect = surf.get_rect(topleft=location)
+                self.display_surface.blit(surf, item_rect)
 
             elif item in self.player.seeds:
                 surf = self.seeds_surf[item]
                 location = self.inventory_rect.bottomleft + \
                            Vector2(30 + index * (20 + surf.get_width()),
                                    num)
+                item_rect = surf.get_rect(topleft=location)
+                self.display_surface.blit(surf, item_rect)
 
-            item_rect = surf.get_rect(topleft=location)
-            self.display_surface.blit(surf, item_rect)
+                text_surf = self.font.render(
+                    str(self.player.seed_inventory[item]),
+                    False, 'Green')
+                text_rect = item_rect.bottomright + Vector2(-12, -24)
+                self.display_surface.blit(text_surf, text_rect)
 
-        self.display_surface.blit(self.box_img,
-                                  self.box_rect)
+        self.display_surface.blit(self.box_img, self.box_rect)

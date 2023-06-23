@@ -33,7 +33,7 @@ class Level:
         # inventory
         self.inventory = None
         self.overlay = None
-        self.held_items = ['hoe', 'axe', 'water', 'fishing']
+        self.held_items = ['hoe', 'axe', 'water', 'fishing', 'wheat']
 
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')

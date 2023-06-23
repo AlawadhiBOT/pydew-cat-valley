@@ -45,18 +45,28 @@ class Overlay:
                 # for the calculation, perhaps it may be best to use the size of
                 # each box (52x52)
                 surf = self.tools_surf[item]
+
                 location = self.overlay_rect.topleft + \
-                           Vector2(30 + index * (20 + surf.get_width()),
+                           Vector2(30 + index * (surf.get_width() * 1.5),
                                    29)
+                item_rect = surf.get_rect(topleft=location)
+                self.display_surface.blit(surf, item_rect)
 
             elif item in self.player.seeds:
                 surf = self.seeds_surf[item]
-                location = self.overlay_rect.topleft + \
-                           Vector2(30 + index * (20 + surf.get_width()),
-                                   29)
 
-            item_rect = surf.get_rect(topleft=location)
-            self.display_surface.blit(surf, item_rect)
+                location = self.overlay_rect.topleft + \
+                           Vector2(30 + index * (surf.get_width() * 1.5),
+                                   29)
+                item_rect = surf.get_rect(topleft=location)
+                self.display_surface.blit(surf, item_rect)
+
+                text_surf = self.font.render(
+                    str(self.player.seed_inventory[item]),
+                    False, 'Green')
+                text_rect = item_rect.bottomright + Vector2(-12, -24)
+                self.display_surface.blit(text_surf, text_rect)
+
 
         # tools
         # tools_surf = self.tools_surf[self.player.selected_tool]
