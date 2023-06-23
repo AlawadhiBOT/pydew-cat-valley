@@ -37,25 +37,42 @@ class Overlay:
                                                        ['inven'])
 
         # stats overlay
-        self.stats_overlay_surf = pygame.image.load('../graphics/overlay/'
-                                                    'stats/hp_gold.png')
+        self.stats_overlay_surf = pygame.image.load('../graphics/overlay/stats'
+                                                    '/hp_gold.png'
+                                                    ).convert_alpha()
         self.stats_overlay_rect = self.stats_overlay_surf.get_rect(topleft=
                                                                    (0, 0))
         # heart surf
-        self.f_heart_surfs = [pygame.image.load('../graphics/overlay/'
-                                                'stats/heart.png')
+        self.f_heart_surfs = [pygame.image.load('../graphics/overlay/stats/'
+                                                'heart.png').convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.f_heart_rects = [heart.get_rect() for heart in self.f_heart_surfs]
-        self.h_heart_surfs = [pygame.image.load('../graphics/overlay/'
-                                                'stats/half_heart.png')
+        self.h_heart_surfs = [pygame.image.load('../graphics/overlay/stats/half'
+                                                '_heart.png').convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.h_heart_rects = [heart.get_rect() for heart in self.h_heart_surfs]
-        self.e_heart_surfs = [pygame.image.load('../graphics/overlay/'
-                                                'stats/empty_heart.png')
+        self.e_heart_surfs = [pygame.image.load('../graphics/overlay/stats/'
+                                                'empty_heart.png'
+                                                ).convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.e_heart_rects = [heart.get_rect() for heart in self.e_heart_surfs]
+        # gold overlay
+        self.gold_img = pygame.image.load('../graphics/overlay/stats/'
+                                          'gold.png').convert_alpha()
+        self.gold_rect = self.gold_img.get_rect(bottomleft=
+                                                self.stats_overlay_rect.
+                                                bottomleft + Vector2(13, -11))
+        self.gold_txt_surf = self.font.render(f'{self.player.money}', False,
+                                              (182, 137, 98))
+        self.gold_txt_rect = self.gold_txt_surf.get_rect(midleft=
+                                                         self.gold_rect.midright
+                                                         + Vector2(5, 0))
 
-    def display(self):
+    def toolbox_display(self):
+        """
+        Handles the display of the toolbox
+        :return: NoneType
+        """
         # inventory
         self.display_surface.blit(self.overlay_surf, self.overlay_rect)
 
@@ -89,6 +106,12 @@ class Overlay:
         # stamina bar
         self.display_surface.blit(self.stats_overlay_surf,
                                   self.stats_overlay_rect)
+
+    def heart_gold_display(self):
+        """
+        Handles the display of the hearts and gold on the top left
+        :return: NoneType
+        """
         # heart top left is 6, 6 and 27, 6
         # heart width is 18, height is 20, so second heart comes 3 px after
         # heart to make look good.
@@ -123,6 +146,12 @@ class Overlay:
             self.display_surface.blit(self.e_heart_surfs[i],
                                       self.e_heart_rects[i])
 
+        self.display_surface.blit(self.gold_img, self.gold_rect)
+        self.display_surface.blit(self.gold_txt_surf, self.gold_txt_rect)
+
+    def display(self):
+        self.toolbox_display()
+        self.heart_gold_display()
         # sta_surf = self.font.render(f'LVL:{self.player.level}\n'
         #                             f'STA:{self.player.stamina}/'
         #                             f'{self.player.max_stamina}\n'
