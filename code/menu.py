@@ -172,39 +172,78 @@ class Inventory:
     This class is used for the inventory, accessed by pressing "i" and exited
     by pressing "ESCAPE".
     """
-    def __init__(self, player, toggle_inventory, items: list):
+
+    def __init__(self, player, toggle_inventory, held_items: list):
         self.player = player
         self.toggle_inventory = toggle_inventory
-        self.items = items
+        self.held_items = held_items
 
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
 
-        # corn and tomato x2, say it's seeds
-        self.item_surfs = {key: '' for key in
-                           self.player.item_inventory.keys()}
+        # imports
+        self.item_surfs = {item: pygame.image.load(f'../graphics/menus/'
+                                                   f'inventory/{item}.png')
+                           for item in player.item_inventory}
+
+        overlay_path = '../graphics/overlay/'
+
+        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}/tools/'
+                                                   f'{tool}.png'
+                                                   ).convert_alpha()
+                           for tool in player.tools}
+        self.seeds_surf = {seed: pygame.image.load(f'{overlay_path}{seed}'
+                                                   f'.png').convert_alpha()
+                           for seed in player.seeds}
 
         self.inventory_image = pygame.image.load('../graphics/'
                                                  'menus/extended UI'
                                                  '.png').convert_alpha()
         self.inventory_rect = self.inventory_image.get_rect(midbottom=
-                                                       OVERLAY_POSITIONS
-                                                       ['mini_inven'])
+                                                            OVERLAY_POSITIONS
+                                                            ['mini_inven'])
+        # selection rectangle
+        self.box_img = pygame.image.load('../graphics/menus'
+                                                   '/selector.png')
+        self.box_rect = self.box_img.get_rect(topleft=
+                                              self.inventory_rect.topleft +
+                                              Vector2(26, 25))
 
-        self.import_surfs()
-
-        # need to import the surface of the inventory, and put numbers on top
-        # left? of each cell to indicate amount of the rss.
-
-    def import_surfs(self):
-        for item in self.item_surfs.keys():
-            full_path = f'../graphics/menus/inventory/{item}.png'
-            image_surf = pygame.image.load(full_path).convert_alpha()
-            image_surf.set_colorkey((0, 0, 0))
-            self.item_surfs[item] = image_surf
+        # timer
+        self.timer = Timer(250)
 
     def input(self):
         keys = pygame.key.get_pressed()
+        self.timer.update()
+
+        if not self.timer.active:
+            # the -=1 is a bug that happens I could not figure out why it
+            # happened, the inventory would shift in a direction equal to
+            # the change by 1 pixel, so if I moved the box right, the inventory
+            # would move right by one pixel.
+            if keys[pygame.K_d]:
+                self.inventory_rect[0] += 1
+                self.box_rect.left += 52 + 8
+                self.inventory_rect.left -= 1
+                self.timer.activate()
+
+            if keys[pygame.K_a]:
+                self.inventory_rect[0] -= 1
+                self.box_rect.left -= 52 + 8
+                self.inventory_rect.left += 1
+                self.timer.activate()
+
+            if keys[pygame.K_w]:
+                self.inventory_rect[1] -= 1
+                self.box_rect.top -= 52 + 8
+                self.inventory_rect.top += 1
+                self.timer.activate()
+
+            if keys[pygame.K_s]:
+                self.inventory_rect[1] += 1
+                self.box_rect.top += 52 + 8
+                self.inventory_rect.top -= 1
+                self.timer.activate()
 
         if keys[pygame.K_ESCAPE]:
             self.toggle_inventory()
@@ -215,14 +254,17 @@ class Inventory:
 
     def update(self):
         self.input()
-        self.display_surface.blit(self.inventory_image, self.inventory_rect)
+
+        self.display_surface.blit(self.inventory_image,
+                                  self.inventory_rect)
 
         for index, key in enumerate(self.item_surfs.keys()):
             surf = self.item_surfs[key]
             location = self.inventory_rect.topleft + \
                        Vector2(40 + (index % 5) *
                                (surf.get_width() * 3),
-                               35 + (index // 5 + 1) * (surf.get_height() * 2.6))
+                               35 + (index // 5 + 1) *
+                               (surf.get_height() * 2.6))
 
             item_rect = surf.get_rect(topleft=location)
             self.display_surface.blit(surf, item_rect)
@@ -230,3 +272,25 @@ class Inventory:
                                          False, 'White')
             text_rect = item_rect.bottomright + Vector2(-3, -8)
             self.display_surface.blit(text_surf, text_rect)
+
+        for index, item in enumerate(self.held_items):
+            num = -71
+            if item in self.player.tools:
+                # for the calculation, perhaps it may be best to use the size of
+                # each box (52x52)
+                surf = self.tools_surf[item]
+                location = self.inventory_rect.bottomleft + \
+                           Vector2(30 + index * (20 + surf.get_width()),
+                                   num)
+
+            elif item in self.player.seeds:
+                surf = self.seeds_surf[item]
+                location = self.inventory_rect.bottomleft + \
+                           Vector2(30 + index * (20 + surf.get_width()),
+                                   num)
+
+            item_rect = surf.get_rect(topleft=location)
+            self.display_surface.blit(surf, item_rect)
+
+        self.display_surface.blit(self.box_img,
+                                  self.box_rect)

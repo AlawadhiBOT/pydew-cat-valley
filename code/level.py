@@ -412,8 +412,13 @@ class Level:
 
         # apples on trees
         for tree in self.tree_sprites.sprites():
-            for apple in tree.apple_sprites.sprites():
-                apple.kill()
+            try:
+                for apple in tree.apple_sprites.sprites():
+                    apple.kill()
+                    # TODO Fix bug
+            except AttributeError:
+                print(tree)
+                print(tree.pos)
             if tree.alive:
                 tree.create_fruit()
             else:
