@@ -9,9 +9,9 @@ OVERLAY_POSITIONS = {
     'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
     'inven': (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10),
     'tool': (SCREEN_WIDTH / 2 + 10, SCREEN_HEIGHT - 10 + 10),
-    'stamina': (15, 15),
+    'stamina': (SCREEN_WIDTH - 5, SCREEN_HEIGHT - 5),
     'xp': (15, 50),
-    'heart': (6, 6)
+    'heart': (6, 6),
 }
 
 PLAYER_TOOL_OFFSET = {
@@ -151,4 +151,13 @@ GAME_MESSAGES = {
 MAP_NUMBERS = {
     "Starting": 0,
     "Forest": 1,
+}
+
+STAMINA_COLORS = {
+    "very happy": (174, 212, 153),
+    "happy": (192, 212, 112),
+    "normal": (234, 225, 110),
+    "unhappy": (238, 186, 119),
+    "sad": (102, 65, 101),
+    "dead": (220, 224, 210)
 }

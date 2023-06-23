@@ -67,6 +67,13 @@ class Overlay:
         self.gold_txt_rect = self.gold_txt_surf.get_rect(midleft=
                                                          self.gold_rect.midright
                                                          + Vector2(5, 0))
+        # stamina bar overlay
+        self.stamina_bar_img = pygame.image.load('../graphics/overlay/'
+                                                 'stats/stamina_bar.png'
+                                                 ).convert_alpha()
+        self.stamina_bar_rect = self.stamina_bar_img.get_rect(bottomright=
+                                                              OVERLAY_POSITIONS
+                                                              ['stamina'])
 
     def toolbox_display(self):
         """
@@ -149,9 +156,44 @@ class Overlay:
         self.display_surface.blit(self.gold_img, self.gold_rect)
         self.display_surface.blit(self.gold_txt_surf, self.gold_txt_rect)
 
+    def stamina_bar_display(self):
+        """
+        Function to display the stamina bar
+        :return: NoneType
+        """
+        self.display_surface.blit(self.stamina_bar_img, self.stamina_bar_rect)
+
+        # stamina top left 4, 12
+        top_left = self.stamina_bar_rect.topleft + Vector2(4, 12)
+
+        Rect = pygame.Rect((top_left, (self.stamina_bar_img.get_width() // 2,
+                                       self.stamina_bar_img.get_height() - 24)))
+        percent_stamina = self.player.stamina/self.player.max_stamina
+        Rect = Rect.inflate(0, -(Rect.height - Rect.height*percent_stamina))
+        result = self.threshold_marker(percent_stamina)
+        pygame.draw.rect(self.display_surface,
+                         result, Rect, 0, 0)
+
+    def threshold_marker(self, percentage):
+        if percentage == 1:
+            return STAMINA_COLORS["very happy"]
+        if percentage >= .75:
+            return STAMINA_COLORS["happy"]
+        if percentage >= .50:
+            return STAMINA_COLORS["normal"]
+        if percentage >= .25:
+            return STAMINA_COLORS["unhappy"]
+        if percentage >= 0:
+            return STAMINA_COLORS["sad"]
+        else:
+            return STAMINA_COLORS["dead"]
+
+
     def display(self):
         self.toolbox_display()
         self.heart_gold_display()
+        self.stamina_bar_display()
+
         # sta_surf = self.font.render(f'LVL:{self.player.level}\n'
         #                             f'STA:{self.player.stamina}/'
         #                             f'{self.player.max_stamina}\n'
