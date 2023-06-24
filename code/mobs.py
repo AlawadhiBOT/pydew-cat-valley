@@ -229,7 +229,7 @@ class Cow(NeutralMob):
                                                self.rect.height * 0.75)
         return self.hitbox
 
-    def update(self, dt:float ):
+    def update(self, dt: float):
         """
         Update method, which happens every frame
         :param dt: delta time
