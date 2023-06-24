@@ -1,17 +1,18 @@
 import pygame
 import sys
-from settings import *
-from level import Level
 from time import sleep
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),
-                                              pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode((0, 0),
+                                              pygame.FULLSCREEN)
         pygame.display.set_caption('PyDew Cat Valley')
+
         self.clock = pygame.time.Clock()
+
+        from level import Level
         self.level = Level()
 
     def run(self):

@@ -1,9 +1,11 @@
+import pygame.display
 from pygame.math import Vector2
 
 # SCREEN
-SCREEN_WIDTH = 1400
-SCREEN_HEIGHT = 810
+infoObject = pygame.display.Info()
+SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
 TILE_SIZE = 64
+del infoObject
 
 OVERLAY_POSITIONS = {
     'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
@@ -12,6 +14,7 @@ OVERLAY_POSITIONS = {
     'stamina': (SCREEN_WIDTH - 5, SCREEN_HEIGHT - 5),
     'xp': (15, 50),
     'heart': (6, 6),
+    'character_box': (0, SCREEN_HEIGHT)
 }
 
 PLAYER_TOOL_OFFSET = {

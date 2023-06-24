@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" persistUploadOnCheckin="false" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="alawad10@dh2010pc17.utm.utoronto.ca:22">
         <serverdata>
