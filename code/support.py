@@ -25,6 +25,20 @@ def import_folder_dict(path):
 
     return surface_dict
 
+def import_folder_dict2(path):
+    surface_dict = {}
+
+    for wrong_path, __, img_files in walk(path):
+        imgs_lst = []
+        actual_path = wrong_path.split('\\')[-1]
+        for image in img_files:
+            full_path = path + '/' + actual_path + '/' + image
+            image_surf = pygame.image.load(full_path).convert_alpha()
+            imgs_lst.append(image_surf)
+
+        surface_dict[actual_path] = imgs_lst
+
+    return surface_dict
 
 def get_stats(path):
     """

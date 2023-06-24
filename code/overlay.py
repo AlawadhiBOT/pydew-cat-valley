@@ -1,5 +1,5 @@
 import pygame
-from support import import_folder
+from support import import_folder_dict2
 from settings import *
 from player import Player
 
@@ -93,13 +93,12 @@ class Overlay:
                                                            ['character_box'])
         # character emote imports
         path = "../graphics/overlay/teemo_emotes"
-        self.teemo_emotes = {
-            "idle": import_folder(f"{path}/idle"),
-            "idle_lick": import_folder(f"{path}/idle_lick"),
-            "idle_ears": import_folder(f"{path}/idle_ears"),
-        }
+        self.teemo_emotes = import_folder_dict2(path)
         self.frame_index = 0
-        self.status = "idle_lick"
+        self.actions_index = 0
+        self.actions_list = ["idle" for _ in range(3)]
+        self.actions_list += ["idle_lick"] + self.actions_list + ["idle_ears"]
+        self.status = self.actions_list[self.actions_index]
         self.image = self.teemo_emotes[self.status][self.frame_index]
         self.image_rect = None
 
@@ -249,9 +248,15 @@ class Overlay:
         """
         self.display_surface.blit(self.chara_box_surf, self.chara_box_rect)
         
-        self.frame_index += 0.5 * len(self.teemo_emotes[self.status]) * dt
+        self.frame_index += len(self.teemo_emotes[self.status]) ** 2 * dt
         if self.frame_index >= len(self.teemo_emotes[self.status]):
             self.frame_index = 0
+
+            self.actions_index += 1
+            if self.actions_index >= len(self.actions_list):
+                self.actions_index = 0
+
+            self.status = self.actions_list[self.actions_index]
 
         self.image = self.teemo_emotes[self.status][int(self.frame_index)]
         # 33, 30 is top left for character after checking on paint.net
