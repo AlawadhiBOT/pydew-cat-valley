@@ -35,8 +35,17 @@ class Overlay:
         self.overlay_rect = self.overlay_surf.get_rect(midbottom=
                                                        OVERLAY_POSITIONS
                                                        ['inven'])
+        # xp and level overlay
+        self.xp_bar_surf = pygame.image.load('../graphics/overlay/stats/'
+                                             'xp_bar.png')
+        self.xp_bar_rect = self.xp_bar_surf.get_rect(midbottom=
+                                                     self.overlay_rect.midtop)
+        self.xp_no_surf = self.font.render(f'{self.player.level}', False,
+                                           'Green')
+        self.xp_no_rect = self.xp_no_surf.get_rect(midbottom=
+                                                   self.xp_bar_rect.midtop)
 
-        # stats overlay
+        # health and gold section overlay
         self.stats_overlay_surf = pygame.image.load('../graphics/overlay/stats'
                                                     '/hp_gold.png'
                                                     ).convert_alpha()
@@ -74,6 +83,13 @@ class Overlay:
         self.stamina_bar_rect = self.stamina_bar_img.get_rect(bottomright=
                                                               OVERLAY_POSITIONS
                                                               ['stamina'])
+        # character box
+        self.chara_box_surf = pygame.image.load('../graphics/overlay/stats/'
+                                                'character_box.png'
+                                                ).convert_alpha()
+        self.chara_box_rect = self.chara_box_surf.get_rect(bottomleft=
+                                                           OVERLAY_POSITIONS
+                                                           ['character_box'])
 
     def toolbox_display(self):
         """
@@ -113,6 +129,24 @@ class Overlay:
         # stamina bar
         self.display_surface.blit(self.stats_overlay_surf,
                                   self.stats_overlay_rect)
+
+    def xp_level_display(self):
+        """
+        Handles the display of the xp bar and the level of the player.
+        :return: NoneType
+        """
+        self.display_surface.blit(self.xp_bar_surf, self.xp_bar_rect)
+        num = 4
+        topleft = self.xp_bar_rect.topleft + Vector2(num, num)
+        percent = self.player.xp / self.player.max_xp
+        Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - 4*2) * percent,
+                                     self.xp_bar_rect.height - 4*2))
+        pygame.draw.rect(self.display_surface, 'Green',
+                         Rect, 0, 0)
+        self.xp_no_surf = self.font.render(f'{self.player.level}', False,
+                                           'Green')
+        self.display_surface.blit(self.xp_no_surf, self.xp_no_rect)
+
 
     def heart_gold_display(self):
         """
@@ -154,6 +188,8 @@ class Overlay:
                                       self.e_heart_rects[i])
 
         self.display_surface.blit(self.gold_img, self.gold_rect)
+        self.gold_txt_surf = self.font.render(f'{self.player.money}', False,
+                                              (182, 137, 98))
         self.display_surface.blit(self.gold_txt_surf, self.gold_txt_rect)
 
     def stamina_bar_display(self):
@@ -166,15 +202,22 @@ class Overlay:
         # stamina top left 4, 12
         top_left = self.stamina_bar_rect.topleft + Vector2(4, 12)
 
-        Rect = pygame.Rect((top_left, (self.stamina_bar_img.get_width() // 2,
-                                       self.stamina_bar_img.get_height() - 24)))
-        percent_stamina = self.player.stamina/self.player.max_stamina
-        Rect = Rect.inflate(0, -(Rect.height - Rect.height*percent_stamina))
+        Rect = pygame.Rect(top_left, (self.stamina_bar_img.get_width() // 2,
+                                      self.stamina_bar_img.get_height() - 24))
+        percent_stamina = self.player.stamina / self.player.max_stamina
+        Rect = Rect.inflate(0, -(Rect.height - Rect.height * percent_stamina))
         result = self.threshold_marker(percent_stamina)
         pygame.draw.rect(self.display_surface,
                          result, Rect, 0, 0)
 
-    def threshold_marker(self, percentage):
+    @staticmethod
+    def threshold_marker(percentage: float) -> tuple[int, int, int]:
+        """
+        Function serves as a way to get the color which represents the stamina the player is
+        at.
+        :param percentage: float representing the percentage stamina
+        :return: tuple containing 3 ints representing RGB colors
+        """
         if percentage == 1:
             return STAMINA_COLORS["very happy"]
         if percentage >= .75:
@@ -185,29 +228,22 @@ class Overlay:
             return STAMINA_COLORS["unhappy"]
         if percentage >= 0:
             return STAMINA_COLORS["sad"]
-        else:
-            return STAMINA_COLORS["dead"]
 
+        return STAMINA_COLORS["dead"]
+
+    def character_box_display(self):
+        """
+        Function to display character
+        :return: NoneType
+        """
+        self.display_surface.blit(self.chara_box_surf, self.chara_box_rect)
 
     def display(self):
         self.toolbox_display()
+        self.xp_level_display()
         self.heart_gold_display()
         self.stamina_bar_display()
-
-        # sta_surf = self.font.render(f'LVL:{self.player.level}\n'
-        #                             f'STA:{self.player.stamina}/'
-        #                             f'{self.player.max_stamina}\n'
-        #                             f'XP:{self.player.xp}/'
-        #                             f'{self.player.max_xp}\n'
-        #                             f'HP:{self.player.hp}/'
-        #                             f'{self.player.max_hp}',
-        #                             False, 'Black')
-        # sta_rect = sta_surf.get_rect(
-        #     topleft=OVERLAY_POSITIONS['stamina'])
-        #
-        # pygame.draw.rect(self.display_surface, 'White',
-        #                  sta_rect.inflate(10, 10), 0, 6)
-        # self.display_surface.blit(sta_surf, sta_rect)
+        # self.character_box_display()
 
         for text in self.player.display_text:
             text[2].update()

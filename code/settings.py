@@ -7,22 +7,90 @@ SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
 TILE_SIZE = 64
 del infoObject
 
+# General overlay
 OVERLAY_POSITIONS = {
     'seed': (SCREEN_WIDTH / 13, SCREEN_HEIGHT - 15),
     'inven': (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10),
     'tool': (SCREEN_WIDTH / 2 + 10, SCREEN_HEIGHT - 10 + 10),
     'stamina': (SCREEN_WIDTH - 5, SCREEN_HEIGHT - 5),
-    'xp': (15, 50),
+    'xp': "is a function of inven, use that.",
     'heart': (6, 6),
     'character_box': (0, SCREEN_HEIGHT)
 }
 
+STAMINA_COLORS = {
+    "very happy": (174, 212, 153),
+    "happy": (192, 212, 112),
+    "normal": (234, 225, 110),
+    "unhappy": (238, 186, 119),
+    "sad": (102, 65, 101),
+    "dead": (220, 224, 210)
+}
+
+GAME_MESSAGES = {
+    "TXT_BEG": (SCREEN_WIDTH - 30, SCREEN_HEIGHT - SCREEN_HEIGHT // 7),
+    "TEXT_SPACE": 10,
+    "TEXT_TIMER": 700,
+    "TEXT_CHOICES": ["SWAPPED TOOL"]
+}
+
+# player
 PLAYER_TOOL_OFFSET = {
     'left': Vector2(-50, 50),
     'right': Vector2(50, 40),
     'up': Vector2(0, -10),
     'down': Vector2(0, 50)}
 
+INVENTORY_OFFSETS = {
+    3: (38 + 19, 76),
+}
+
+PLAYER_LEVEL_STATS = {
+    "max xp": 30,
+    'dig': 1,
+    'water': 1,
+    'buy': 1,
+    'sell': 2,
+    'plant': 3,
+    'harvest': 3,
+    'fish': 3,
+    'wood': 5,
+}
+
+PLAYER_STAMINA_STATS = {
+    "stamina": 200,
+    "stamina increase": 10,
+    "dig": 5,
+    "water": 3,
+    'fishing': 2,
+    "tree": 1,
+    "plant": 1,
+    'buy': 1,
+    "sell": 1
+}
+
+# level
+LAYERS = {
+    'water': 0,
+    'ground': 1,
+    'port': 2,
+    'soil': 3,
+    'soil water': 4,
+    'rain floor': 5,
+    'house bottom': 6,
+    'ground plant': 7,
+    'main': 8,
+    'house top': 9,
+    'fruit': 10,
+    'rain drops': 11,
+}
+
+MAP_NUMBERS = {
+    "Starting": 0,
+    "Forest": 1,
+}
+
+# plant settings
 PLANT_OFFSET = {
     'wheat': -16,
     'tomato': -8,
@@ -58,21 +126,6 @@ BIG_PLANT_OFFSET = {
     'edamame': 0
 }
 
-LAYERS = {
-    'water': 0,
-    'ground': 1,
-    'port': 2,
-    'soil': 3,
-    'soil water': 4,
-    'rain floor': 5,
-    'house bottom': 6,
-    'ground plant': 7,
-    'main': 8,
-    'house top': 9,
-    'fruit': 10,
-    'rain drops': 11,
-}
-
 APPLE_POS = {
     "Small": [(18, 17), (30, 37), (12, 50), (30, 45), (20, 30), (30, 10)],
     "Large": [(30, 24), (60, 65), (50, 50), (16, 40), (45, 50), (42, 70)],
@@ -98,6 +151,7 @@ GROW_SPEED = {
     'edamame': 1
 }
 
+# shop settings
 SALE_PRICES = {
     'wood': 4,
     'apple': 2,
@@ -109,58 +163,4 @@ SALE_PRICES = {
 PURCHASE_PRICES = {
     'corn': 4,
     'tomato': 5
-}
-
-PLAYER_LEVEL_STATS = {
-    "max xp": 30,
-    'dig': 1,
-    'water': 1,
-    'buy': 1,
-    'sell': 2,
-    'plant': 3,
-    'harvest': 3,
-    'fish': 3,
-    'wood': 5,
-}
-
-PLAYER_STAMINA_STATS = {
-    "stamina": 200,
-    "stamina increase": 10,
-    "dig": 5,
-    "water": 3,
-    'fishing': 2,
-    "tree": 1,
-    "plant": 1,
-    'buy': 1,
-    "sell": 1
-}
-
-INVENTORY_OFFSETS = {
-    0: (42, 116),
-    1: (89, 89),
-    2: 5,
-    3: (38 + 19, 76),
-    4: (800, 76),
-    5: 19
-}
-
-GAME_MESSAGES = {
-    "TXT_BEG": (SCREEN_WIDTH - 30, SCREEN_HEIGHT - SCREEN_HEIGHT // 7),
-    "TEXT_SPACE": 10,
-    "TEXT_TIMER": 700,
-    "TEXT_CHOICES": ["SWAPPED TOOL"]
-}
-
-MAP_NUMBERS = {
-    "Starting": 0,
-    "Forest": 1,
-}
-
-STAMINA_COLORS = {
-    "very happy": (174, 212, 153),
-    "happy": (192, 212, 112),
-    "normal": (234, 225, 110),
-    "unhappy": (238, 186, 119),
-    "sad": (102, 65, 101),
-    "dead": (220, 224, 210)
 }
