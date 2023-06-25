@@ -155,7 +155,7 @@ class Cow(NeutralMob):
         :param dt: delta time
         :return: None
         """
-        self.frame_index += 0.5 * len(self.frames[self.status]) * dt
+        self.frame_index += 0.75 * len(self.frames[self.status]) * dt
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
             if not self.pathing:
