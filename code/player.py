@@ -168,7 +168,8 @@ class Player(pygame.sprite.Sprite):
             self.status.split('_')[0]]
 
     def use_seed(self):
-        if self.seed_inventory[self.selected_hand] > 0:
+        if self.selected_hand not in self.tools and \
+                self.seed_inventory[self.selected_hand] > 0:
             if self.soil_layer.plant_seed(self.target_pos, self.selected_hand):
                 self.seed_inventory[self.selected_hand] -= 1
                 self.stamina -= PLAYER_STAMINA_STATS['plant']
