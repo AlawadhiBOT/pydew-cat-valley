@@ -23,9 +23,9 @@ class Game:
                     sys.exit()
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_x]:
-                    self.level.music.set_volume(0)
+                    self.level.active_music.set_volume(0)
                 if keys[pygame.K_c]:
-                    self.level.music.set_volume(0.3)
+                    self.level.active_music.set_volume(0.3)
 
             dt = self.clock.tick(60) / 1000
             self.level.run(dt)
