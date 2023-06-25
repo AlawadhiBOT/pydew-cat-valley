@@ -118,6 +118,33 @@ class Player(pygame.sprite.Sprite):
         self.throw_bob = pygame.mixer.Sound('../audio/fishing.wav')
         self.throw_bob.set_volume(0.2)
 
+    def map_swap(self, pos, sprite_dict):
+        """
+        Resets some core attributes which are usually set by the __init__
+        method.
+        Function was created in order to fix the bugs of returning to the
+        forest/main map where gold/hp would be reset.
+        :param pos: tmx object representing the location of the player.
+        :param sprite_dict: Dictionary containing sprites.
+        :return: NoneType
+        """
+        # re-initialize all sprites
+        super().__init__(sprite_dict["group"])
+
+        # change the player's rect, which changes the player's pos, and by
+        # extension, the location of the hitbox
+        self.rect = self.image.get_rect(center=pos)
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.hitbox = self.rect.copy().inflate((-126, -70))
+
+        # re-setup sprite groups individually
+        self.collision_sprites = sprite_dict["collision_sprites"]
+        self.tree_sprites = sprite_dict["tree_sprites"]
+        self.water_sprites = sprite_dict["water_sprites"]
+        self.slime_sprites = sprite_dict["slime_sprites"]
+        self.interaction = sprite_dict["interaction"]
+        self.soil_layer = sprite_dict["soil_layer"]
+
     def use_tool(self):
         if self.selected_hand == 'hoe':
             self.soil_layer.get_hit(self.target_pos)

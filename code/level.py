@@ -50,6 +50,7 @@ class Level:
         self.mob_area = {}
 
         # setup
+        self.initial_set_up = True
         self.setup()
 
     def setup(self):
@@ -132,14 +133,21 @@ class Level:
                            "cow_sprites": self.cow_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
-                    self.player = Player(pos=(obj.x, obj.y),
-                                         sprite_dict=sprite_dict,
-                                         toggle_shop=self.toggle_shop,
-                                         toggle_inventory=self.toggle_inventory,
-                                         get_map_level=self.get_map_number,
-                                         set_map_level=self.set_map_number,
-                                         play_fishing_theme=
-                                         self.play_fishing_theme)
+                    if self.initial_set_up:
+                        self.player = Player(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict,
+                                             toggle_shop=self.toggle_shop,
+                                             toggle_inventory=
+                                             self.toggle_inventory,
+                                             get_map_level=self.get_map_number,
+                                             set_map_level=self.set_map_number,
+                                             play_fishing_theme=
+                                             self.play_fishing_theme)
+                        self.initial_set_up = False
+                    else:
+                        self.player.map_swap(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict)
+
                 elif obj.name == 'Bed':
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
@@ -273,16 +281,20 @@ class Level:
                            "slime_sprites": self.slime_sprites}
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
-                    # TODO make a new function for the player so that it is
-                    # not re-initialized every time
-                    self.player = Player(pos=(obj.x, obj.y),
-                                         sprite_dict=sprite_dict,
-                                         toggle_shop=self.toggle_shop,
-                                         toggle_inventory=self.toggle_inventory,
-                                         get_map_level=self.get_map_number,
-                                         set_map_level=self.set_map_number,
-                                         play_fishing_theme=
-                                         self.play_fishing_theme)
+                    if self.initial_set_up:
+                        self.player = Player(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict,
+                                             toggle_shop=self.toggle_shop,
+                                             toggle_inventory=
+                                             self.toggle_inventory,
+                                             get_map_level=self.get_map_number,
+                                             set_map_level=self.set_map_number,
+                                             play_fishing_theme=
+                                             self.play_fishing_theme)
+                        self.initial_set_up = False
+                    else:
+                        self.player.map_swap(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict)
 
                 elif obj.name == 'Slime':
                     slime_frames = {"death": import_folder('../graphics/slime/'
