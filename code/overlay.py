@@ -36,6 +36,13 @@ class Overlay:
         self.overlay_rect = self.overlay_surf.get_rect(midbottom=
                                                        OVERLAY_POSITIONS
                                                        ['inven'])
+
+        self.box_img = pygame.image.load('../graphics/overlay/tools/'
+                                         'selector.png')
+        self.box_rect = self.box_img.get_rect(topleft=
+                                              self.overlay_rect.topleft +
+                                              Vector2(26, 25))
+
         # xp and level overlay
         self.xp_bar_surf = pygame.image.load('../graphics/overlay/stats/'
                                              'xp_bar.png')
@@ -77,6 +84,7 @@ class Overlay:
         self.gold_txt_rect = self.gold_txt_surf.get_rect(midleft=
                                                          self.gold_rect.midright
                                                          + Vector2(5, 0))
+
         # stamina bar overlay
         self.stamina_bar_img = pygame.image.load('../graphics/overlay/'
                                                  'stats/stamina_bar.png'
@@ -84,6 +92,7 @@ class Overlay:
         self.stamina_bar_rect = self.stamina_bar_img.get_rect(bottomright=
                                                               OVERLAY_POSITIONS
                                                               ['stamina'])
+
         # character box
         self.chara_box_surf = pygame.image.load('../graphics/overlay/stats/'
                                                 'character_box.png'
@@ -110,6 +119,7 @@ class Overlay:
         # inventory
         self.display_surface.blit(self.overlay_surf, self.overlay_rect)
 
+        # held items rendering
         for index, item in enumerate(self.items):
             if item in self.player.tools:
                 # for the calculation, perhaps it may be best to use the size of
@@ -137,6 +147,10 @@ class Overlay:
                 text_rect = item_rect.bottomright + Vector2(-12, -24)
                 self.display_surface.blit(text_surf, text_rect)
 
+        # selector
+        self.move_box(self.player.held_items_index)
+        self.display_surface.blit(self.box_img, self.box_rect)
+
         # stamina bar
         self.display_surface.blit(self.stats_overlay_surf,
                                   self.stats_overlay_rect)
@@ -150,8 +164,8 @@ class Overlay:
         num = 4
         topleft = self.xp_bar_rect.topleft + Vector2(num, num)
         percent = self.player.xp / self.player.max_xp
-        Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - 4*2) * percent,
-                                     self.xp_bar_rect.height - 4*2))
+        Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - 4 * 2) * percent,
+                                     self.xp_bar_rect.height - 4 * 2))
         pygame.draw.rect(self.display_surface, 'Green',
                          Rect, 0, 0)
         self.xp_no_surf = self.font.render(f'{self.player.level}', False,
@@ -247,7 +261,7 @@ class Overlay:
         :return: NoneType
         """
         self.display_surface.blit(self.chara_box_surf, self.chara_box_rect)
-        
+
         self.frame_index += len(self.teemo_emotes[self.status]) ** 2 * dt
         if self.frame_index >= len(self.teemo_emotes[self.status]):
             self.frame_index = 0
@@ -265,6 +279,17 @@ class Overlay:
                                               Vector2(33, 30))
 
         self.display_surface.blit(self.image, self.image_rect)
+
+    def move_box(self, num):
+        """
+        Calculates the correct location of the box selector box.
+        :param num: int
+        :return: NoneType
+        """
+        num = num % len(self.player.held_items)
+        self.box_rect.topleft = self.overlay_rect.topleft + \
+                                Vector2(26, 25) + \
+                                Vector2((52 + 8) * num, 0)
 
     def display(self, dt: float):
         self.toolbox_display()
