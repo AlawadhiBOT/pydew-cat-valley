@@ -279,7 +279,7 @@ class Overlay:
         # 33, 30 is top left for character after checking on paint.net
         self.image_rect = self.image.get_rect(topleft=
                                               self.chara_box_rect.topleft +
-                                              Vector2(33, 30))
+                                              Vector2(27, 30))
 
         self.display_surface.blit(self.image, self.image_rect)
 
