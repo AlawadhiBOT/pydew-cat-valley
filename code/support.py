@@ -35,8 +35,8 @@ def import_folder_dict2(path):
             full_path = path + '/' + actual_path + '/' + image
             image_surf = pygame.image.load(full_path).convert_alpha()
             imgs_lst.append(image_surf)
-
-        surface_dict[actual_path] = imgs_lst
+        if "/" not in actual_path:
+            surface_dict[actual_path] = imgs_lst
 
     return surface_dict
 
