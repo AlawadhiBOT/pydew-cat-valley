@@ -105,8 +105,10 @@ class Overlay:
         self.teemo_emotes = import_folder_dict2(path)
         self.frame_index = 0
         self.actions_index = 0
-        self.actions_list = ["idle" for _ in range(3)]
-        self.actions_list += ["idle_lick"] + self.actions_list + ["idle_ears"]
+        self.actions_list = []
+        for key in self.teemo_emotes.keys():
+            if "sleep" not in key:
+                self.actions_list += ["idle" for _ in range(3)] + [key]
         self.status = self.actions_list[self.actions_index]
         self.image = self.teemo_emotes[self.status][self.frame_index]
         self.image_rect = None
@@ -164,8 +166,9 @@ class Overlay:
         num = 4
         topleft = self.xp_bar_rect.topleft + Vector2(num, num)
         percent = self.player.xp / self.player.max_xp
-        Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - 4 * 2) * percent,
-                                     self.xp_bar_rect.height - 4 * 2))
+        Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - num * 2) *
+                                     percent,
+                                     self.xp_bar_rect.height - num * 2))
         pygame.draw.rect(self.display_surface, 'Green',
                          Rect, 0, 0)
         self.xp_no_surf = self.font.render(f'{self.player.level}', False,

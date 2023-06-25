@@ -211,7 +211,7 @@ class Inventory:
                                               Vector2(26, 25))
 
         # timer
-        self.timer = Timer(250)
+        self.timer = Timer(150)
 
         self.item_array = [[] for _ in range((len(self.item_surfs) +
                                               len(self.tools_surf)) // 5 + 1)]
@@ -230,35 +230,47 @@ class Inventory:
             # happened, the inventory would shift in a direction equal to
             # the change by 1 pixel, so if I moved the box right, the inventory
             # would move right by one pixel.
-            if keys[pygame.K_d]:
-                self.inventory_rect[0] += 1
-                self.box_rect.left += 52 + 8
-                self.inventory_rect.left -= 1
-                self.curr_ind[0] += 1
+            if keys[pygame.K_RIGHT]:
+                row_len = len(self.item_array[self.curr_ind[0]])
+                if self.curr_ind[0] + 1 == row_len:
+                    self.box_rect.left -= (52 + 8) * (row_len - 1)
+                    self.curr_ind[0] = 0
+                else:
+                    self.box_rect.left += 52 + 8
+                    self.curr_ind[0] += 1
 
                 self.timer.activate()
 
-            if keys[pygame.K_a]:
-                self.inventory_rect[0] -= 1
-                self.box_rect.left -= 52 + 8
-                self.inventory_rect.left += 1
-                self.curr_ind[0] -= 1
+            if keys[pygame.K_LEFT]:
+                row_len = len(self.item_array[self.curr_ind[0]])
+                if self.curr_ind[0] - 1 < 0:
+                    self.box_rect.left += (52 + 8) * row_len
+                    self.curr_ind[0] = row_len
+                else:
+                    self.box_rect.left -= 52 + 8
+                    self.curr_ind[0] -= 1
 
                 self.timer.activate()
 
-            if keys[pygame.K_w]:
-                self.inventory_rect[1] -= 1
-                self.box_rect.top -= 52 + 8
-                self.inventory_rect.top += 1
-                self.curr_ind[1] -= 1
+            if keys[pygame.K_UP]:
+                col_len = len(self.item_array)
+                if self.curr_ind[1] - 1 < 0:
+                    self.box_rect.top += (52 + 8) * (col_len - 1)
+                    self.curr_ind[1] = col_len - 1
+                else:
+                    self.box_rect.top -= 52 + 8
+                    self.curr_ind[1] -= 1
 
                 self.timer.activate()
 
-            if keys[pygame.K_s]:
-                self.inventory_rect[1] += 1
-                self.box_rect.top += 52 + 8
-                self.inventory_rect.top -= 1
-                self.curr_ind[1] += 1
+            if keys[pygame.K_DOWN]:
+                col_len = len(self.item_array)
+                if self.curr_ind[1] + 1 == col_len:
+                    self.box_rect.top -= (52 + 8) * (col_len - 1)
+                    self.curr_ind[1] = 0
+                else:
+                    self.box_rect.top += 52 + 8
+                    self.curr_ind[1] += 1
 
                 self.timer.activate()
 
