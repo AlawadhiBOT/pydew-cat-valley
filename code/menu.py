@@ -22,7 +22,9 @@ class Menu:
 
         # menu image
         self.menu_image = \
-            pygame.image.load('../graphics/menus/shop.png').convert()
+            pygame.image.load('../graphics/menus/shop_2.png').convert()
+        self.menu_rect = self.menu_image.get_rect(
+            center=OVERLAY_POSITIONS['shop'])
 
         # imaging setup
         self.sample_rect = pygame.Rect(INVENTORY_OFFSETS[3],
@@ -31,27 +33,26 @@ class Menu:
         self.space = 5
         self.width = self.menu_image.get_width()
         self.height = self.menu_image.get_height()
-        self.padding = 8.5
-        self.topleft_x = SCREEN_HEIGHT / 2 - self.width / 2
-        self.topleft_y = SCREEN_HEIGHT / 2 - self.height / 2
+        self.padding = 5
+        self.topleft_items = self.menu_rect.topleft + Vector2(128, 128)
 
         # entries
-        self.options = list(self.player.item_inventory.keys()) + \
-                       list(self.player.seed_inventory.keys())
+        self.options = list(self.player.item_inventory.keys())
         self.sell_border = len(self.player.item_inventory) - 1
         self.setup()
 
         # movement
+        self.page_number = 0
         self.index = 0
         self.timer = Timer(200)
 
     def display_money(self):
-        # put on topleft of image
         text_surf = self.font.render(f'${self.player.money}', False, 'Black')
-        text_rect = pygame.Rect(self.topleft_x + SCREEN_WIDTH / 2,
-                                self.topleft_y + self.space * 3,
-                                text_surf.get_width() + self.space,
-                                text_surf.get_height() + self.space)
+        text_rect = pygame.Rect(0, 0,
+                                text_surf.get_width(),
+                                text_surf.get_height())
+        text_rect.midbottom = self.menu_rect.midbottom + \
+                              Vector2(0, - self.padding * 6)
 
         self.display_surface.blit(text_surf, text_rect)
 
@@ -61,22 +62,12 @@ class Menu:
         self.text_surfs = []
 
         for index, item in enumerate(self.options):
-            if index > len(self.player.item_inventory.keys()) - 1:
-                text_surf = self.font.render(item + ' seed(s)', False, 'Black')
-            else:
-                text_surf = self.font.render(item, False, 'Black')
+            text_surf = self.font.render(item, False, 'Black')
             self.text_surfs.append(text_surf)
 
-        self.menu_top = SCREEN_HEIGHT / 2 - self.height / 2 + \
-                        self.sample_rect.y
-        self.main_rect = pygame.Rect(SCREEN_WIDTH / 2 - self.width / 2 +
-                                     self.sample_rect.x,
-                                     self.menu_top, self.width,
-                                     self.height)
-
-        # buy/sell text surface
-        self.buy_text = self.font.render(' ' * 6 + 'buy', False, 'Black')
-        self.sell_text = self.font.render(' ' * 7 + 'sell', False, 'Black')
+        # # buy/sell text surface
+        # self.buy_text = self.font.render(' ' * 6 + 'buy', False, 'Black')
+        # self.sell_text = self.font.render(' ' * 7 + 'sell', False, 'Black')
 
     def input(self):
         # get the input and then if the player presses esc, close the menu
@@ -122,50 +113,52 @@ class Menu:
         if self.index > len(self.options) - 1:
             self.index = 0
 
-    def show_entry(self, text_surf, amount, top, selected):
+    def show_entry(self, text_surf, amount, index, selected):
         # background
-        bg_rect = pygame.Rect(self.main_rect.left, top, self.sample_rect.width,
-                              text_surf.get_height() + (self.padding * 2))
+        top_left_calc = self.topleft_items + Vector2(0, (text_surf.get_height()
+                                                         + self.padding * 2)
+                                                     * index
+                                                     )
+        bg_rect = pygame.Rect(top_left_calc.x - self.padding,
+                              top_left_calc.y - self.padding,
+                              self.menu_rect.width // 2,
+                              text_surf.get_height() + self.padding * 2)
 
         # text
-        text_rect = text_surf.get_rect(midleft=
-                                       (self.main_rect.left + 20,
-                                        bg_rect.centery))
+        text_rect = text_surf.get_rect(midleft=top_left_calc +
+                                               Vector2(self.padding,
+                                                       self.padding * 3)
+                                                       )
         self.display_surface.blit(text_surf, text_rect)
 
         # amount
         amount_surf = self.font.render(str(amount), False, 'Black')
-        amount_rect = amount_surf.get_rect(midright=(bg_rect.right -
-                                                     15,
-                                                     bg_rect.centery))
+        amount_rect = amount_surf.get_rect(midright=bg_rect.midright
+                                           - Vector2(self.padding, 0))
         self.display_surface.blit(amount_surf, amount_rect)
 
         # selected
         if selected:
             pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
-            if self.index <= self.sell_border:  # sell
-                pos_rect = self.sell_text.get_rect(midleft=(
-                    self.main_rect.left + 150, bg_rect.centery))
-                self.display_surface.blit(self.sell_text, pos_rect)
-            else:  # buy
-                pos_rect = self.buy_text.get_rect(midleft=(
-                    self.main_rect.left + 150, bg_rect.centery))
-                self.display_surface.blit(self.buy_text, pos_rect)
+            # if self.index <= self.sell_border:  # sell
+            #     pos_rect = self.sell_text.get_rect(midleft=(
+            #         self.main_rect.left + 150, bg_rect.centery))
+            #     self.display_surface.blit(self.sell_text, pos_rect)
+            # else:  # buy
+            #     pos_rect = self.buy_text.get_rect(midleft=(
+            #         self.main_rect.left + 150, bg_rect.centery))
+            #     self.display_surface.blit(self.buy_text, pos_rect)
 
     def update(self):
         self.input()
-        posx = (SCREEN_WIDTH / 2 - self.width / 2)
-        posy = (SCREEN_HEIGHT / 2 - self.height / 2)
-        self.display_surface.blit(self.menu_image, (posx, posy))
+
+        self.display_surface.blit(self.menu_image, self.menu_rect)
         self.display_money()
         for text_index, text_surf in enumerate(self.text_surfs):
-            top = self.main_rect.top + text_index * (text_surf.get_height() +
-                                                     (self.padding * 2) +
-                                                     self.space)
-            amount_list = list(self.player.item_inventory.values()) + \
-                          list(self.player.seed_inventory.values())
+            amount_list = list(self.player.item_inventory.values())
             amount = amount_list[text_index]
-            self.show_entry(text_surf, amount, top, self.index == text_index)
+            self.show_entry(text_surf, amount, text_index,
+                            self.index == text_index)
 
 
 class Inventory:

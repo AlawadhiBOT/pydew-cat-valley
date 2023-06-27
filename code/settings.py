@@ -15,7 +15,8 @@ OVERLAY_POSITIONS = {
     'stamina': (SCREEN_WIDTH - 5, SCREEN_HEIGHT - 5),
     'xp': "is a function of inven, use that.",
     'heart': (6, 6),
-    'character_box': (0, SCREEN_HEIGHT)
+    'character_box': (0, SCREEN_HEIGHT),
+    'shop': (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 }
 
 STAMINA_COLORS = {
