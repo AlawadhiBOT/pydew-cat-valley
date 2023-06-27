@@ -27,6 +27,11 @@ class Game:
                 if keys[pygame.K_c]:
                     self.level.active_music.set_volume(0.3)
 
+                if keys[pygame.K_o]:
+                    self.level.soil_layer.save_soil_state()
+                if keys[pygame.K_r]:
+                    self.level.soil_layer.read_soil_state()
+
             dt = self.clock.tick(60) / 1000
             self.level.run(dt)
             pygame.display.update()

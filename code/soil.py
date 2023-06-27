@@ -1,10 +1,11 @@
 from typing import Callable
 
-import pygame
 from settings import *
 from pytmx.util_pygame import load_pygame
 from support import *
 from random import choice
+import json
+from pygame.math import Vector2
 
 
 class SoilTile(pygame.sprite.Sprite):
@@ -27,7 +28,7 @@ class WaterTile(pygame.sprite.Sprite):
 
 class Plant(pygame.sprite.Sprite):
     def __init__(self, plant_type, groups: list[pygame.sprite.Group],
-                 soil, check_watered: Callable):
+                 soil, check_watered: Callable, age):
         super().__init__(groups)
 
         # setup
@@ -37,7 +38,7 @@ class Plant(pygame.sprite.Sprite):
         self.check_watered = check_watered
 
         # plant growth
-        self.age = 0
+        self.age = 0 if age is None else age
         self.max_age = len(self.frames) - 1
         self.grow_speed = GROW_SPEED[plant_type]
         self.harvestable = False
@@ -46,8 +47,12 @@ class Plant(pygame.sprite.Sprite):
         self.image = self.frames[self.age]
         self.y_offset = PLANT_OFFSET[self.plant_type]
         self.rect = self.image.get_rect(midbottom=soil.rect.midbottom +
-                                                  pygame.math.Vector2(0, self.y_offset))
+                                                  Vector2(0, self.y_offset))
         self.z = LAYERS['ground plant']
+
+    def __str__(self):
+        return f'{self.plant_type},{self.age},' \
+               f'{self.rect.left},{self.rect.top}'
 
     def grow(self):
         if self.check_watered(self.rect.center):
@@ -66,12 +71,12 @@ class Plant(pygame.sprite.Sprite):
             if self.age > 2:
                 self.rect = self.image.get_rect(midbottom=
                                                 self.soil.rect.midbottom +
-                                                pygame.math.Vector2
+                                                Vector2
                                                 (0, self.y_offset))
             else:
                 self.rect = self.image.get_rect(midbottom=
                                                 self.soil.rect.midbottom +
-                                                pygame.math.Vector2
+                                                Vector2
                                                 (0, self.y_offset +
                                                  BIG_PLANT_OFFSET
                                                  [self.plant_type]))
@@ -97,12 +102,17 @@ class SoilLayer:
         self.create_soil_grid()
         self.create_hit_rects()
 
+        # bools
+        self.raining = False
 
         # sounds
         self.hoe_sound = pygame.mixer.Sound('../audio/hoe.wav')
         self.hoe_sound.set_volume(0.1)
         self.plant_sound = pygame.mixer.Sound('../audio/plant.wav')
         self.plant_sound.set_volume(0.2)
+
+        # read saved data
+        self.read_soil_state()
 
     def create_soil_grid(self):
         ground = pygame.image.load('../graphics/world/ground 2.png')
@@ -125,6 +135,58 @@ class SoilLayer:
                     y = index_row * TILE_SIZE
                     rect = pygame.Rect(x, y, TILE_SIZE, TILE_SIZE)
                     self.hit_rects.append(rect)
+
+    def save_soil_state(self):
+        """
+        Function written to save state of soil tiles
+        :return: NoneType
+        """
+        with open("../data/farmed_land.txt", "w") as file:
+            for row in self.grid:
+                ln = ""
+                for cell in row:
+                    mini_ln = ""
+                    for item in cell:
+                        if item not in "WP":
+                            mini_ln += str(item)
+                    ln += mini_ln + "|"
+                ln += '\n'
+                file.write(ln)
+
+        lst = [[str(plant)] for plant in self.plant_sprites]
+        jason_file = json.dumps(lst, indent=4)
+
+        with open("../data/plant_in_soil.json", "w") as f:
+            f.write(jason_file)
+
+    def read_soil_state(self):
+        """
+        Function written to read save state of soil tiles
+        :return: NoneType
+        """
+        with open("../data/farmed_land.txt", "r") as file:
+            ctr = 0
+            for line in file:
+                arr_line = line.split("|")[:-1]
+                self.grid[ctr] = [[state for state in item] for
+                                  item in arr_line]
+                ctr += 1
+        self.create_soil_tiles()
+
+        with open("../data/plant_in_soil.json", "r") as file:
+            lst = []
+            for entry in json.load(file):
+                lst.append(entry[0].split(','))
+
+        for item in lst:
+            selected_seed = item[0]
+            age = int(item[1])
+            target_pos = (int(item[2]) + TILE_SIZE // 2,
+                          int(item[3]) + TILE_SIZE // 2)
+            self.plant_seed(target_pos, selected_seed, age)
+
+        if self.raining:
+            self.water_all()
 
     def get_hit(self, point):
         for rect in self.hit_rects:
@@ -182,11 +244,12 @@ class SoilLayer:
         is_watered = 'W' in cell
         return is_watered
 
-    def plant_seed(self, target_pos, selected_seed: str):
+    def plant_seed(self, target_pos, selected_seed: str, age: int = None):
         """
         Plants a seed in the relevant soil tile
         :param target_pos: target location of seed planting
         :param selected_seed: the seed type which will be planted
+        :param age: int indicating age of plant
         :return: boolean indicating success or fail in planting
         """
         for soil_sprite in self.soil_sprites:
@@ -201,7 +264,7 @@ class SoilLayer:
                     Plant(selected_seed,
                           [self.all_sprites, self.plant_sprites,
                            self.collision_sprites], soil_sprite,
-                          self.check_watered)
+                          self.check_watered, age)
                     return True
 
         return False
