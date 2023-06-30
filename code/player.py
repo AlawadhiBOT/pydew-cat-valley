@@ -284,6 +284,7 @@ class Player(pygame.sprite.Sprite):
                 # tool_timer.activate()
                 # self.display_text = [(tool_swp_surf, tool_swp_rect, tool_timer)]
 
+            # swap to left hand item
             if keys[pygame.K_q] and not self.timers['swap'].active:
                 self.timers['swap'].activate()
                 # swap to left held item
@@ -304,6 +305,22 @@ class Player(pygame.sprite.Sprite):
                 # tool_timer = Timer(GAME_MESSAGES["TEXT_TIMER"])
                 # tool_timer.activate()
                 # self.display_text = [(tool_swp_surf, tool_swp_rect, tool_timer)]
+
+            if keys[pygame.K_1]:
+                self.held_items_index = 0
+                self.selected_hand = self.held_items[self.held_items_index]
+            if keys[pygame.K_2]:
+                self.held_items_index = 1
+                self.selected_hand = self.held_items[self.held_items_index]
+            if keys[pygame.K_3]:
+                self.held_items_index = 2
+                self.selected_hand = self.held_items[self.held_items_index]
+            if keys[pygame.K_4]:
+                self.held_items_index = 3
+                self.selected_hand = self.held_items[self.held_items_index]
+            if keys[pygame.K_5]:
+                self.held_items_index = 4
+                self.selected_hand = self.held_items[self.held_items_index]
 
             # open inventory
             if keys[pygame.K_i]:

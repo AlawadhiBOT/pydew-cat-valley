@@ -27,24 +27,35 @@ class Menu:
             center=OVERLAY_POSITIONS['shop'])
 
         # imaging setup
-        self.sample_rect = pygame.Rect(INVENTORY_OFFSETS[3],
-                                       (self.menu_image.get_width() // 2 - 37,
-                                        20))
         self.space = 5
         self.width = self.menu_image.get_width()
         self.height = self.menu_image.get_height()
         self.padding = 5
-        self.topleft_items = self.menu_rect.topleft + Vector2(128, 128)
+        self.topleft_offset = 128
+        self.topleft_items = self.menu_rect.topleft + \
+                             Vector2(self.topleft_offset, self.topleft_offset)
 
         # entries
-        self.options = list(self.player.item_inventory.keys())
+        self.tools = self.player.tools
+        self.items = list(self.player.item_inventory.keys())
+        self.seeds = self.player.seeds
         self.sell_border = len(self.player.item_inventory) - 1
+
+        # surfs
+        self.tool_text_surfs = []
+        self.item_nonplant_text_surfs = []
+        self.item_text_plant_surf = []
+        self.seed_text_surfs = []
+
+        self.tool_text = self.item_text = self.seed_text = None
+
         self.setup()
 
         # movement
         self.page_number = 0
+        self.status_page = "Unplantable"
         self.index = 0
-        self.timer = Timer(200)
+        self.timer = Timer(150)
 
     def display_money(self):
         text_surf = self.font.render(f'${self.player.money}', False, 'Black')
@@ -57,17 +68,30 @@ class Menu:
         self.display_surface.blit(text_surf, text_rect)
 
     def setup(self):
-
-        # create text surfaces
-        self.text_surfs = []
-
-        for index, item in enumerate(self.options):
+        """
+        Gets texts for each function item type.
+        """
+        self.tool_text = self.font.render("TOOLS", False, 'Black')
+        for item in self.tools:
             text_surf = self.font.render(item, False, 'Black')
-            self.text_surfs.append(text_surf)
+            self.tool_text_surfs.append(text_surf)
 
-        # # buy/sell text surface
-        # self.buy_text = self.font.render(' ' * 6 + 'buy', False, 'Black')
-        # self.sell_text = self.font.render(' ' * 7 + 'sell', False, 'Black')
+        self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
+                                          False, 'Black')
+        for item in self.items:
+            if item not in self.seeds:
+                text_surf = self.font.render(item, False, 'Black')
+                self.item_nonplant_text_surfs.append(text_surf)
+            else:
+                text_surf = self.font.render(item, False, 'Black')
+                self.item_text_plant_surf.append(text_surf)
+
+        self.seed_text = self.font.render("PLANT-ABLES", False, 'Black')
+        for item in self.seeds:
+            text_surf = self.font.render(item, False, 'Black')
+            self.seed_text_surfs.append(text_surf)
+            text_surf = self.font.render(item + "seeds", False, 'Black')
+            self.seed_text_surfs.append(text_surf)
 
     def input(self):
         # get the input and then if the player presses esc, close the menu
@@ -109,32 +133,39 @@ class Menu:
 
         # clamo the values
         if self.index < 0:
-            self.index = len(self.options) - 1
-        if self.index > len(self.options) - 1:
+            self.index = len(self.item_nonplant_text_surfs) - 1
+        if self.index > len(self.item_nonplant_text_surfs) - 1:
             self.index = 0
 
     def show_entry(self, text_surf, amount, index, selected):
         # background
-        top_left_calc = self.topleft_items + Vector2(0, (text_surf.get_height()
-                                                         + self.padding * 2)
-                                                     * index
-                                                     )
+        if index % 2 == 0:
+            calc_x = 0
+            calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        else:
+            calc_x = self.menu_rect.width // 2 - self.topleft_offset
+            calc_y = (text_surf.get_height() + self.padding * 4) * \
+                     (index - 1) // 2
+
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+
         bg_rect = pygame.Rect(top_left_calc.x - self.padding,
                               top_left_calc.y - self.padding,
-                              self.menu_rect.width // 2,
+                              self.menu_rect.width // 2 - self.topleft_offset,
                               text_surf.get_height() + self.padding * 2)
 
         # text
         text_rect = text_surf.get_rect(midleft=top_left_calc +
                                                Vector2(self.padding,
                                                        self.padding * 3)
-                                                       )
+                                       )
         self.display_surface.blit(text_surf, text_rect)
 
         # amount
         amount_surf = self.font.render(str(amount), False, 'Black')
         amount_rect = amount_surf.get_rect(midright=bg_rect.midright
-                                           - Vector2(self.padding, 0))
+                                                    - Vector2(self.padding, 0))
         self.display_surface.blit(amount_surf, amount_rect)
 
         # selected
@@ -154,8 +185,20 @@ class Menu:
 
         self.display_surface.blit(self.menu_image, self.menu_rect)
         self.display_money()
-        for text_index, text_surf in enumerate(self.text_surfs):
-            amount_list = list(self.player.item_inventory.values())
+
+        if self.status_page == "Unplantable":
+            amount_list = [val for key, val in
+                           self.player.item_inventory.items()
+                           if key not in self.player.seeds]
+            lst = self.item_nonplant_text_surfs
+        # else:
+            # TODO finish this for plantables
+            # amount_lst = []
+            # for item in self.seeds:
+            #
+            # lst = self.item_nonplant_text_surfs
+
+        for text_index, text_surf in enumerate(self.item_nonplant_text_surfs):
             amount = amount_list[text_index]
             self.show_entry(text_surf, amount, text_index,
                             self.index == text_index)

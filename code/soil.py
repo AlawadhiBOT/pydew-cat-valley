@@ -112,7 +112,7 @@ class SoilLayer:
         self.plant_sound.set_volume(0.2)
 
         # read saved data
-        self.read_soil_state()
+        # self.read_soil_state()
 
     def create_soil_grid(self):
         ground = pygame.image.load('../graphics/world/ground 2.png')
