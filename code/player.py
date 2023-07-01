@@ -372,14 +372,23 @@ class Player(pygame.sprite.Sprite):
         """
         self.hp -= 1
 
-    def player_add(self, item: str):
+    def player_add(self, item: str, sign: int=1):
         """
         Copy of a function used in level. Added here for files such as
         fishing.py
         :param item to be increased in counter
+        :param sign: indicates increase or decrease of item
         :return: None
         """
-        self.item_inventory[item] += 1
+        self.item_inventory[item] += 1 * sign
+    def player_add_seed(self, seed: str, sign: int=1):
+        """
+        As in player_add function same thing. However the purpose of this
+        function is to support
+        :param seed:
+        :param sign:
+        :return:
+        """
 
     def update_timers(self):
         for timer in self.timers.values():
