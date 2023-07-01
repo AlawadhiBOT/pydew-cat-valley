@@ -19,19 +19,51 @@ class Menu:
         self.toggle_menu = toggle_menu
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
+        self.topleft_offset = 128
 
         # menu image
         self.menu_image = \
-            pygame.image.load('../graphics/menus/shop_2.png').convert()
+            pygame.image.load('../graphics/menus/shop_2.png').convert_alpha()
         self.menu_rect = self.menu_image.get_rect(
             center=OVERLAY_POSITIONS['shop'])
+        # menu arrows
+        self.menu_arrows = {
+            "left": pygame.image.load('../graphics/menus/shop/left_'
+                                      'arrow.png').convert_alpha(),
+            "left_p": pygame.image.load('../graphics/menus/shop/left_'
+                                        'arrow_pressed.'
+                                        'png').convert_alpha(),
+            "right":
+                pygame.image.load('../graphics/menus/shop/right_'
+                                  'arrow.png').convert_alpha(),
+            "right_p": pygame.image.load('../graphics/menus/shop/right_'
+                                         'arrow_pressed.'
+                                         'png').convert_alpha()
+        }
+        calc_height_diff = self.menu_arrows["left"].get_height()\
+                           - self.menu_arrows["left_p"].get_height()
+        self.menu_arrows_rects = {
+            "left": self.menu_arrows["left"].get_rect(
+                bottomleft=self.menu_rect.bottomleft +
+                           Vector2(64, -64)),
+            "right": self.menu_arrows["right"].get_rect(
+                bottomright=self.menu_rect.bottomright +
+                           Vector2(-64, -64)),
+            "left_p": self.menu_arrows["left"].get_rect(
+                bottomleft=self.menu_rect.bottomleft +
+                           Vector2(64, -64 + calc_height_diff)),
+            "right_p": self.menu_arrows["right"].get_rect(
+                bottomright=self.menu_rect.bottomright +
+                           Vector2(-64, -64 + calc_height_diff)),
+        }
+        self.left_arrow = self.menu_arrows["left"]
+        self.right_arrow = self.menu_arrows["right"]
 
         # imaging setup
         self.space = 5
         self.width = self.menu_image.get_width()
         self.height = self.menu_image.get_height()
         self.padding = 5
-        self.topleft_offset = 128
         self.topleft_items = self.menu_rect.topleft + \
                              Vector2(self.topleft_offset, self.topleft_offset)
 
@@ -40,9 +72,10 @@ class Menu:
         self.items = list(self.player.item_inventory.keys())
         self.seeds = self.player.seeds
         self.sell_border = len(self.player.item_inventory) - 1
+        self.max_entries = 10
 
         # surfs
-        self.tool_text_surfs = []
+        # self.tool_text_surfs = []
         self.item_nonplant_text_surfs = []
         self.item_text_plant_surf = []
         self.seed_text_surfs = []
@@ -50,10 +83,11 @@ class Menu:
         self.tool_text = self.item_text = self.seed_text = None
 
         self.setup()
+        self.lst = self.item_nonplant_text_surfs
 
         # movement
         self.page_number = 0
-        self.status_page = "Unplantable"
+        self.status_page = "plantable"
         self.index = 0
         self.timer = Timer(150)
 
@@ -67,14 +101,34 @@ class Menu:
 
         self.display_surface.blit(text_surf, text_rect)
 
+    def display_arrows(self):
+        mousex, mousey = pygame.mouse.get_pos()
+        if self.menu_arrows_rects["left"].collidepoint(mousex, mousey):
+            self.left_arrow = self.menu_arrows["left_p"]
+            rect = self.menu_arrows_rects["left_p"]
+        else:
+            self.left_arrow = self.menu_arrows["left"]
+            rect = self.menu_arrows_rects["left"]
+
+        self.display_surface.blit(self.left_arrow, rect)
+
+        if self.menu_arrows_rects["right"].collidepoint(mousex, mousey):
+            self.right_arrow = self.menu_arrows["right_p"]
+            rect = self.menu_arrows_rects["right_p"]
+        else:
+            self.right_arrow = self.menu_arrows["right"]
+            rect = self.menu_arrows_rects["right"]
+
+        self.display_surface.blit(self.right_arrow, rect)
+
     def setup(self):
         """
         Gets texts for each function item type.
         """
-        self.tool_text = self.font.render("TOOLS", False, 'Black')
-        for item in self.tools:
-            text_surf = self.font.render(item, False, 'Black')
-            self.tool_text_surfs.append(text_surf)
+        # self.tool_text = self.font.render("TOOLS", False, 'Black')
+        # for item in self.tools:
+        #     text_surf = self.font.render(item, False, 'Black')
+        #     self.tool_text_surfs.append(text_surf)
 
         self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
                                           False, 'Black')
@@ -89,8 +143,6 @@ class Menu:
         self.seed_text = self.font.render("PLANT-ABLES", False, 'Black')
         for item in self.seeds:
             text_surf = self.font.render(item, False, 'Black')
-            self.seed_text_surfs.append(text_surf)
-            text_surf = self.font.render(item + "seeds", False, 'Black')
             self.seed_text_surfs.append(text_surf)
 
     def input(self):
@@ -114,27 +166,27 @@ class Menu:
                 self.timer.activate()
 
                 # get item
-                current_item = self.options[self.index]
+                # current_item = self.options[self.index]
 
                 # sell
-                if self.index <= self.sell_border:
-                    if self.player.item_inventory[current_item] > 0:
-                        self.player.item_inventory[current_item] -= 1
-                        self.player.money += SALE_PRICES[current_item]
-                        self.player.xp += PLAYER_LEVEL_STATS['sell']
-                        self.player.stamina -= PLAYER_STAMINA_STATS['sell']
-                else:  # buy
-                    seed_price = PURCHASE_PRICES[current_item]
-                    if self.player.money >= seed_price:
-                        self.player.seed_inventory[current_item] += 1
-                        self.player.money -= PURCHASE_PRICES[current_item]
-                        self.player.xp += PLAYER_LEVEL_STATS['buy']
-                        self.player.stamina -= PLAYER_STAMINA_STATS['buy']
+                # if self.index <= self.sell_border:
+                #     if self.player.item_inventory[current_item] > 0:
+                #         self.player.item_inventory[current_item] -= 1
+                #         self.player.money += SALE_PRICES[current_item]
+                #         self.player.xp += PLAYER_LEVEL_STATS['sell']
+                #         self.player.stamina -= PLAYER_STAMINA_STATS['sell']
+                # else:  # buy
+                #     seed_price = PURCHASE_PRICES[current_item]
+                #     if self.player.money >= seed_price:
+                #         self.player.seed_inventory[current_item] += 1
+                #         self.player.money -= PURCHASE_PRICES[current_item]
+                #         self.player.xp += PLAYER_LEVEL_STATS['buy']
+                #         self.player.stamina -= PLAYER_STAMINA_STATS['buy']
 
         # clamo the values
         if self.index < 0:
-            self.index = len(self.item_nonplant_text_surfs) - 1
-        if self.index > len(self.item_nonplant_text_surfs) - 1:
+            self.index = len(self.lst) // 2 - 1
+        if self.index > len(self.lst) // 2 - 1:
             self.index = 0
 
     def show_entry(self, text_surf, amount, index, selected):
@@ -171,37 +223,52 @@ class Menu:
         # selected
         if selected:
             pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
-            # if self.index <= self.sell_border:  # sell
-            #     pos_rect = self.sell_text.get_rect(midleft=(
-            #         self.main_rect.left + 150, bg_rect.centery))
-            #     self.display_surface.blit(self.sell_text, pos_rect)
-            # else:  # buy
-            #     pos_rect = self.buy_text.get_rect(midleft=(
-            #         self.main_rect.left + 150, bg_rect.centery))
-            #     self.display_surface.blit(self.buy_text, pos_rect)
 
     def update(self):
         self.input()
 
         self.display_surface.blit(self.menu_image, self.menu_rect)
         self.display_money()
+        self.display_arrows()
 
         if self.status_page == "Unplantable":
             amount_list = [val for key, val in
                            self.player.item_inventory.items()
                            if key not in self.player.seeds]
-            lst = self.item_nonplant_text_surfs
-        # else:
-            # TODO finish this for plantables
-            # amount_lst = []
-            # for item in self.seeds:
-            #
-            # lst = self.item_nonplant_text_surfs
 
-        for text_index, text_surf in enumerate(self.item_nonplant_text_surfs):
-            amount = amount_list[text_index]
-            self.show_entry(text_surf, amount, text_index,
-                            self.index == text_index)
+            for text_ind, text_surf in enumerate(self.lst):
+                amount = amount_list[text_ind]
+                self.show_entry(text_surf, amount, text_ind,
+                                self.index == text_ind)
+        else:
+            item_amount_list = [val for key, val in
+                                self.player.item_inventory.items()
+                                if key in self.player.seeds]
+            seed_amount_list = [val for val in
+                                self.player.seed_inventory.values()]
+
+            num_0 = self.max_entries * self.page_number
+            if (self.max_entries + 1) * self.page_number > \
+                    len(item_amount_list):
+                num_1 = len(item_amount_list) - 1
+            else:
+                num_1 = self.max_entries * (self.page_number + 1)
+
+            self.lst = item_amount_list[num_0:num_1] + \
+                       seed_amount_list[num_0:num_1]
+
+            entries = self.max_entries
+            for i in range(0, len(self.lst) // 2):
+                if entries > 0:
+                    amount = item_amount_list[i]
+                    text_surf = self.item_text_plant_surf[i]
+                    self.show_entry(text_surf, amount, 2 * i,
+                                    self.index == i)
+                    amount = seed_amount_list[i]
+                    text_surf = self.seed_text_surfs[i]
+                    self.show_entry(text_surf, amount, 2 * i + 1,
+                                    self.index == i)
+                    entries -= 1
 
 
 class Inventory:
