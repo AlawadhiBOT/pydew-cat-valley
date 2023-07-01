@@ -27,7 +27,7 @@ class Menu:
         self.menu_rect = self.menu_image.get_rect(
             center=OVERLAY_POSITIONS['shop'])
         # menu arrows
-        self.menu_arrows = {
+        self.shop_imgs = {
             "left": pygame.image.load('../graphics/menus/shop/left_'
                                       'arrow.png').convert_alpha(),
             "left_p": pygame.image.load('../graphics/menus/shop/left_'
@@ -38,31 +38,43 @@ class Menu:
                                   'arrow.png').convert_alpha(),
             "right_p": pygame.image.load('../graphics/menus/shop/right_'
                                          'arrow_pressed.'
-                                         'png').convert_alpha()
+                                         'png').convert_alpha(),
+            "plus": pygame.image.load('../graphics/menus/shop/plus'
+                                      '.png').convert_alpha(),
+            "plus_p": pygame.image.load('../graphics/menus/shop/plus_pressed'
+                                        '.png').convert_alpha(),
+            "minus":
+                pygame.image.load('../graphics/menus/shop/minus'
+                                  '.png').convert_alpha(),
+            "minus_p": pygame.image.load('../graphics/menus/shop/minus_pressed'
+                                         '.png').convert_alpha()
         }
-        calc_height_diff = self.menu_arrows["left"].get_height()\
-                           - self.menu_arrows["left_p"].get_height()
-        self.menu_arrows_rects = {
-            "left": self.menu_arrows["left"].get_rect(
+        calc_height_diff = self.shop_imgs["left"].get_height() \
+                           - self.shop_imgs["left_p"].get_height()
+        self.shop_imgs_rects = {
+            "left": self.shop_imgs["left"].get_rect(
                 bottomleft=self.menu_rect.bottomleft +
                            Vector2(64, -64)),
-            "right": self.menu_arrows["right"].get_rect(
+            "right": self.shop_imgs["right"].get_rect(
                 bottomright=self.menu_rect.bottomright +
-                           Vector2(-64, -64)),
-            "left_p": self.menu_arrows["left"].get_rect(
+                            Vector2(-64, -64)),
+            "left_p": self.shop_imgs["left"].get_rect(
                 bottomleft=self.menu_rect.bottomleft +
                            Vector2(64, -64 + calc_height_diff)),
-            "right_p": self.menu_arrows["right"].get_rect(
+            "right_p": self.shop_imgs["right"].get_rect(
                 bottomright=self.menu_rect.bottomright +
-                           Vector2(-64, -64 + calc_height_diff)),
+                            Vector2(-64, -64 + calc_height_diff)),
         }
-        self.left_arrow = self.menu_arrows["left"]
-        self.right_arrow = self.menu_arrows["right"]
+        self.left_arrow = self.shop_imgs["left"]
+        self.right_arrow = self.shop_imgs["right"]
+        self.plus_minus_lst = [[self.shop_imgs["plus"],
+                                self.shop_imgs["plus_p"],
+                                self.shop_imgs["minus"],
+                                self.shop_imgs["minus_p"]] for _ in
+                               range(len(self.player.seed_inventory.values()))]
 
         # imaging setup
         self.space = 5
-        self.width = self.menu_image.get_width()
-        self.height = self.menu_image.get_height()
         self.padding = 5
         self.topleft_items = self.menu_rect.topleft + \
                              Vector2(self.topleft_offset, self.topleft_offset)
@@ -89,7 +101,7 @@ class Menu:
         self.page_number = 0
         self.status_page = "plantable"
         self.index = 0
-        self.timer = Timer(150)
+        self.timer = Timer(250)
 
     def display_money(self):
         text_surf = self.font.render(f'${self.player.money}', False, 'Black')
@@ -103,23 +115,51 @@ class Menu:
 
     def display_arrows(self):
         mousex, mousey = pygame.mouse.get_pos()
-        if self.menu_arrows_rects["left"].collidepoint(mousex, mousey):
-            self.left_arrow = self.menu_arrows["left_p"]
-            rect = self.menu_arrows_rects["left_p"]
+        if self.shop_imgs_rects["left"].collidepoint(mousex, mousey):
+            self.left_arrow = self.shop_imgs["left_p"]
+            rect = self.shop_imgs_rects["left_p"]
         else:
-            self.left_arrow = self.menu_arrows["left"]
-            rect = self.menu_arrows_rects["left"]
+            self.left_arrow = self.shop_imgs["left"]
+            rect = self.shop_imgs_rects["left"]
 
         self.display_surface.blit(self.left_arrow, rect)
 
-        if self.menu_arrows_rects["right"].collidepoint(mousex, mousey):
-            self.right_arrow = self.menu_arrows["right_p"]
-            rect = self.menu_arrows_rects["right_p"]
+        if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
+            self.right_arrow = self.shop_imgs["right_p"]
+            rect = self.shop_imgs_rects["right_p"]
         else:
-            self.right_arrow = self.menu_arrows["right"]
-            rect = self.menu_arrows_rects["right"]
+            self.right_arrow = self.shop_imgs["right"]
+            rect = self.shop_imgs_rects["right"]
 
         self.display_surface.blit(self.right_arrow, rect)
+
+    def display_plus_minus(self, text_rect: pygame.Rect, index: int):
+        mousex, mousey = pygame.mouse.get_pos()
+
+        height_diff = self.plus_minus_lst[index // 2][0].get_height() - \
+                      self.plus_minus_lst[index // 2][1].get_height()
+
+        image_1 = self.plus_minus_lst[index // 2][0]  # plus (right)
+        image_2 = self.plus_minus_lst[index // 2 + 1][2]  # minus (left)
+
+        rect_1 = text_rect.copy()
+        rect_1.topleft += Vector2(text_rect.width + self.padding * 3,
+                                  2)
+
+        if rect_1.collidepoint(mousex, mousey):
+            image_1 = self.plus_minus_lst[index // 2][1]
+            rect_1.topleft += Vector2(0, height_diff)
+
+        rect_2 = text_rect.copy()
+        rect_2.topleft += Vector2(-(image_2.get_width() + self.padding * 3),
+                                  2)
+
+        if rect_2.collidepoint(mousex, mousey):
+            image_2 = self.plus_minus_lst[index // 2][3]
+            rect_2.topleft += Vector2(0, height_diff)
+
+        self.display_surface.blit(image_1, rect_1)
+        self.display_surface.blit(image_2, rect_2)
 
     def setup(self):
         """
@@ -154,13 +194,21 @@ class Menu:
             self.toggle_menu()
 
         if not self.timer.active:
-            if keys[pygame.K_UP]:
-                self.index -= 1
-                self.timer.activate()
+            # if keys[pygame.K_UP]:
+            #     self.index -= 1
+            #     self.timer.activate()
+            #
+            # if keys[pygame.K_DOWN]:
+            #     self.index += 1
+            #     self.timer.activate()
 
-            if keys[pygame.K_DOWN]:
-                self.index += 1
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
                 self.timer.activate()
+                mousex, mousey = pygame.mouse.get_pos()
+                if self.shop_imgs_rects["left"].collidepoint(mousex, mousey):
+                    self.page_number -= 1
+                if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
+                    self.page_number += 1
 
             if keys[pygame.K_SPACE]:
                 self.timer.activate()
@@ -213,16 +261,17 @@ class Menu:
                                                        self.padding * 3)
                                        )
         self.display_surface.blit(text_surf, text_rect)
-
         # amount
         amount_surf = self.font.render(str(amount), False, 'Black')
         amount_rect = amount_surf.get_rect(midright=bg_rect.midright
-                                                    - Vector2(self.padding, 0))
+                                                    - Vector2(self.padding * 10,
+                                                              0))
+        self.display_plus_minus(amount_rect, index)
         self.display_surface.blit(amount_surf, amount_rect)
 
         # selected
-        if selected:
-            pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
+        # if selected:
+        #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
 
     def update(self):
         self.input()
@@ -248,9 +297,9 @@ class Menu:
                                 self.player.seed_inventory.values()]
 
             num_0 = self.max_entries * self.page_number
-            if (self.max_entries + 1) * self.page_number > \
+            if self.max_entries * (self.page_number + 1) > \
                     len(item_amount_list):
-                num_1 = len(item_amount_list) - 1
+                num_1 = len(item_amount_list)
             else:
                 num_1 = self.max_entries * (self.page_number + 1)
 
@@ -260,12 +309,12 @@ class Menu:
             entries = self.max_entries
             for i in range(0, len(self.lst) // 2):
                 if entries > 0:
-                    amount = item_amount_list[i]
-                    text_surf = self.item_text_plant_surf[i]
+                    amount = item_amount_list[i + num_0]
+                    text_surf = self.item_text_plant_surf[i + num_0]
                     self.show_entry(text_surf, amount, 2 * i,
                                     self.index == i)
-                    amount = seed_amount_list[i]
-                    text_surf = self.seed_text_surfs[i]
+                    amount = seed_amount_list[i + num_0]
+                    text_surf = self.seed_text_surfs[i + num_0]
                     self.show_entry(text_surf, amount, 2 * i + 1,
                                     self.index == i)
                     entries -= 1
