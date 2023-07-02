@@ -143,18 +143,18 @@ class Menu:
         image_1 = self.plus_minus_lst[index // 2][0]  # plus (right)
         image_2 = self.plus_minus_lst[index // 2 + 1][2]  # minus (left)
 
-        rect_1 = image_1.copy().get_rect(topleft=text_rect.topleft + Vector2(text_rect.width + self.padding * 3,
-                                  2))
-        # rect_1.topleft += Vector2(text_rect.width + self.padding * 3,
-        #                           2)
+        rect_1 = image_1.copy().get_rect(topleft=text_rect.topleft +
+                                                 Vector2(text_rect.width +
+                                                         self.padding * 3,
+                                                         2))
         if rect_1.collidepoint(mousex, mousey):
             image_1 = self.plus_minus_lst[index // 2][1]
             rect_1.topleft += Vector2(0, height_diff)
 
-        rect_2 = image_2.copy().get_rect(topleft=text_rect.topleft + Vector2(-(image_2.get_width() + self.padding * 3),
-                                  2))
-        # rect_2.topleft += Vector2(-(image_2.get_width() + self.padding * 3),
-        #                           2)
+        rect_2 = image_2.copy().get_rect(topleft=text_rect.topleft +
+                                                 Vector2(-(image_2.get_width() +
+                                                           self.padding * 3),
+                                                         2))
 
         if rect_2.collidepoint(mousex, mousey):
             image_2 = self.plus_minus_lst[index // 2][3]
@@ -225,8 +225,6 @@ class Menu:
                 #             # add the input in a way that drags the logic
                 #             # in a good way. Good night.
                 #             ...
-
-
 
             if keys[pygame.K_SPACE]:
                 self.timer.activate()
