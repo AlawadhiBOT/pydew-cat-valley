@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 
         # held items (in toolbox)
         self.held_items_index = 0
-        self.held_items = ['hoe', 'axe', 'water', 'fishing', 'wheat']
+        self.held_items = ['hoe', 'cat', 'cat', 'cat', 'cat']
         self.selected_hand = self.held_items[0]
 
         # STATS
@@ -254,7 +254,7 @@ class Player(pygame.sprite.Sprite):
                 # tool use
                 if self.held_items[self.held_items_index] in self.tools:
                     self.timers['tool use'].activate()
-                else:
+                elif self.held_items[self.held_items_index] in self.seeds:
                     # seed
                     self.timers['seed use'].activate()
 

@@ -20,7 +20,7 @@ class Overlay:
 
         # imports
         overlay_path = '../graphics/overlay/'
-        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}/tools/'
+        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}tools/'
                                                    f'{tool}.png'
                                                    ).convert_alpha()
                            for tool in player.tools}
@@ -290,11 +290,11 @@ class Overlay:
         Displays held item briefly
         :return: NoneType
         """
-        self.item_held = self.font.render(self.player.held_items[
-                                              self.player.held_items_index],
-                                          False, 'Green')
-        rect = self.item_held.get_rect(midbottom=self.xp_no_rect.midtop)
-        self.display_surface.blit(self.item_held, rect)
+        item = self.player.held_items[self.player.held_items_index]
+        if item != "cat":
+            self.item_held = self.font.render(item, False, 'Green')
+            rect = self.item_held.get_rect(midbottom=self.xp_no_rect.midtop)
+            self.display_surface.blit(self.item_held, rect)
 
     def move_box(self, num):
         """
