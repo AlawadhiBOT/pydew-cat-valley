@@ -372,27 +372,80 @@ class Player(pygame.sprite.Sprite):
         """
         self.hp -= 1
 
-    def player_add(self, item: str, sign: int = 1):
+    def player_add(self, item: str, sign: int = 1, transact_shop: bool = False):
         """
         Copy of a function used in level. Added here for files such as
         fishing.py
         02-Jul-23, added sign parameter and exp.
         :param item: item to be increased in counter
-        :param sign: indicates increase or decrease of item
+        :param sign: boolean that indicates increase or decrease of item
+        :param transact_shop: boolean that indicates if the item was in shop
         :return: NoneType
         """
         self.item_inventory[item] += 1 * sign
+        item_seed = True
+        bought_sold = True if sign > 0 else False
 
-    def player_add_seed(self, seed: str, sign: int = 1):
+        if transact_shop:
+            transaction_in_shop = True
+            self.update_xp_stamina_gold(item, item_seed, bought_sold,
+                                        transaction_in_shop)
+
+        else:
+            transaction_in_shop = False
+            self.update_xp_stamina_gold(item, item_seed, bought_sold,
+                                        transaction_in_shop)
+
+    def player_add_seed(self, seed: str, sign: int = 1,
+                        transact_shop: bool = False):
         """
         02-Jul-23
         As in player_add function same thing. However, the purpose of this
         function is to support menu.py
         :param seed: seed to be increased in counter
         :param sign: indicates increase or decrease of seed
+        :param transact_shop: boolean that indicates whether the item was in shop
         :return: NoneType
         """
         self.seed_inventory[seed] += 1 * sign
+
+        item_seed = False
+        bought_sold = True if sign > 0 else False
+
+        if transact_shop:
+            transaction_in_shop = True
+            self.update_xp_stamina_gold(seed, item_seed, bought_sold,
+                                        transaction_in_shop)
+
+        else:
+            transaction_in_shop = False
+            self.update_xp_stamina_gold(seed, item_seed, bought_sold,
+                                        transaction_in_shop)
+
+    def update_xp_stamina_gold(self, item: str, item_seed: bool,
+                               bought_sold: bool, transact_shop: bool = False):
+        """
+        02-Jul-23
+        :param item: item/seed to be gotten xp/stamina/gold for
+        :param item_seed: boolean to show if item is item or seed (True=Item)
+        :param bought_sold: boolean that indicates if it was bought/sold
+        :param transact_shop: boolean that indicates whether the item was in shop
+        :return: NoneType
+        """
+        if item_seed:  # this means it is an item
+            if transact_shop:  # this means the player bought/sold this item
+                if bought_sold:  # item was bought
+                    self.xp += PLAYER_LEVEL_STATS['buy']
+                    self.stamina -= PLAYER_STAMINA_STATS['buy']
+                    self.money += PURCHASE_PRICES[item]
+                else:  # sold
+                    self.xp += PLAYER_LEVEL_STATS['sell']
+                    self.stamina -= PLAYER_STAMINA_STATS['sell']
+                    self.money += SALE_PRICES[item]
+            else:  # acquired without shop
+                if item == 'fish':
+                    self.xp += PLAYER_LEVEL_STATS['fish']
+                    self.stamina -= PLAYER_STAMINA_STATS['fish']
 
     def update_timers(self):
         for timer in self.timers.values():

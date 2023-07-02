@@ -63,7 +63,7 @@ PLAYER_STAMINA_STATS = {
     "stamina increase": 10,
     "dig": 5,
     "water": 3,
-    'fishing': 2,
+    "fish": 2,
     "tree": 1,
     "plant": 1,
     'buy': 1,
