@@ -2,7 +2,7 @@ import pygame
 from support import import_folder_dict2
 from settings import *
 from player import Player
-
+from timer import Timer
 
 class Overlay:
     """
@@ -43,7 +43,7 @@ class Overlay:
                                               self.overlay_rect.topleft +
                                               Vector2(26, 25))
 
-        # xp and level overlay
+        # xp and level and held item overlay
         self.xp_bar_surf = pygame.image.load('../graphics/overlay/stats/'
                                              'xp_bar.png')
         self.xp_bar_rect = self.xp_bar_surf.get_rect(midbottom=
@@ -52,6 +52,8 @@ class Overlay:
                                            'Green')
         self.xp_no_rect = self.xp_no_surf.get_rect(midbottom=
                                                    self.xp_bar_rect.midtop)
+        self.item_held = self.font.render(f'{items[0]}', False, 'Green')
+        self.display_item_held_timer = Timer(500)
 
         # health and gold section overlay
         self.stats_overlay_surf = pygame.image.load('../graphics/overlay/stats'
@@ -157,7 +159,7 @@ class Overlay:
         self.display_surface.blit(self.stats_overlay_surf,
                                   self.stats_overlay_rect)
 
-    def xp_level_display(self):
+    def xp_level_item_display(self):
         """
         Handles the display of the xp bar and the level of the player.
         :return: NoneType
@@ -283,6 +285,17 @@ class Overlay:
 
         self.display_surface.blit(self.image, self.image_rect)
 
+    def held_item_display(self):
+        """
+        Displays held item briefly
+        :return: NoneType
+        """
+        self.item_held = self.font.render(self.player.held_items[
+                                              self.player.held_items_index],
+                                          False, 'Green')
+        rect = self.item_held.get_rect(midbottom=self.xp_no_rect.midtop)
+        self.display_surface.blit(self.item_held, rect)
+
     def move_box(self, num):
         """
         Calculates the correct location of the box selector box.
@@ -296,12 +309,13 @@ class Overlay:
 
     def display(self, dt: float):
         self.toolbox_display()
-        self.xp_level_display()
+        self.xp_level_item_display()
         self.heart_gold_display()
         self.stamina_bar_display()
         self.character_box_display(dt)
-
-        for text in self.player.display_text:
-            text[2].update()
-            if text[2].active:
-                self.display_surface.blit(text[0], text[1])
+        if self.player.timers['swap'].active:
+            if not self.display_item_held_timer.active:
+                self.display_item_held_timer.activate()
+        self.display_item_held_timer.update()
+        if self.display_item_held_timer.active:
+            self.held_item_display()

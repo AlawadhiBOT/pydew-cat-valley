@@ -41,7 +41,6 @@ class Player(pygame.sprite.Sprite):
 
         # text for player
         self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
-        self.display_text = []
 
         self.get_map_level = get_map_level
         self.set_map_level = set_map_level
@@ -54,7 +53,6 @@ class Player(pygame.sprite.Sprite):
             'tool use': Timer(600, self.use_tool),
             'swap': Timer(200),
             'seed use': Timer(350, self.use_seed),
-            'seed switch': Timer(200),
             'fishing timer': Timer(450)
         }
 
@@ -274,15 +272,6 @@ class Player(pygame.sprite.Sprite):
                     self.selected_hand = self.held_items[self.held_items_index]
                 else:
                     self.selected_hand = self.held_items[self.held_items_index]
-
-                # tool_swp_surf = self.font.render(
-                #     f'{GAME_MESSAGES["TEXT_CHOICES"][0]} '
-                #     f'{self.selected_hand}', False, 'Black')
-                # tool_swp_rect = tool_swp_surf.get_rect(topright=
-                #                                        GAME_MESSAGES["TXT_BEG"])
-                # tool_timer = Timer(GAME_MESSAGES["TEXT_TIMER"])
-                # tool_timer.activate()
-                # self.display_text = [(tool_swp_surf, tool_swp_rect, tool_timer)]
 
             # swap to left hand item
             if keys[pygame.K_q] and not self.timers['swap'].active:
