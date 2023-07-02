@@ -232,9 +232,11 @@ class Menu:
                             # implement pricing :D hopefully you can
                             # add the input in a way that drags the logic
                             # in a good way. Good night.
-                            self.player.player_add(item, key[1])
+                            self.player.player_add(item, key[1],
+                                                   transact_shop=True)
                         else:
-                            self.player.player_add_seed(item, key[1])
+                            self.player.player_add_seed(item, key[1],
+                                                        transact_shop=True)
 
             if keys[pygame.K_SPACE]:
                 self.timer.activate()

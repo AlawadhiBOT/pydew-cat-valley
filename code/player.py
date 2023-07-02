@@ -437,7 +437,7 @@ class Player(pygame.sprite.Sprite):
                 if bought_sold:  # item was bought
                     self.xp += PLAYER_LEVEL_STATS['buy']
                     self.stamina -= PLAYER_STAMINA_STATS['buy']
-                    self.money += PURCHASE_PRICES[item]
+                    self.money -= PURCHASE_PRICES[item]
                 else:  # sold
                     self.xp += PLAYER_LEVEL_STATS['sell']
                     self.stamina -= PLAYER_STAMINA_STATS['sell']
