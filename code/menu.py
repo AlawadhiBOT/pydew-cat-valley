@@ -201,13 +201,6 @@ class Menu:
             self.toggle_menu()
 
         if not self.timer.active:
-            # if keys[pygame.K_UP]:
-            #     self.index -= 1
-            #     self.timer.activate()
-            #
-            # if keys[pygame.K_DOWN]:
-            #     self.index += 1
-            #     self.timer.activate()
 
             if pygame.mouse.get_pressed(num_buttons=3)[0]:
                 self.timer.activate()
@@ -238,32 +231,12 @@ class Menu:
                             self.player.player_add_seed(item, key[1],
                                                         transact_shop=True)
 
-            if keys[pygame.K_SPACE]:
-                self.timer.activate()
-
-                # get item
-                # current_item = self.options[self.index]
-
-                # sell
-                # if self.index <= self.sell_border:
-                #     if self.player.item_inventory[current_item] > 0:
-                #         self.player.item_inventory[current_item] -= 1
-                #         self.player.money += SALE_PRICES[current_item]
-                #         self.player.xp += PLAYER_LEVEL_STATS['sell']
-                #         self.player.stamina -= PLAYER_STAMINA_STATS['sell']
-                # else:  # buy
-                #     seed_price = PURCHASE_PRICES[current_item]
-                #     if self.player.money >= seed_price:
-                #         self.player.seed_inventory[current_item] += 1
-                #         self.player.money -= PURCHASE_PRICES[current_item]
-                #         self.player.xp += PLAYER_LEVEL_STATS['buy']
-                #         self.player.stamina -= PLAYER_STAMINA_STATS['buy']
-
         # clamo the values
         if self.index < 0:
             self.index = len(self.lst) // 2 - 1
         if self.index > len(self.lst) // 2 - 1:
             self.index = 0
+
     def show_entry(self, text_surf, amount: int, index: int, selected: bool):
         """
         This shows an entry in the shop.
