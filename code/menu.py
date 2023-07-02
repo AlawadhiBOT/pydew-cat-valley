@@ -104,7 +104,32 @@ class Menu:
         self.index = 0
         self.timer = Timer(250)
 
+    def setup(self):
+        """
+        Gets texts for each function item type.
+        """
+        # self.tool_text = self.font.render("TOOLS", False, 'Black')
+        # for item in self.tools:
+        #     text_surf = self.font.render(item, False, 'Black')
+        #     self.tool_text_surfs.append(text_surf)
+
+        self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
+                                          False, 'Black')
+        for item in self.items:
+            if item not in self.seeds:
+                text_surf = self.font.render(item, False, 'Black')
+                self.item_nonplant_text_surfs.append(text_surf)
+            else:
+                text_surf = self.font.render(item, False, 'Black')
+                self.item_text_plant_surf.append(text_surf)
+
+        self.seed_text = self.font.render("PLANT-ABLES", False, 'Black')
+        for item in self.seeds:
+            text_surf = self.font.render("", False, 'Black')
+            self.seed_text_surfs.append(text_surf)
+
     def display_money(self):
+        """Displays the money that the player has."""
         text_surf = self.font.render(f'${self.player.money}', False, 'Black')
         text_rect = pygame.Rect(0, 0,
                                 text_surf.get_width(),
@@ -115,6 +140,7 @@ class Menu:
         self.display_surface.blit(text_surf, text_rect)
 
     def display_arrows(self):
+        """Displays the arrows to change pages in the shop"""
         mousex, mousey = pygame.mouse.get_pos()
         if self.shop_imgs_rects["left"].collidepoint(mousex, mousey):
             self.left_arrow = self.shop_imgs["left_p"]
@@ -135,6 +161,7 @@ class Menu:
         self.display_surface.blit(self.right_arrow, rect)
 
     def display_plus_minus(self, text_rect: pygame.Rect, index: int):
+        """Displays the plus and minus signs to buy or sell in the shop."""
         mousex, mousey = pygame.mouse.get_pos()
 
         height_diff = self.plus_minus_lst[index // 2][0].get_height() - \
@@ -164,30 +191,6 @@ class Menu:
         self.plus_minus_rects[(index, -1)] = rect_2
         self.display_surface.blit(image_1, rect_1)
         self.display_surface.blit(image_2, rect_2)
-
-    def setup(self):
-        """
-        Gets texts for each function item type.
-        """
-        # self.tool_text = self.font.render("TOOLS", False, 'Black')
-        # for item in self.tools:
-        #     text_surf = self.font.render(item, False, 'Black')
-        #     self.tool_text_surfs.append(text_surf)
-
-        self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
-                                          False, 'Black')
-        for item in self.items:
-            if item not in self.seeds:
-                text_surf = self.font.render(item, False, 'Black')
-                self.item_nonplant_text_surfs.append(text_surf)
-            else:
-                text_surf = self.font.render(item, False, 'Black')
-                self.item_text_plant_surf.append(text_surf)
-
-        self.seed_text = self.font.render("PLANT-ABLES", False, 'Black')
-        for item in self.seeds:
-            text_surf = self.font.render("", False, 'Black')
-            self.seed_text_surfs.append(text_surf)
 
     def input(self):
         # get the input and then if the player presses esc, close the menu
@@ -259,8 +262,15 @@ class Menu:
             self.index = len(self.lst) // 2 - 1
         if self.index > len(self.lst) // 2 - 1:
             self.index = 0
-
-    def show_entry(self, text_surf, amount, index, selected):
+    def show_entry(self, text_surf, amount: int, index: int, selected: bool):
+        """
+        This shows an entry in the shop.
+        :param text_surf: Surface representing the current item
+        :param amount: Number representing how much of that item there is
+        :param index: Index of the item in list
+        :param selected: boolean representing whether the item is selected
+        :return:
+        """
         # background
         if index % 2 == 0:
             calc_x = 0

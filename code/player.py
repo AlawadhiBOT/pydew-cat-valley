@@ -372,7 +372,7 @@ class Player(pygame.sprite.Sprite):
         """
         self.hp -= 1
 
-    def player_add(self, item: str, sign: int=1):
+    def player_add(self, item: str, sign: int = 1):
         """
         Copy of a function used in level. Added here for files such as
         fishing.py
@@ -383,7 +383,7 @@ class Player(pygame.sprite.Sprite):
         """
         self.item_inventory[item] += 1 * sign
 
-    def player_add_seed(self, seed: str, sign: int=1):
+    def player_add_seed(self, seed: str, sign: int = 1):
         """
         02-Jul-23
         As in player_add function same thing. However, the purpose of this
@@ -453,9 +453,9 @@ class Player(pygame.sprite.Sprite):
         f.write('xp,level,max_xp,stamina,max_stamina,money\n')
 
         items = "".join([f'{key},' for key in self.item_inventory.keys()])
-        f.write(items[:-1]+"\n")
+        f.write(items[:-1] + "\n")
         seeds = "".join([f'{key} seed,' for key in self.seed_inventory.keys()])
-        f.write(seeds[:-1]+"\n")
+        f.write(seeds[:-1] + "\n")
 
         f.write(f'{self.xp},{self.level},{self.max_xp},'
                 f'{self.stamina},{self.max_stamina},'
