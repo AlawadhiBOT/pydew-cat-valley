@@ -376,19 +376,23 @@ class Player(pygame.sprite.Sprite):
         """
         Copy of a function used in level. Added here for files such as
         fishing.py
-        :param item to be increased in counter
+        02-Jul-23, added sign parameter and exp.
+        :param item: item to be increased in counter
         :param sign: indicates increase or decrease of item
-        :return: None
+        :return: NoneType
         """
         self.item_inventory[item] += 1 * sign
+
     def player_add_seed(self, seed: str, sign: int=1):
         """
-        As in player_add function same thing. However the purpose of this
-        function is to support
-        :param seed:
-        :param sign:
-        :return:
+        02-Jul-23
+        As in player_add function same thing. However, the purpose of this
+        function is to support menu.py
+        :param seed: seed to be increased in counter
+        :param sign: indicates increase or decrease of seed
+        :return: NoneType
         """
+        self.seed_inventory[seed] += 1 * sign
 
     def update_timers(self):
         for timer in self.timers.values():

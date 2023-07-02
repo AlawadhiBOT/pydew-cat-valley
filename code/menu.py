@@ -160,8 +160,8 @@ class Menu:
             image_2 = self.plus_minus_lst[index // 2][3]
             rect_2.topleft += Vector2(0, height_diff)
 
-        self.plus_minus_rects[(index, 0)] = rect_1
-        self.plus_minus_rects[(index, 1)] = rect_2
+        self.plus_minus_rects[(index, 1)] = rect_1
+        self.plus_minus_rects[(index, -1)] = rect_2
         self.display_surface.blit(image_1, rect_1)
         self.display_surface.blit(image_2, rect_2)
 
@@ -214,17 +214,24 @@ class Menu:
                 if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
                     self.page_number += 1
 
-                # for key, rect in self.plus_minus_rects.items():
-                #     if rect.collidepoint(mousex, mousey):
-                #         index = key[0]
-                #         item = self.player.seed_inventory.keys()[index // 2]
-                #         if index % 2 == 0:
-                #             # you are coding a function in player.py to buy
-                #             # and sell, you need to figure out how you will
-                #             # implement pricing :D hopefully you can
-                #             # add the input in a way that drags the logic
-                #             # in a good way. Good night.
-                #             ...
+                for key, rect in self.plus_minus_rects.items():
+                    if rect.collidepoint(mousex, mousey):
+                        # this variable (index) has index in 0th place
+                        # and has a number representing whether
+                        # it is plus or minus
+                        index = key[0]
+                        #  + self.page_number*self.max_entries
+                        item = list(self.player.seed_inventory.keys())[
+                            (index) // 2 + self.page_number*self.max_entries]
+                        if index % 2 == 0:
+                            # you are coding a function in player.py to buy
+                            # and sell, you need to figure out how you will
+                            # implement pricing :D hopefully you can
+                            # add the input in a way that drags the logic
+                            # in a good way. Good night.
+                            self.player.player_add(item, key[1])
+                        else:
+                            self.player.player_add_seed(item, key[1])
 
             if keys[pygame.K_SPACE]:
                 self.timer.activate()
@@ -398,6 +405,8 @@ class Inventory:
             # happened, the inventory would shift in a direction equal to
             # the change by 1 pixel, so if I moved the box right, the inventory
             # would move right by one pixel.
+            # update: figured it out slightly after, check commits, one of them
+            # has it.
             if keys[pygame.K_RIGHT]:
                 row_len = len(self.item_array[self.curr_ind[0]])
                 if self.curr_ind[0] + 1 == row_len:
