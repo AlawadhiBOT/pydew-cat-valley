@@ -143,16 +143,18 @@ class Menu:
         image_1 = self.plus_minus_lst[index // 2][0]  # plus (right)
         image_2 = self.plus_minus_lst[index // 2 + 1][2]  # minus (left)
 
-        rect_1 = text_rect.copy()
-        rect_1.topleft += Vector2(text_rect.width + self.padding * 3,
-                                  2)
+        rect_1 = image_1.copy().get_rect(topleft=text_rect.topleft + Vector2(text_rect.width + self.padding * 3,
+                                  2))
+        # rect_1.topleft += Vector2(text_rect.width + self.padding * 3,
+        #                           2)
         if rect_1.collidepoint(mousex, mousey):
             image_1 = self.plus_minus_lst[index // 2][1]
             rect_1.topleft += Vector2(0, height_diff)
 
-        rect_2 = text_rect.copy()
-        rect_2.topleft += Vector2(-(image_2.get_width() + self.padding * 3),
-                                  2)
+        rect_2 = image_2.copy().get_rect(topleft=text_rect.topleft + Vector2(-(image_2.get_width() + self.padding * 3),
+                                  2))
+        # rect_2.topleft += Vector2(-(image_2.get_width() + self.padding * 3),
+        #                           2)
 
         if rect_2.collidepoint(mousex, mousey):
             image_2 = self.plus_minus_lst[index // 2][3]
@@ -212,17 +214,17 @@ class Menu:
                 if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
                     self.page_number += 1
 
-                for key, rect in self.plus_minus_rects.items():
-                    if rect.collidepoint(mousex, mousey):
-                        index = key[0]
-                        item = self.player.seed_inventory.keys()[index // 2]
-                        if index % 2 == 0:
-                            # you are coding a function in player.py to buy
-                            # and sell, you need to figure out how you will
-                            # implement pricing :D hopefully you can
-                            # add the input in a way that drags the logic
-                            # in a good way. Good night.
-                            ...
+                # for key, rect in self.plus_minus_rects.items():
+                #     if rect.collidepoint(mousex, mousey):
+                #         index = key[0]
+                #         item = self.player.seed_inventory.keys()[index // 2]
+                #         if index % 2 == 0:
+                #             # you are coding a function in player.py to buy
+                #             # and sell, you need to figure out how you will
+                #             # implement pricing :D hopefully you can
+                #             # add the input in a way that drags the logic
+                #             # in a good way. Good night.
+                #             ...
 
 
 
