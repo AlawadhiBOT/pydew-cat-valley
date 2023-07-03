@@ -26,6 +26,29 @@ class Menu:
             pygame.image.load('../graphics/menus/shop_2.png').convert_alpha()
         self.menu_rect = self.menu_image.get_rect(
             center=OVERLAY_POSITIONS['shop'])
+        # status rects
+        self.status_imgs = {
+            "tools": pygame.image.load('../graphics/menus/shop/'
+                                       'tools.png').convert_alpha(),
+            "unplantables": pygame.image.load('../graphics/menus/shop/'
+                                              'unplantables.'
+                                              'png').convert_alpha(),
+            "plants": pygame.image.load('../graphics/menus/shop/'
+                                        'plants.png').convert_alpha()
+        }
+        self.status_rects = {
+            "tools": self.status_imgs["tools"].get_rect(
+                midright=self.menu_rect.center - Vector2(
+                    self.status_imgs["unplantables"].get_width() // 2, 0)
+            ),
+            "unplantables": self.status_imgs["unplantables"].get_rect(
+                center=self.menu_rect.center
+            ),
+            "plants": self.status_imgs["plants"].get_rect(
+                midleft=self.menu_rect.center + Vector2(
+                    self.status_imgs["unplantables"].get_width() // 2, 0)
+            )
+        }
         # menu arrows
         self.shop_imgs = {
             "left": pygame.image.load('../graphics/menus/shop/left_'
@@ -100,7 +123,7 @@ class Menu:
 
         # movement
         self.page_number = 0
-        self.status_page = "plantable"
+        self.status_page = "selection screen"
         self.index = 0
         self.timer = Timer(250)
 
@@ -127,6 +150,14 @@ class Menu:
         for item in self.seeds:
             text_surf = self.font.render("", False, 'Black')
             self.seed_text_surfs.append(text_surf)
+
+    def display_selection_shop(self):
+        """
+        Displays the selection boxes for the player to select what they can buy.
+        :return: NoneType
+        """
+        for key, image in self.status_imgs.items():
+            self.display_surface.blit(image, self.status_rects[key])
 
     def display_money(self):
         """Displays the money that the player has."""
@@ -205,31 +236,42 @@ class Menu:
             if pygame.mouse.get_pressed(num_buttons=3)[0]:
                 self.timer.activate()
                 mousex, mousey = pygame.mouse.get_pos()
-                if self.shop_imgs_rects["left"].collidepoint(mousex, mousey):
-                    self.page_number -= 1
-                if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
-                    self.page_number += 1
 
-                for key, rect in self.plus_minus_rects.items():
-                    if rect.collidepoint(mousex, mousey):
-                        # this variable (index) has index in 0th place
-                        # and has a number representing whether
-                        # it is plus or minus
-                        index = key[0]
-                        #  + self.page_number*self.max_entries
-                        item = list(self.player.seed_inventory.keys())[
-                            (index) // 2 + self.page_number*self.max_entries]
-                        if index % 2 == 0:
-                            # you are coding a function in player.py to buy
-                            # and sell, you need to figure out how you will
-                            # implement pricing :D hopefully you can
-                            # add the input in a way that drags the logic
-                            # in a good way. Good night.
-                            self.player.player_add(item, key[1],
-                                                   transact_shop=True)
-                        else:
-                            self.player.player_add_seed(item, key[1],
-                                                        transact_shop=True)
+                if self.status_page == "selection screen":
+                    for key, rect in self.status_rects.items():
+                        if rect.collidepoint(mousex, mousey):
+                            self.status_page = key
+
+                if self.status_page == "plantable":
+                    if self.shop_imgs_rects["left"].collidepoint(mousex,
+                                                                 mousey):
+                        self.page_number -= 1
+                    if self.shop_imgs_rects["right"].collidepoint(mousex,
+                                                                  mousey):
+                        self.page_number += 1
+
+                    for key, rect in self.plus_minus_rects.items():
+                        if rect.collidepoint(mousex, mousey):
+                            # this variable (index) has index in 0th place
+                            # and has a number representing whether
+                            # it is plus or minus
+                            index = key[0]
+                            #  + self.page_number*self.max_entries
+                            item = list(self.player.seed_inventory.keys())[
+                                index // 2 +
+                                self.page_number * self.max_entries]
+                            if index % 2 == 0:
+                                # you are coding a function in player.py to buy
+                                # and sell, you need to figure out how you will
+                                # implement pricing :D hopefully you can
+                                # add the input in a way that drags the logic
+                                # in a good way. Good night.
+                                self.player.player_add(item, key[1],
+                                                       transact_shop=True)
+                            else:
+                                self.player.player_add_seed(item, key[1],
+                                                            transact_shop=True)
+
 
         # clamo the values
         if self.index < 0:
@@ -288,7 +330,9 @@ class Menu:
         self.display_money()
         self.display_arrows()
 
-        if self.status_page == "Unplantable":
+        if self.status_page == "selection screen":
+            self.display_selection_shop()
+        elif self.status_page == "unplantables":
             amount_list = [val for key, val in
                            self.player.item_inventory.items()
                            if key not in self.player.seeds]
@@ -297,7 +341,7 @@ class Menu:
                 amount = amount_list[text_ind]
                 self.show_entry(text_surf, amount, text_ind,
                                 self.index == text_ind)
-        else:
+        elif self.status_page == "plants":
             item_amount_list = [val for key, val in
                                 self.player.item_inventory.items()
                                 if key in self.player.seeds]
