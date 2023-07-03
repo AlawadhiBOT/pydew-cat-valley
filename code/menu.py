@@ -50,30 +50,31 @@ class Menu:
             )
         }
         # menu arrows
+        path = "../graphics/menus/shop/"
         self.shop_imgs = {
-            "left": pygame.image.load('../graphics/menus/shop/left_'
-                                      'arrow.png').convert_alpha(),
-            "left_p": pygame.image.load('../graphics/menus/shop/left_'
-                                        'arrow_pressed.'
-                                        'png').convert_alpha(),
-            "right":
-                pygame.image.load('../graphics/menus/shop/right_'
-                                  'arrow.png').convert_alpha(),
-            "right_p": pygame.image.load('../graphics/menus/shop/right_'
+            "left": pygame.image.load(f'{path}left_arrow.png').convert_alpha(),
+            "left_p": pygame.image.load(f'{path}left_arrow_pressed.png'
+                                        ).convert_alpha(),
+            "right": pygame.image.load(f'{path}/right_arrow.png'
+                                       ).convert_alpha(),
+            "right_p": pygame.image.load(f'{path}right_'
                                          'arrow_pressed.'
                                          'png').convert_alpha(),
-            "plus": pygame.image.load('../graphics/menus/shop/plus'
-                                      '.png').convert_alpha(),
-            "plus_p": pygame.image.load('../graphics/menus/shop/plus_pressed'
-                                        '.png').convert_alpha(),
-            "minus":
-                pygame.image.load('../graphics/menus/shop/minus'
-                                  '.png').convert_alpha(),
-            "minus_p": pygame.image.load('../graphics/menus/shop/minus_pressed'
-                                         '.png').convert_alpha()
+            "plus": pygame.image.load(f'{path}/plus.png').convert_alpha(),
+            "plus_p": pygame.image.load(f'{path}plus_pressed.png'
+                                        ).convert_alpha(),
+            "minus": pygame.image.load(f'{path}/minus.png').convert_alpha(),
+            "minus_p": pygame.image.load(f'{path}minus_pressed.png'
+                                         ).convert_alpha(),
+            "exit": pygame.image.load(f'{path}exit_shop.png'
+                                      ).convert_alpha(),
+            "exit_p": pygame.image.load(f'{path}exit_shop_pressed.png'
+                                        ).convert_alpha()
         }
         calc_height_diff = self.shop_imgs["left"].get_height() \
                            - self.shop_imgs["left_p"].get_height()
+        height_diff_exit = self.shop_imgs["exit"].get_height() - \
+                                self.shop_imgs["exit_p"].get_height()
         self.shop_imgs_rects = {
             "left": self.shop_imgs["left"].get_rect(
                 bottomleft=self.menu_rect.bottomleft +
@@ -87,6 +88,16 @@ class Menu:
             "right_p": self.shop_imgs["right"].get_rect(
                 bottomright=self.menu_rect.bottomright +
                             Vector2(-64, -64 + calc_height_diff)),
+            "exit": self.shop_imgs["exit"].get_rect(
+                topleft=self.menu_rect.topleft +
+                        Vector2(self.topleft_offset // 2,
+                                self.topleft_offset // 2)
+            ),
+            "exit_p": self.shop_imgs["exit_p"].get_rect(
+                topleft=self.menu_rect.topleft +
+                        Vector2(self.topleft_offset // 2,
+                                self.topleft_offset // 2 + height_diff_exit)
+            )
         }
         self.plus_minus_rects = {}
         self.left_arrow = self.shop_imgs["left"]
@@ -191,6 +202,10 @@ class Menu:
 
         self.display_surface.blit(self.right_arrow, rect)
 
+        # if self.shop_imgs_rects["exit"].co
+        self.display_surface.blit(self.shop_imgs["exit"],
+                                  self.shop_imgs_rects["exit"])
+
     def display_plus_minus(self, text_rect: pygame.Rect, index: int):
         """Displays the plus and minus signs to buy or sell in the shop."""
         mousex, mousey = pygame.mouse.get_pos()
@@ -271,7 +286,6 @@ class Menu:
                             else:
                                 self.player.player_add_seed(item, key[1],
                                                             transact_shop=True)
-
 
         # clamo the values
         if self.index < 0:
