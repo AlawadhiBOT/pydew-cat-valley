@@ -13,6 +13,7 @@ from random import randint
 from menu import Menu, Inventory
 from timer import Timer
 
+
 class Level:
     def __init__(self):
         # Get display surface
