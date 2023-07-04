@@ -101,7 +101,11 @@ class Menu:
         }
         self.plus_minus_rects = {}
         self.left_arrow = self.shop_imgs["left"]
+        self.left_arrow_rect = self.shop_imgs_rects["left"]
         self.right_arrow = self.shop_imgs["right"]
+        self.right_arrow_rect = self.shop_imgs_rects["right"]
+        self.exit_button = self.shop_imgs["exit"]
+        self.exit_button_rect = self.shop_imgs_rects["exit"]
         self.plus_minus_lst = [[self.shop_imgs["plus"],
                                 self.shop_imgs["plus_p"],
                                 self.shop_imgs["minus"],
@@ -186,25 +190,31 @@ class Menu:
         mousex, mousey = pygame.mouse.get_pos()
         if self.shop_imgs_rects["left"].collidepoint(mousex, mousey):
             self.left_arrow = self.shop_imgs["left_p"]
-            rect = self.shop_imgs_rects["left_p"]
+            self.left_arrow_rect = self.shop_imgs_rects["left_p"]
         else:
             self.left_arrow = self.shop_imgs["left"]
-            rect = self.shop_imgs_rects["left"]
+            self.left_arrow_rect = self.shop_imgs_rects["left"]
 
-        self.display_surface.blit(self.left_arrow, rect)
+        self.display_surface.blit(self.left_arrow, self.left_arrow_rect)
 
         if self.shop_imgs_rects["right"].collidepoint(mousex, mousey):
             self.right_arrow = self.shop_imgs["right_p"]
-            rect = self.shop_imgs_rects["right_p"]
+            self.right_arrow_rect = self.shop_imgs_rects["right_p"]
         else:
             self.right_arrow = self.shop_imgs["right"]
-            rect = self.shop_imgs_rects["right"]
+            self.right_arrow_rect = self.shop_imgs_rects["right"]
 
-        self.display_surface.blit(self.right_arrow, rect)
+        self.display_surface.blit(self.right_arrow, self.right_arrow_rect)
 
-        # if self.shop_imgs_rects["exit"].co
-        self.display_surface.blit(self.shop_imgs["exit"],
-                                  self.shop_imgs_rects["exit"])
+        if self.shop_imgs_rects["exit"].collidepoint(mousex, mousey):
+            self.exit_button = self.shop_imgs["exit_p"]
+            self.exit_button_rect = self.shop_imgs_rects["exit_p"]
+        else:
+            self.exit_button = self.shop_imgs["exit"]
+            self.exit_button_rect = self.shop_imgs_rects["exit"]
+
+        self.display_surface.blit(self.exit_button,
+                                  self.exit_button_rect)
 
     def display_plus_minus(self, text_rect: pygame.Rect, index: int):
         """Displays the plus and minus signs to buy or sell in the shop."""
@@ -257,7 +267,8 @@ class Menu:
                         if rect.collidepoint(mousex, mousey):
                             self.status_page = key
 
-                if self.status_page == "plantable":
+                if self.status_page == "plants":
+
                     if self.shop_imgs_rects["left"].collidepoint(mousex,
                                                                  mousey):
                         self.page_number -= 1
@@ -286,6 +297,10 @@ class Menu:
                             else:
                                 self.player.player_add_seed(item, key[1],
                                                             transact_shop=True)
+
+                if self.status_page != "selection screen":
+                    if self.exit_button_rect.collidepoint(mousex, mousey):
+                        self.status_page = "selection screen"
 
         # clamo the values
         if self.index < 0:
@@ -341,8 +356,9 @@ class Menu:
         self.input()
 
         self.display_surface.blit(self.menu_image, self.menu_rect)
-        self.display_money()
-        self.display_arrows()
+        if self.status_page != "selection screen":
+            self.display_money()
+            self.display_arrows()
 
         if self.status_page == "selection screen":
             self.display_selection_shop()
@@ -350,6 +366,7 @@ class Menu:
             amount_list = [val for key, val in
                            self.player.item_inventory.items()
                            if key not in self.player.seeds]
+            self.lst = self.item_nonplant_text_surfs
 
             for text_ind, text_surf in enumerate(self.lst):
                 amount = amount_list[text_ind]
