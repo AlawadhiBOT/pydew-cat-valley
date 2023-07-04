@@ -35,7 +35,7 @@ class Level:
         self.overlay = None
 
         # timer
-        self.autosave_timer = Timer(3000, self.auto_save)
+        self.autosave_timer = Timer(120000, self.auto_save)
 
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')
