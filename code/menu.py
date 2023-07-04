@@ -467,7 +467,7 @@ class Inventory:
             # would move right by one pixel.
             # update: figured it out slightly after, check commits, one of them
             # has it.
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d]:
                 row_len = len(self.item_array[self.curr_ind[0]])
                 if self.curr_ind[0] + 1 == row_len:
                     self.box_rect.left -= (52 + 8) * (row_len - 1)
@@ -478,7 +478,7 @@ class Inventory:
 
                 self.timer.activate()
 
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_a]:
                 row_len = len(self.item_array[self.curr_ind[0]])
                 if self.curr_ind[0] - 1 < 0:
                     self.box_rect.left += (52 + 8) * row_len
@@ -489,7 +489,7 @@ class Inventory:
 
                 self.timer.activate()
 
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_w]:
                 col_len = len(self.item_array)
                 if self.curr_ind[1] - 1 < 0:
                     self.box_rect.top += (52 + 8) * (col_len - 1)
@@ -500,7 +500,7 @@ class Inventory:
 
                 self.timer.activate()
 
-            if keys[pygame.K_DOWN]:
+            if keys[pygame.K_s]:
                 col_len = len(self.item_array)
                 if self.curr_ind[1] + 1 == col_len:
                     self.box_rect.top -= (52 + 8) * (col_len - 1)
