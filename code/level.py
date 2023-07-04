@@ -11,7 +11,7 @@ from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
 from menu import Menu, Inventory
-
+from timer import Timer
 
 class Level:
     def __init__(self):
@@ -33,6 +33,9 @@ class Level:
         # inventory
         self.inventory = None
         self.overlay = None
+
+        # timer
+        self.autosave_timer = Timer(3000, self.auto_save)
 
         # music
         self.success = pygame.mixer.Sound('../audio/success.wav')
@@ -384,6 +387,14 @@ class Level:
         self.level_no = level_no
         self.setup()
 
+    def auto_save(self):
+        """
+        Autosave function for saving soil state
+        :return: NoneType
+        """
+        self.soil_layer.save_soil_state()
+        self.autosave_timer.activate()
+
     def player_add(self, item: str):
         """
         Adds an item to the player's inventory
@@ -473,6 +484,7 @@ class Level:
         # drawing logic
         self.display_surface.fill("black")
         self.all_sprites.custom_draw(self.player)
+        self.autosave_timer.update()
 
         # updates
         if self.shop_active:
@@ -500,6 +512,8 @@ class Level:
 
         # transition
         if self.player.sleep:
+            self.autosave_timer.activate()
+            self.auto_save()
             self.transition.play()
 
 

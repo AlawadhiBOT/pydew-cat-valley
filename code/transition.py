@@ -16,10 +16,11 @@ class Transition:
 
     def play(self):
         self.color += self.speed
-        if self.color <= 0:
+        if self.color <= 1:
             self.speed *= -1
             self.color = 0
             self.reset()
+
         if self.color > 255:
             self.color = 255
             self.player.sleep = False
