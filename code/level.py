@@ -383,8 +383,11 @@ class Level:
     def set_map_number(self, level_no):
         """
         Sets the map number
+        05-Jul-2023
+        Now auto saves.
         :return: None
         """
+        self.auto_save()
         self.level_no = level_no
         self.setup()
 
