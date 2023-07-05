@@ -328,6 +328,7 @@ class Player(pygame.sprite.Sprite):
                         elif collided_interaction_sprites[0].name == 'Forest':
                             self.set_map_level(MAP_NUMBERS["Forest"])
                         else:
+                            self.sleep = True
                             self.auto_save_night()
                     elif map_no == MAP_NUMBERS["Forest"]:
                         if collided_interaction_sprites[0].name == "Starting":
@@ -488,7 +489,6 @@ class Player(pygame.sprite.Sprite):
 
     def auto_save_night(self):
         self.status = 'left_idle'
-        self.sleep = True
         self.stamina = self.max_stamina
         self.speed = 200
         f = open('../data/player_info.csv', 'w')

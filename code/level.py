@@ -395,6 +395,7 @@ class Level:
         """
         self.soil_layer.save_soil_state()
         self.autosave_timer.activate()
+        self.player.auto_save_night()
 
     def player_add(self, item: str):
         """
