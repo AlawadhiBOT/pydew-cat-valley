@@ -383,8 +383,11 @@ class Level:
     def set_map_number(self, level_no):
         """
         Sets the map number
+        05-Jul-2023
+        Now auto saves.
         :return: None
         """
+        self.auto_save()
         self.level_no = level_no
         self.setup()
 
@@ -395,6 +398,7 @@ class Level:
         """
         self.soil_layer.save_soil_state()
         self.autosave_timer.activate()
+        self.player.auto_save_night()
 
     def player_add(self, item: str):
         """
