@@ -248,6 +248,50 @@ class Menu:
         self.display_surface.blit(image_1, rect_1)
         self.display_surface.blit(image_2, rect_2)
 
+    def show_entry(self, text_surf, amount: int, index: int):
+        """
+        This shows an entry in the shop.
+        :param text_surf: Surface representing the current item
+        :param amount: Number representing how much of that item there is
+        :param index: Index of the item in list
+        :param selected: boolean representing whether the item is selected
+        :return:
+        """
+        # background
+        if index % 2 == 0:
+            calc_x = 0
+            calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        else:
+            calc_x = self.menu_rect.width // 2 - self.topleft_offset
+            calc_y = (text_surf.get_height() + self.padding * 4) * \
+                     (index - 1) // 2
+
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+
+        bg_rect = pygame.Rect(top_left_calc.x - self.padding,
+                              top_left_calc.y - self.padding,
+                              self.menu_rect.width // 2 - self.topleft_offset,
+                              text_surf.get_height() + self.padding * 2)
+
+        # text
+        text_rect = text_surf.get_rect(midleft=top_left_calc +
+                                               Vector2(self.padding,
+                                                       self.padding * 3)
+                                       )
+        self.display_surface.blit(text_surf, text_rect)
+        # amount
+        amount_surf = self.font.render(str(amount), False, 'Black')
+        amount_rect = amount_surf.get_rect(midright=bg_rect.midright
+                                                    - Vector2(self.padding * 10,
+                                                              0))
+        self.display_plus_minus(amount_rect, index)
+        self.display_surface.blit(amount_surf, amount_rect)
+
+        # selected
+        # if selected:
+        #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
+
     def input(self):
         # get the input and then if the player presses esc, close the menu
         keys = pygame.key.get_pressed()
@@ -308,50 +352,6 @@ class Menu:
         if self.index > len(self.lst) // 2 - 1:
             self.index = 0
 
-    def show_entry(self, text_surf, amount: int, index: int, selected: bool):
-        """
-        This shows an entry in the shop.
-        :param text_surf: Surface representing the current item
-        :param amount: Number representing how much of that item there is
-        :param index: Index of the item in list
-        :param selected: boolean representing whether the item is selected
-        :return:
-        """
-        # background
-        if index % 2 == 0:
-            calc_x = 0
-            calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
-            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
-        else:
-            calc_x = self.menu_rect.width // 2 - self.topleft_offset
-            calc_y = (text_surf.get_height() + self.padding * 4) * \
-                     (index - 1) // 2
-
-            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
-
-        bg_rect = pygame.Rect(top_left_calc.x - self.padding,
-                              top_left_calc.y - self.padding,
-                              self.menu_rect.width // 2 - self.topleft_offset,
-                              text_surf.get_height() + self.padding * 2)
-
-        # text
-        text_rect = text_surf.get_rect(midleft=top_left_calc +
-                                               Vector2(self.padding,
-                                                       self.padding * 3)
-                                       )
-        self.display_surface.blit(text_surf, text_rect)
-        # amount
-        amount_surf = self.font.render(str(amount), False, 'Black')
-        amount_rect = amount_surf.get_rect(midright=bg_rect.midright
-                                                    - Vector2(self.padding * 10,
-                                                              0))
-        self.display_plus_minus(amount_rect, index)
-        self.display_surface.blit(amount_surf, amount_rect)
-
-        # selected
-        # if selected:
-        #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
-
     def update(self):
         self.input()
 
@@ -370,8 +370,7 @@ class Menu:
 
             for text_ind, text_surf in enumerate(self.lst):
                 amount = amount_list[text_ind]
-                self.show_entry(text_surf, amount, text_ind,
-                                self.index == text_ind)
+                self.show_entry(text_surf, amount, text_ind)
         elif self.status_page == "plants":
             item_amount_list = [val for key, val in
                                 self.player.item_inventory.items()
@@ -394,12 +393,10 @@ class Menu:
                 if entries > 0:
                     amount = item_amount_list[i + num_0]
                     text_surf = self.item_text_plant_surf[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i,
-                                    self.index == i)
+                    self.show_entry(text_surf, amount, 2 * i)
                     amount = seed_amount_list[i + num_0]
                     text_surf = self.seed_text_surfs[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i + 1,
-                                    self.index == i)
+                    self.show_entry(text_surf, amount, 2 * i + 1)
                     entries -= 1
 
 
