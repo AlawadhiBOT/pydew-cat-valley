@@ -511,21 +511,29 @@ class Inventory:
 
                 self.timer.activate()
 
-        if keys[pygame.K_1]:
-            self.held_items[0] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_2]:
-            self.held_items[1] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_3]:
-            self.held_items[2] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_4]:
-            self.held_items[3] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_5]:
-            self.held_items[4] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
+            try:
+                if keys[pygame.K_1]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[0] = item
+                if keys[pygame.K_2]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[1] = item
+                if keys[pygame.K_3]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[2] = item
+                if keys[pygame.K_4]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[3] = item
+                if keys[pygame.K_5]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[4] = item
+            except IndexError:
+                print("No item here yet :D")
 
         if keys[pygame.K_ESCAPE]:
             self.toggle_inventory()

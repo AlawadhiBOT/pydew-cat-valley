@@ -355,6 +355,26 @@ class Player(pygame.sprite.Sprite):
 
         return self.pos.x, self.pos.y
 
+    def get_unlocked(self, item) -> bool:
+        """
+        Function to display if item is unlocked or not
+        :param item: item to be check if unlocked or not
+        :return: a boolean value indicating whether the item was unlocked or not
+        """
+        # ['hoe', 'axe', 'water', 'fishing']
+        if item in self.tools:
+            if item == self.tools[0] and self.level >= 0:
+                return True
+            elif item == self.tools[1] and self.level >= 3:
+                return True
+            elif item == self.tools[2] and self.level >= 0:
+                return True
+            elif item == self.tools[3] and self.level >= 5:
+                return True
+        else:
+            return True
+        return False
+
     def reduce_hp(self):
         """
         Reduces hp of the player by 1.
