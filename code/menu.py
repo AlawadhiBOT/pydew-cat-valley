@@ -292,6 +292,46 @@ class Menu:
         # if selected:
         #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
 
+    def display_unplantables_screen(self):
+        """Displays the unplantables screen"""
+        amount_list = [val for key, val in
+                       self.player.item_inventory.items()
+                       if key not in self.player.seeds]
+        self.lst = self.item_nonplant_text_surfs
+
+        for text_ind, text_surf in enumerate(self.lst):
+            amount = amount_list[text_ind]
+            self.show_entry(text_surf, amount, text_ind)
+
+    def display_plants_screen(self):
+        """Displays the plants screen"""
+        item_amount_list = [val for key, val in
+                            self.player.item_inventory.items()
+                            if key in self.player.seeds]
+        seed_amount_list = [val for val in
+                            self.player.seed_inventory.values()]
+
+        num_0 = self.max_entries * self.page_number
+        if self.max_entries * (self.page_number + 1) > \
+                len(item_amount_list):
+            num_1 = len(item_amount_list)
+        else:
+            num_1 = self.max_entries * (self.page_number + 1)
+
+        self.lst = item_amount_list[num_0:num_1] + \
+                   seed_amount_list[num_0:num_1]
+
+        entries = self.max_entries
+        for i in range(0, len(self.lst) // 2):
+            if entries > 0:
+                amount = item_amount_list[i + num_0]
+                text_surf = self.item_text_plant_surf[i + num_0]
+                self.show_entry(text_surf, amount, 2 * i)
+                amount = seed_amount_list[i + num_0]
+                text_surf = self.seed_text_surfs[i + num_0]
+                self.show_entry(text_surf, amount, 2 * i + 1)
+                entries -= 1
+
     def input(self):
         # get the input and then if the player presses esc, close the menu
         keys = pygame.key.get_pressed()
@@ -363,41 +403,9 @@ class Menu:
         if self.status_page == "selection screen":
             self.display_selection_shop()
         elif self.status_page == "unplantables":
-            amount_list = [val for key, val in
-                           self.player.item_inventory.items()
-                           if key not in self.player.seeds]
-            self.lst = self.item_nonplant_text_surfs
-
-            for text_ind, text_surf in enumerate(self.lst):
-                amount = amount_list[text_ind]
-                self.show_entry(text_surf, amount, text_ind)
+            self.display_unplantables_screen()
         elif self.status_page == "plants":
-            item_amount_list = [val for key, val in
-                                self.player.item_inventory.items()
-                                if key in self.player.seeds]
-            seed_amount_list = [val for val in
-                                self.player.seed_inventory.values()]
-
-            num_0 = self.max_entries * self.page_number
-            if self.max_entries * (self.page_number + 1) > \
-                    len(item_amount_list):
-                num_1 = len(item_amount_list)
-            else:
-                num_1 = self.max_entries * (self.page_number + 1)
-
-            self.lst = item_amount_list[num_0:num_1] + \
-                       seed_amount_list[num_0:num_1]
-
-            entries = self.max_entries
-            for i in range(0, len(self.lst) // 2):
-                if entries > 0:
-                    amount = item_amount_list[i + num_0]
-                    text_surf = self.item_text_plant_surf[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i)
-                    amount = seed_amount_list[i + num_0]
-                    text_surf = self.seed_text_surfs[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i + 1)
-                    entries -= 1
+            self.display_plants_screen()
 
 
 class Inventory:
