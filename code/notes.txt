@@ -1,1 +1,1 @@
-
+Move inventory to its own file.

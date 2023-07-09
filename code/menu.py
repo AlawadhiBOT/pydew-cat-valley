@@ -126,7 +126,7 @@ class Menu:
         self.max_entries = 10
 
         # surfs
-        # self.tool_text_surfs = []
+        self.tool_text_surfs = []
         self.item_nonplant_text_surfs = []
         self.item_text_plant_surf = []
         self.seed_text_surfs = []
@@ -146,10 +146,10 @@ class Menu:
         """
         Gets texts for each function item type.
         """
-        # self.tool_text = self.font.render("TOOLS", False, 'Black')
-        # for item in self.tools:
-        #     text_surf = self.font.render(item, False, 'Black')
-        #     self.tool_text_surfs.append(text_surf)
+        self.tool_text = self.font.render("TOOLS", False, 'Black')
+        for item in self.tools:
+            text_surf = self.font.render(item, False, 'Black')
+            self.tool_text_surfs.append(text_surf)
 
         self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
                                           False, 'Black')
@@ -332,6 +332,21 @@ class Menu:
                 self.show_entry(text_surf, amount, 2 * i + 1)
                 entries -= 1
 
+    def display_tools_screen(self):
+        """Displays the plants screen"""
+        # for i in range
+        # if index % 2 == 0:
+        #     calc_x = 0
+        #     calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
+        #     top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        # else:
+        #     calc_x = self.menu_rect.width // 2 - self.topleft_offset
+        #     calc_y = (text_surf.get_height() + self.padding * 4) * \
+        #              (index - 1) // 2
+        #
+        #     top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        ...
+
     def input(self):
         # get the input and then if the player presses esc, close the menu
         keys = pygame.key.get_pressed()
@@ -406,6 +421,8 @@ class Menu:
             self.display_unplantables_screen()
         elif self.status_page == "plants":
             self.display_plants_screen()
+        else:
+            self.display_tools_screen()
 
 
 class Inventory:
