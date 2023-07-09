@@ -126,7 +126,7 @@ class Menu:
         self.max_entries = 10
 
         # surfs
-        # self.tool_text_surfs = []
+        self.tool_text_surfs = []
         self.item_nonplant_text_surfs = []
         self.item_text_plant_surf = []
         self.seed_text_surfs = []
@@ -146,10 +146,10 @@ class Menu:
         """
         Gets texts for each function item type.
         """
-        # self.tool_text = self.font.render("TOOLS", False, 'Black')
-        # for item in self.tools:
-        #     text_surf = self.font.render(item, False, 'Black')
-        #     self.tool_text_surfs.append(text_surf)
+        self.tool_text = self.font.render("TOOLS", False, 'Black')
+        for item in self.tools:
+            text_surf = self.font.render(item, False, 'Black')
+            self.tool_text_surfs.append(text_surf)
 
         self.item_text = self.font.render("NON PLANT-ABLE ITEMS",
                                           False, 'Black')
@@ -248,6 +248,105 @@ class Menu:
         self.display_surface.blit(image_1, rect_1)
         self.display_surface.blit(image_2, rect_2)
 
+    def show_entry(self, text_surf, amount: int, index: int):
+        """
+        This shows an entry in the shop.
+        :param text_surf: Surface representing the current item
+        :param amount: Number representing how much of that item there is
+        :param index: Index of the item in list
+        :param selected: boolean representing whether the item is selected
+        :return:
+        """
+        # background
+        if index % 2 == 0:
+            calc_x = 0
+            calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        else:
+            calc_x = self.menu_rect.width // 2 - self.topleft_offset
+            calc_y = (text_surf.get_height() + self.padding * 4) * \
+                     (index - 1) // 2
+
+            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+
+        bg_rect = pygame.Rect(top_left_calc.x - self.padding,
+                              top_left_calc.y - self.padding,
+                              self.menu_rect.width // 2 - self.topleft_offset,
+                              text_surf.get_height() + self.padding * 2)
+
+        # text
+        text_rect = text_surf.get_rect(midleft=top_left_calc +
+                                               Vector2(self.padding,
+                                                       self.padding * 3)
+                                       )
+        self.display_surface.blit(text_surf, text_rect)
+        # amount
+        amount_surf = self.font.render(str(amount), False, 'Black')
+        amount_rect = amount_surf.get_rect(midright=bg_rect.midright
+                                                    - Vector2(self.padding * 10,
+                                                              0))
+        self.display_plus_minus(amount_rect, index)
+        self.display_surface.blit(amount_surf, amount_rect)
+
+        # selected
+        # if selected:
+        #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
+
+    def display_unplantables_screen(self):
+        """Displays the unplantables screen"""
+        amount_list = [val for key, val in
+                       self.player.item_inventory.items()
+                       if key not in self.player.seeds]
+        self.lst = self.item_nonplant_text_surfs
+
+        for text_ind, text_surf in enumerate(self.lst):
+            amount = amount_list[text_ind]
+            self.show_entry(text_surf, amount, text_ind)
+
+    def display_plants_screen(self):
+        """Displays the plants screen"""
+        item_amount_list = [val for key, val in
+                            self.player.item_inventory.items()
+                            if key in self.player.seeds]
+        seed_amount_list = [val for val in
+                            self.player.seed_inventory.values()]
+
+        num_0 = self.max_entries * self.page_number
+        if self.max_entries * (self.page_number + 1) > \
+                len(item_amount_list):
+            num_1 = len(item_amount_list)
+        else:
+            num_1 = self.max_entries * (self.page_number + 1)
+
+        self.lst = item_amount_list[num_0:num_1] + \
+                   seed_amount_list[num_0:num_1]
+
+        entries = self.max_entries
+        for i in range(0, len(self.lst) // 2):
+            if entries > 0:
+                amount = item_amount_list[i + num_0]
+                text_surf = self.item_text_plant_surf[i + num_0]
+                self.show_entry(text_surf, amount, 2 * i)
+                amount = seed_amount_list[i + num_0]
+                text_surf = self.seed_text_surfs[i + num_0]
+                self.show_entry(text_surf, amount, 2 * i + 1)
+                entries -= 1
+
+    def display_tools_screen(self):
+        """Displays the plants screen"""
+        # for i in range
+        # if index % 2 == 0:
+        #     calc_x = 0
+        #     calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
+        #     top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        # else:
+        #     calc_x = self.menu_rect.width // 2 - self.topleft_offset
+        #     calc_y = (text_surf.get_height() + self.padding * 4) * \
+        #              (index - 1) // 2
+        #
+        #     top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
+        ...
+
     def input(self):
         # get the input and then if the player presses esc, close the menu
         keys = pygame.key.get_pressed()
@@ -308,50 +407,6 @@ class Menu:
         if self.index > len(self.lst) // 2 - 1:
             self.index = 0
 
-    def show_entry(self, text_surf, amount: int, index: int, selected: bool):
-        """
-        This shows an entry in the shop.
-        :param text_surf: Surface representing the current item
-        :param amount: Number representing how much of that item there is
-        :param index: Index of the item in list
-        :param selected: boolean representing whether the item is selected
-        :return:
-        """
-        # background
-        if index % 2 == 0:
-            calc_x = 0
-            calc_y = (text_surf.get_height() + self.padding * 4) * index // 2
-            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
-        else:
-            calc_x = self.menu_rect.width // 2 - self.topleft_offset
-            calc_y = (text_surf.get_height() + self.padding * 4) * \
-                     (index - 1) // 2
-
-            top_left_calc = self.topleft_items + Vector2(calc_x, calc_y)
-
-        bg_rect = pygame.Rect(top_left_calc.x - self.padding,
-                              top_left_calc.y - self.padding,
-                              self.menu_rect.width // 2 - self.topleft_offset,
-                              text_surf.get_height() + self.padding * 2)
-
-        # text
-        text_rect = text_surf.get_rect(midleft=top_left_calc +
-                                               Vector2(self.padding,
-                                                       self.padding * 3)
-                                       )
-        self.display_surface.blit(text_surf, text_rect)
-        # amount
-        amount_surf = self.font.render(str(amount), False, 'Black')
-        amount_rect = amount_surf.get_rect(midright=bg_rect.midright
-                                                    - Vector2(self.padding * 10,
-                                                              0))
-        self.display_plus_minus(amount_rect, index)
-        self.display_surface.blit(amount_surf, amount_rect)
-
-        # selected
-        # if selected:
-        #     pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
-
     def update(self):
         self.input()
 
@@ -363,44 +418,11 @@ class Menu:
         if self.status_page == "selection screen":
             self.display_selection_shop()
         elif self.status_page == "unplantables":
-            amount_list = [val for key, val in
-                           self.player.item_inventory.items()
-                           if key not in self.player.seeds]
-            self.lst = self.item_nonplant_text_surfs
-
-            for text_ind, text_surf in enumerate(self.lst):
-                amount = amount_list[text_ind]
-                self.show_entry(text_surf, amount, text_ind,
-                                self.index == text_ind)
+            self.display_unplantables_screen()
         elif self.status_page == "plants":
-            item_amount_list = [val for key, val in
-                                self.player.item_inventory.items()
-                                if key in self.player.seeds]
-            seed_amount_list = [val for val in
-                                self.player.seed_inventory.values()]
-
-            num_0 = self.max_entries * self.page_number
-            if self.max_entries * (self.page_number + 1) > \
-                    len(item_amount_list):
-                num_1 = len(item_amount_list)
-            else:
-                num_1 = self.max_entries * (self.page_number + 1)
-
-            self.lst = item_amount_list[num_0:num_1] + \
-                       seed_amount_list[num_0:num_1]
-
-            entries = self.max_entries
-            for i in range(0, len(self.lst) // 2):
-                if entries > 0:
-                    amount = item_amount_list[i + num_0]
-                    text_surf = self.item_text_plant_surf[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i,
-                                    self.index == i)
-                    amount = seed_amount_list[i + num_0]
-                    text_surf = self.seed_text_surfs[i + num_0]
-                    self.show_entry(text_surf, amount, 2 * i + 1,
-                                    self.index == i)
-                    entries -= 1
+            self.display_plants_screen()
+        else:
+            self.display_tools_screen()
 
 
 class Inventory:
@@ -511,23 +533,35 @@ class Inventory:
 
                 self.timer.activate()
 
-        if keys[pygame.K_1]:
-            self.held_items[0] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_2]:
-            self.held_items[1] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_3]:
-            self.held_items[2] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_4]:
-            self.held_items[3] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
-        if keys[pygame.K_5]:
-            self.held_items[4] = self.item_array[
-                self.curr_ind[1]][self.curr_ind[0]]
+            try:
+                if keys[pygame.K_1]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[0] = item
+                if keys[pygame.K_2]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[1] = item
+                if keys[pygame.K_3]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[2] = item
+                if keys[pygame.K_4]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[3] = item
+                if keys[pygame.K_5]:
+                    item = self.item_array[self.curr_ind[1]][self.curr_ind[0]]
+                    if self.player.get_unlocked(item):
+                        self.held_items[4] = item
+            except IndexError:
+                print("No item here yet :D")
 
         if keys[pygame.K_ESCAPE]:
+            # this is here to make sure the item is currently holding correctly
+            # updates
+            self.player.selected_hand = \
+                self.held_items[self.player.held_items_index]
             self.toggle_inventory()
 
         if keys[pygame.K_p]:
