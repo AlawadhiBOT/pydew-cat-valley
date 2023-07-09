@@ -558,6 +558,10 @@ class Inventory:
                 print("No item here yet :D")
 
         if keys[pygame.K_ESCAPE]:
+            # this is here to make sure the item is currently holding correctly
+            # updates
+            self.player.selected_hand = \
+                self.held_items[self.player.held_items_index]
             self.toggle_inventory()
 
         if keys[pygame.K_p]:
