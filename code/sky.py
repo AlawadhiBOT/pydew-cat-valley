@@ -11,24 +11,64 @@ class Sky:
     """
     This class is used to darken the map when it becomes dark
     """
+
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.start_color = [255, 255, 255]
         self.end_color = (38, 101, 189)
         self.time = time.time()
+        self.usable_time = [77, 777]
+        self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
+        self.text = self.font.render(f"{self.usable_time[0]}"
+                                     f":{self.usable_time[1]}", False,
+                                     "Black")
+        self.text_rect = self.text.get_rect(topright=
+                                            (self.full_surf.get_width(), 0))
         self.night = False
         self.music_swap = False
 
-    def display(self, dt: float):
-        for index, value in enumerate(self.end_color):
-            if self.start_color[index] > value:
-                self.start_color[index] -= 2 * dt
+    def calculate_time(self, curr_time: float, seconds_in_day, starting_hour,
+                       seconds_per_hour):
+        """
+        Calculates the time of the user, and displays it.
+        """
+        # this means that in every day 5 seconds will equal to one-hour
+        # day starts at 6am, so 120 - 6 * 5 = 90
+        # at 12am (00,   time does not update)
+        # first cell in usable is hour, second is seconds. Day starts at 6, 0
 
-        if time.time() - self.time >= 45:
+        self.usable_time[0] = int((((curr_time - self.time) // seconds_per_hour)
+                                   + starting_hour))
+
+        self.usable_time[1] = int(((curr_time - self.time) % seconds_per_hour
+                                   ) * 60 // seconds_per_hour)
+
+        if self.usable_time[0] >= 24:
+            self.usable_time[0] = 23
+            self.usable_time[1] = 59
+
+    def display(self, dt: float):
+        curr_time = time.time()
+        seconds_in_day = 90
+        starting_hour = 6
+        seconds_per_hour = 5
+
+        self.calculate_time(curr_time, seconds_in_day, starting_hour,
+                            seconds_per_hour)
+
+        for index, value in enumerate(self.end_color):
+            if self.start_color[index] > value and self.usable_time[0] > 18:
+                self.start_color[index] -= 2 * dt * 10
+
+        if curr_time - self.time >= seconds_in_day:
             self.night = True
 
         self.full_surf.fill(self.start_color)
+        self.text = self.font.render(f"{self.usable_time[0]}"
+                                     f":{self.usable_time[1]}", False,
+                                     "Black")
+        self.display_surface.blit(self.text, self.text_rect)
         self.display_surface.blit(self.full_surf, (0, 0),
                                   special_flags=pygame.BLEND_RGBA_MULT)
 
@@ -37,6 +77,7 @@ class Drop(Generic):
     """
     This class is used to simulate rain in the air
     """
+
     def __init__(self, surf, pos, moving, groups, z):
 
         # general setup
@@ -66,6 +107,7 @@ class Rain:
     """
     This class is used to simulate rain drops (on the ground)
     """
+
     def __init__(self, all_sprites: pygame.sprite.Group):
         self.all_sprites = all_sprites
         self.rain_drops = import_folder('../graphics/rain/drops/')
