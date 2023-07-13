@@ -34,11 +34,12 @@ def import_folder_dict2(path):
         actual_path = wrong_path.split('\\')[-1]
         for image in img_files:
             # path old: path + '/' + actual_path + '/' + image
-            full_path = actual_path + '/' + image
+            # ubuntu path actual_path + '/' + image
+            full_path = path + '/' + actual_path + '/' + image
             image_surf = pygame.image.load(full_path).convert_alpha()
             imgs_lst.append(image_surf)
         if not files:
-            # second .split is a fix for linux (debian)
+            # second .split is a fix for linux (ubuntu)
             surface_dict[actual_path.split('/')[-1]] = imgs_lst
 
     return surface_dict
