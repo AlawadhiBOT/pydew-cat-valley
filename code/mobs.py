@@ -149,6 +149,43 @@ class Cow(NeutralMob):
                                "sit": 3, "sit_idle": 4, "sleep": 5,
                                "stand_up": 6, "grass_find": 7, "munch": 8}
 
+        self.current_time = None
+        self.important_positions = {
+                                    "CowOrigin": pos, "CowInside": None,
+                                    "CowArea": None,
+                                   }
+        self.routine_checklist = {
+                                  "pathing_origin": True,
+                                  "pathing_cow_inside": False,
+                                  "pathing_cow_area": False,
+                                  "pathing_inside_cow_area": False,
+                                 }
+
+    def setup_time(self, curr_time: list[int, int]):
+        """
+        Sets the current time to the game time
+        """
+        self.current_time = curr_time
+
+    def target_pathfind(self):
+        """
+        Function to know where the cow is currently pathfinding to
+        """
+        if self.routine_checklist["pathing_origin"]:
+            return self.important_positions["CowOrigin"]
+
+        if self.routine_checklist["pathing_cow_inside"]:
+            return self.important_positions["CowInside"]
+
+        if self.routine_checklist["pathing_cow_area"]:
+            return self.important_positions["CowArea"]
+
+    def begin_routine(self):
+        """
+        Function to know at what point the cow does what exactly
+        """
+
+
     def animate(self, dt: float):
         """
         Animates the cow

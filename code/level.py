@@ -135,36 +135,9 @@ class Level:
                            "soil_layer": self.soil_layer,
                            "slime_sprites": self.slime_sprites,
                            "cow_sprites": self.cow_sprites}
-            for obj in tmx_data.get_layer_by_name('Player'):
-                if obj.name == 'Start':
-                    if self.initial_set_up:
-                        self.player = Player(pos=(obj.x, obj.y),
-                                             sprite_dict=sprite_dict,
-                                             toggle_shop=self.toggle_shop,
-                                             toggle_inventory=
-                                             self.toggle_inventory,
-                                             get_map_level=self.get_map_number,
-                                             set_map_level=self.set_map_number,
-                                             play_fishing_theme=
-                                             self.play_fishing_theme)
-                        self.initial_set_up = False
-                    else:
-                        self.player.map_swap(pos=(obj.x, obj.y),
-                                             sprite_dict=sprite_dict)
 
-                elif obj.name == 'Bed':
-                    Interaction((obj.x, obj.y), (obj.width, obj.height),
-                                self.interaction_sprites, obj.name)
-
-                elif obj.name == 'Trader':
-                    Interaction((obj.x, obj.y), (obj.width, obj.height),
-                                self.interaction_sprites, obj.name)
-
-                elif obj.name == 'Forest':
-                    Interaction((obj.x, obj.y), (obj.width, obj.height),
-                                self.interaction_sprites, obj.name)
-
-                elif obj.name == 'Cow':
+            for obj in tmx_data.get_layer_by_name('Cow'):
+                if obj.name == "CowOrigin":
                     cow_frames = {"idle": import_folder('../graphics/big_cow/'
                                                         'idle'),
                                   "move_left": import_folder(
@@ -198,6 +171,36 @@ class Level:
                         groups=[self.all_sprites, self.cow_sprites],
                         z=LAYERS['main'],
                         player_pos=self.player.get_pos)
+
+            for obj in tmx_data.get_layer_by_name('Player'):
+                if obj.name == 'Start':
+                    if self.initial_set_up:
+                        self.player = Player(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict,
+                                             toggle_shop=self.toggle_shop,
+                                             toggle_inventory=
+                                             self.toggle_inventory,
+                                             get_map_level=self.get_map_number,
+                                             set_map_level=self.set_map_number,
+                                             play_fishing_theme=
+                                             self.play_fishing_theme)
+                        self.initial_set_up = False
+                    else:
+                        self.player.map_swap(pos=(obj.x, obj.y),
+                                             sprite_dict=sprite_dict)
+
+                elif obj.name == 'Bed':
+                    Interaction((obj.x, obj.y), (obj.width, obj.height),
+                                self.interaction_sprites, obj.name)
+
+                elif obj.name == 'Trader':
+                    Interaction((obj.x, obj.y), (obj.width, obj.height),
+                                self.interaction_sprites, obj.name)
+
+                elif obj.name == 'Forest':
+                    Interaction((obj.x, obj.y), (obj.width, obj.height),
+                                self.interaction_sprites, obj.name)
+
 
             Generic(
                 pos=(0, 0),
