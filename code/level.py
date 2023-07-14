@@ -166,11 +166,19 @@ class Level:
                                       'munch'),
                                   }
 
-                    Cow(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
-                        frames=cow_frames,
-                        groups=[self.all_sprites, self.cow_sprites],
-                        z=LAYERS['main'],
-                        player_pos=self.player.get_pos)
+                    temp = Cow(pos=(obj.x + TILE_SIZE // 4,
+                                   obj.y + TILE_SIZE // 4),
+                               frames=cow_frames,
+                               groups=[self.all_sprites, self.cow_sprites],
+                               z=LAYERS['main'])
+
+                if obj.name == "CowInside":
+                    temp1 = [obj.x, obj.y]
+                if obj.name == "CowArea1":
+                    temp2 = [obj.x, obj.y]
+
+            temp.setup_important_positions("CowInside", temp1)
+            temp.setup_important_positions("CowArea1", temp2)
 
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
@@ -221,6 +229,8 @@ class Level:
             self.raining = randint(0, 10) > -1
             self.soil_layer.raining = self.raining
             self.sky = Sky()
+            # adjust cow stuffs
+            temp.setup_time(self.sky.usable_time)
 
             # shop
             self.shop_active = False
