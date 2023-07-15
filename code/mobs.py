@@ -151,7 +151,7 @@ class Cow(NeutralMob):
         self.current_time = None
         self.important_positions = {
             "CowOrigin": pos, "CowInside": None,
-            "CowArea1": None,
+            "CowAreaMarker": None,
         }
         self.routine_checklist = {
             "pathing_origin": True,
@@ -162,6 +162,7 @@ class Cow(NeutralMob):
         self.current_job = "pathing_origin"
         self.times_left = 3
         self.count = 0
+        self.collision_tiles = pygame.sprite.Group()
 
     def setup_time(self, curr_time: list[int, int]):
         """
@@ -176,6 +177,13 @@ class Cow(NeutralMob):
         :param value:
         """
         self.important_positions[key] = value
+
+    def setup_cow_collision_tiles(self, collision_tiles):
+        """
+
+        :param collision_tiles:
+        """
+        self.collision_tiles = collision_tiles
 
     def target_pathfind(self):
         """
@@ -192,7 +200,7 @@ class Cow(NeutralMob):
         if self.routine_checklist["pathing_cow_area"]:
             self.current_job = "pathing_cow_area"
             self.routine_checklist["pathing_inside_cow_area"] = True
-            return self.important_positions["CowArea1"]
+            return self.important_positions["CowAreaMarker"]
 
     def routine_action(self):
         """
@@ -204,7 +212,7 @@ class Cow(NeutralMob):
         From 12 to 15, the cow should be on the ground (sleeping/idling)
         From 15 to 18, the cow moves around, and if it searches, it should
         occasionally munch grass.
-        From 17 to 18, the cow idles. (ignored for currently)
+        From 17 to 18, the cow idles. (ignored currently)
         After 18, the cow paths to the barn and stays there.
         At 21, the cow sleeps.
         """
@@ -296,15 +304,23 @@ class Cow(NeutralMob):
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
 
-        # cow is to the left of target
-        if self.target_path[0] > self.rect.centerx:
+        if x - margin < self.target_path[0] < x + margin:
+            # cow inside margin of "error"
+            self.direction.x = 0
+        elif self.target_path[0] > x:
+            # cow is to the left of target
             self.direction.x = 1
             self.status = "move_right"
-        else:  # cow is to the right of target
+        elif self.target_path[0] < x:
+            # cow is to the right of target
             self.direction.x = -1
             self.status = "move_left"
-        # cow is below the target
+
+        if y - margin < self.target_path[1] < y + margin:
+            # cow inside margin of "error"
+            self.direction.y = 0
         if self.target_path[1] > self.rect.centery:
+            # cow is below the target
             self.direction.y = 1
         else:  # cow is above the target
             self.direction.y = -1

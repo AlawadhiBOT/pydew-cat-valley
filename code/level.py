@@ -166,20 +166,28 @@ class Level:
                                       'munch'),
                                   }
 
-                    temp = Cow(pos=(obj.x + TILE_SIZE // 4,
+                    cow_variable = Cow(pos=(obj.x + TILE_SIZE // 4,
                                    obj.y + TILE_SIZE // 4),
                                frames=cow_frames,
                                groups=[self.all_sprites, self.cow_sprites],
                                z=LAYERS['main'])
 
                 if obj.name == "CowInside":
-                    temp1 = [obj.x, obj.y]
-                if obj.name == "CowArea1":
-                    temp2 = [obj.x, obj.y]
+                    cow_inside_var = [obj.x, obj.y]
+                if obj.name == "CowAreaMarker":
+                    cow_area_marker_var = [obj.x, obj.y]
 
-            temp.setup_important_positions("CowInside", temp1)
-            temp.setup_important_positions("CowArea1", temp2)
+            cow_variable.setup_important_positions("CowInside",
+                                                   cow_inside_var)
+            cow_variable.setup_important_positions("CowAreaMarker",
+                                                   cow_area_marker_var)
 
+            collision_cow_sprites = pygame.sprite.Group()
+            for x, y, surf in tmx_data.get_layer_by_name('CowCollision'):
+                Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface(
+                    (TILE_SIZE, TILE_SIZE)), collision_cow_sprites)
+            cow_variable.setup_cow_collision_tiles(collision_cow_sprites)
+            
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
                     if self.initial_set_up:
@@ -230,7 +238,7 @@ class Level:
             self.soil_layer.raining = self.raining
             self.sky = Sky()
             # adjust cow stuffs
-            temp.setup_time(self.sky.usable_time)
+            cow_variable.setup_time(self.sky.usable_time)
 
             # shop
             self.shop_active = False
