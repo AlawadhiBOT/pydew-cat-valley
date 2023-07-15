@@ -2,7 +2,7 @@ from typing import Callable
 
 import pygame
 from timer import Timer
-from random import choice, randint, random, choices
+from random import choice, randint, choices
 
 
 class NeutralMob(pygame.sprite.Sprite):
@@ -153,7 +153,6 @@ class Cow(NeutralMob):
         }
         self.current_job = "pathing_origin"
         self.times_complete = 3
-        self.count = 0
         self.collision_tiles = pygame.sprite.Group()
 
     def setup_time(self, curr_time: list[int, int]):
@@ -237,6 +236,9 @@ class Cow(NeutralMob):
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
             self.times_complete += 1
+            if self.routine_checklist["pathing_inside_cow_area"] and not \
+                    "move" in self.status:
+                self.action_picker()
 
         self.image = self.frames[self.status][int(self.frame_index)]
 
@@ -245,7 +247,6 @@ class Cow(NeutralMob):
 
         # Vertical Movement
         self.rect.y += self.direction.y * self.speed * dt
-        self.count = 0
 
     def action_picker(self):
         """
@@ -259,33 +260,31 @@ class Cow(NeutralMob):
                 if self.status != "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
-                                          [1, 3, 1])[0]
+                                          [10, 10, 5])[0]
                 else:
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
-                                          [3, 1, 3])[0]
+                                          [10, 10, 1])[0]
 
                 if "move" in self.status:
                     return ((randint(-70, 70) + self.rect.centerx,
-                             randint(-70, 70) + self.rect.centery))
+                             randint(-210, 70) + self.rect.centery))
 
             elif self.current_time[0] < 12:  # earlier than 12
                 self.status = choice(["idle", "munch"])
             elif self.current_time[0] < 15:  # earlier than 15
-                if self.status not in ["sit_idle", "sleep"]:
+                if self.status not in ["sit_idle", "sleep", "sit"]:
                     self.status = "sit"
-                    self.times_complete = 2
                 else:
                     self.status = choice(["sit_idle", "sleep"])
 
             elif self.current_time[0] < 18:
-                if self.status in ["sit_idle", "sleep"]:
+                if self.status in ["sit_idle", "sleep", "sit"]:
                     self.status = "stand_up"
-                    self.times_complete = 2
                 elif self.status == "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find", "munch"],
-                                          [9, 9, 4, 1])[0]
+                                          [9, 9, 2, 1])[0]
                 else:  # cow finished munching
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
@@ -307,7 +306,8 @@ class Cow(NeutralMob):
         y = self.rect.centery
         margin = 30
         if x - margin < self.target_path[0] < x + margin \
-                and y - margin < self.target_path[1] < y + margin:
+                and y - margin < self.target_path[1] < y + margin and "move" \
+                in self.status:
             self.routine_action()
 
         if self.direction.magnitude() > 0:
