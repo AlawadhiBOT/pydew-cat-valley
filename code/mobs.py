@@ -161,20 +161,32 @@ class Cow(NeutralMob):
         """
         self.current_time = curr_time
 
-    def setup_important_positions(self, key, value):
+    def setup_important_positions(self, key: str, value):
         """
         Sets the position for an important place
-        :param key:
-        :param value:
+        :param key: key in important positions dict
+        :param value: location of that position
         """
         self.important_positions[key] = value
 
     def setup_cow_collision_tiles(self, collision_tiles):
         """
-
-        :param collision_tiles:
+        Sets up valid locations for the cow target path to be in.
+        :param collision_tiles: valid location tiles
         """
         self.collision_tiles = collision_tiles
+
+    def collision_checker(self, position):
+        """
+        Checks if a certain position is colliding with another
+        :param position:
+        :return: bool indicating if there was a point of collision
+        """
+        for tile in self.collision_tiles:
+            if tile.rect.collidepoint(position):
+                return True
+
+        return False
 
     def target_pathfind(self):
         """
@@ -230,7 +242,6 @@ class Cow(NeutralMob):
         """
         Animates the cow
         :param dt: delta time
-        :return: None
         """
         self.frame_index += 0.75 * len(self.frames[self.status]) * dt
         if self.frame_index >= len(self.frames[self.status]):
@@ -256,7 +267,7 @@ class Cow(NeutralMob):
             self.times_complete += 1
             return self.target_path
         else:
-            if self.current_time[0] < 10:  # earlier than 10
+            if self.current_time[0] < 18:  # earlier than 10
                 if self.status != "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
@@ -267,8 +278,12 @@ class Cow(NeutralMob):
                                           [10, 10, 1])[0]
 
                 if "move" in self.status:
-                    return ((randint(-70, 70) + self.rect.centerx,
-                             randint(-210, 70) + self.rect.centery))
+                    num = ((randint(100, 500) + self.rect.centerx,
+                            randint(0, 0) + self.rect.centery))
+                    while not self.collision_checker(num):
+                        num = ((randint(100, 500) + self.rect.centerx,
+                                randint(0, 0) + self.rect.centery))
+                    return num
 
             elif self.current_time[0] < 12:  # earlier than 12
                 self.status = choice(["idle", "munch"])
@@ -300,7 +315,6 @@ class Cow(NeutralMob):
         """
         When the player approaches the cow, the cow begins pathing towards the
         player
-        :return: None
         """
         x = self.rect.centerx
         y = self.rect.centery
@@ -351,7 +365,6 @@ class Cow(NeutralMob):
         """
         Update method, which happens every frame
         :param dt: delta time
-        :return: None
         """
         # self.player_dmg_timer.update()
         self.move()
