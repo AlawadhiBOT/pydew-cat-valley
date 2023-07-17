@@ -184,8 +184,10 @@ class Level:
 
             collision_cow_sprites = pygame.sprite.Group()
             for x, y, surf in tmx_data.get_layer_by_name('CowCollision'):
-                Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface(
-                    (TILE_SIZE, TILE_SIZE)), collision_cow_sprites)
+                if surf != 0:
+                    Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface(
+                        (TILE_SIZE, TILE_SIZE)), collision_cow_sprites)
+
             cow_variable.setup_cow_collision_tiles(collision_cow_sprites)
             
             for obj in tmx_data.get_layer_by_name('Player'):

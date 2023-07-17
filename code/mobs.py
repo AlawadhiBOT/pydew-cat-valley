@@ -182,7 +182,7 @@ class Cow(NeutralMob):
         :param position:
         :return: bool indicating if there was a point of collision
         """
-        for tile in self.collision_tiles:
+        for tile in self.collision_tiles.sprites():
             if tile.rect.collidepoint(position):
                 return True
 
@@ -267,7 +267,7 @@ class Cow(NeutralMob):
             self.times_complete += 1
             return self.target_path
         else:
-            if self.current_time[0] < 18:  # earlier than 10
+            if self.current_time[0] < 10:  # earlier than 10
                 if self.status != "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
@@ -278,11 +278,11 @@ class Cow(NeutralMob):
                                           [10, 10, 1])[0]
 
                 if "move" in self.status:
-                    num = ((randint(100, 500) + self.rect.centerx,
-                            randint(0, 0) + self.rect.centery))
+                    num = ((randint(-500, 500) + self.rect.centerx,
+                            randint(-500, 500) + self.rect.centery))
                     while not self.collision_checker(num):
-                        num = ((randint(100, 500) + self.rect.centerx,
-                                randint(0, 0) + self.rect.centery))
+                        num = ((randint(-500, 500) + self.rect.centerx,
+                                randint(-500, 500) + self.rect.centery))
                     return num
 
             elif self.current_time[0] < 12:  # earlier than 12
