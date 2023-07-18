@@ -188,9 +188,10 @@ class Cow(NeutralMob):
 
         return False
 
-    def target_pathfind(self):
+    def target_pathfind_morning(self):
         """
-        Function to know where the cow is currently pathfinding to
+        Function to know where the cow is currently pathfinding to 
+        (morning routine)
         """
         if self.routine_checklist["pathing_origin"]:
             self.current_job = "pathing_origin"
@@ -207,6 +208,27 @@ class Cow(NeutralMob):
         if self.routine_checklist["pathing_inside_cow_area"]:
             target_pos = self.action_picker()
             return target_pos
+
+    def target_pathfind_night(self):
+        """
+        Function to know where the cow is currently pathfinding to
+        (night routine)
+        """
+        if self.routine_checklist["pathing_cow_area"]:
+            self.current_job = "pathing_cow_area"
+            return self.important_positions["CowAreaMarker"]
+
+        if self.routine_checklist["pathing_cow_inside"]:
+            self.current_job = "pathing_cow_inside"
+            return self.important_positions["CowInside"]
+
+        if self.routine_checklist["pathing_origin"]:
+            self.current_job = "pathing_origin"
+            return self.important_positions["CowOrigin"]
+
+        else:
+            self.current_job = "pathing_cow_area"
+            return self.important_positions["CowAreaMarker"]
 
     def routine_action(self):
         """
@@ -234,9 +256,23 @@ class Cow(NeutralMob):
                     self.current_job = "pathing_inside_cow_area"
 
                 self.routine_checklist[self.current_job] = True
-                self.target_path = self.target_pathfind()
+                self.target_path = self.target_pathfind_morning()
             else:
-                self.target_path = self.target_pathfind()
+                self.target_path = self.target_pathfind_morning()
+        else:
+            if not self.routine_checklist["pathing_origin"]:
+                self.routine_checklist[self.current_job] = False
+                if self.current_job == "pathing_inside_cow_area":
+                    self.current_job = "pathing_cow_area"
+                elif self.current_job == "pathing_cow_area":
+                    self.current_job = "pathing_cow_inside"
+                else:
+                    self.current_job = "pathing_origin"
+
+                self.routine_checklist[self.current_job] = True
+                self.target_path = self.target_pathfind_night()
+            else:
+                self.action_picker()
 
     def animate(self, dt: float):
         """
@@ -247,8 +283,9 @@ class Cow(NeutralMob):
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
             self.times_complete += 1
-            if self.routine_checklist["pathing_inside_cow_area"] and not \
-                    "move" in self.status:
+            if (self.routine_checklist["pathing_inside_cow_area"] or
+                self.routine_checklist["pathing_origin"]) \
+                    and "move" not in self.status:
                 self.action_picker()
 
         self.image = self.frames[self.status][int(self.frame_index)]
@@ -306,9 +343,14 @@ class Cow(NeutralMob):
                                           [1, 3, 1])[0]
 
                 if "move" in self.status:
-                    return ((randint(-70, 70) + self.rect.centerx,
-                             randint(-70, 70) + self.rect.centery))
+                    return ((randint(-250, 250) + self.rect.centerx,
+                             randint(-250, 250) + self.rect.centery))
 
+            elif self.current_time[0] >= 18:
+                if self.status not in ["sit", "sleep"]:
+                    self.status = "sit"
+                else:
+                    self.status = "sleep"
             return self.target_path
 
     def move(self):
@@ -320,8 +362,8 @@ class Cow(NeutralMob):
         y = self.rect.centery
         margin = 30
         if x - margin < self.target_path[0] < x + margin \
-                and y - margin < self.target_path[1] < y + margin and "move" \
-                in self.status:
+                and y - margin < self.target_path[1] < y + margin and \
+                "move" in self.status:
             self.routine_action()
 
         if self.direction.magnitude() > 0:
