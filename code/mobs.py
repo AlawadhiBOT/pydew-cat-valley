@@ -2,7 +2,7 @@ from typing import Callable
 
 import pygame
 from timer import Timer
-from random import choice, randint, random, choices
+from random import choice, randint, choices
 
 
 class NeutralMob(pygame.sprite.Sprite):
@@ -34,6 +34,7 @@ class Slime(NeutralMob):
     """
     This is the Slime class, originally developed for the forest area
     """
+
     def __init__(self, pos, frames, groups: pygame.sprite.Group, z,
                  player_pos: Callable, detection_area: list,
                  reduce_player_hp: Callable):
@@ -135,18 +136,9 @@ class Cow(NeutralMob):
                                (self.rect.x + 250, self.rect.y + 250))
 
         self.speed = self.default_speed = 50
-        self.pathing = False
         self.target_path = pos
         # need to make attribute multiplier so that I can more accurately
         # calculate delta time for each action
-
-        # Also need some precomputed randomizer of actions
-        # maybe randint is a good choice for what actions I can do, but
-        # obviously need to account for the fact that I need to stand up if
-        # the cow is sleeping before starting to move.
-        self.action_indices = {"idle": 0, "move_left": 1, "move_right": 2,
-                               "sit": 3, "sit_idle": 4, "sleep": 5,
-                               "stand_up": 6, "grass_find": 7, "munch": 8}
 
         self.current_time = None
         self.important_positions = {
@@ -160,8 +152,7 @@ class Cow(NeutralMob):
             "pathing_inside_cow_area": False,
         }
         self.current_job = "pathing_origin"
-        self.times_left = 3
-        self.count = 0
+        self.times_complete = 3
         self.collision_tiles = pygame.sprite.Group()
 
     def setup_time(self, curr_time: list[int, int]):
@@ -170,24 +161,37 @@ class Cow(NeutralMob):
         """
         self.current_time = curr_time
 
-    def setup_important_positions(self, key, value):
+    def setup_important_positions(self, key: str, value):
         """
         Sets the position for an important place
-        :param key:
-        :param value:
+        :param key: key in important positions dict
+        :param value: location of that position
         """
         self.important_positions[key] = value
 
     def setup_cow_collision_tiles(self, collision_tiles):
         """
-
-        :param collision_tiles:
+        Sets up valid locations for the cow target path to be in.
+        :param collision_tiles: valid location tiles
         """
         self.collision_tiles = collision_tiles
 
-    def target_pathfind(self):
+    def collision_checker(self, position):
         """
-        Function to know where the cow is currently pathfinding to
+        Checks if a certain position is colliding with another
+        :param position:
+        :return: bool indicating if there was a point of collision
+        """
+        for tile in self.collision_tiles.sprites():
+            if tile.rect.collidepoint(position):
+                return True
+
+        return False
+
+    def target_pathfind_morning(self):
+        """
+        Function to know where the cow is currently pathfinding to 
+        (morning routine)
         """
         if self.routine_checklist["pathing_origin"]:
             self.current_job = "pathing_origin"
@@ -199,7 +203,31 @@ class Cow(NeutralMob):
 
         if self.routine_checklist["pathing_cow_area"]:
             self.current_job = "pathing_cow_area"
-            self.routine_checklist["pathing_inside_cow_area"] = True
+            return self.important_positions["CowAreaMarker"]
+
+        if self.routine_checklist["pathing_inside_cow_area"]:
+            target_pos = self.action_picker()
+            return target_pos
+
+    def target_pathfind_night(self):
+        """
+        Function to know where the cow is currently pathfinding to
+        (night routine)
+        """
+        if self.routine_checklist["pathing_cow_area"]:
+            self.current_job = "pathing_cow_area"
+            return self.important_positions["CowAreaMarker"]
+
+        if self.routine_checklist["pathing_cow_inside"]:
+            self.current_job = "pathing_cow_inside"
+            return self.important_positions["CowInside"]
+
+        if self.routine_checklist["pathing_origin"]:
+            self.current_job = "pathing_origin"
+            return self.important_positions["CowOrigin"]
+
+        else:
+            self.current_job = "pathing_cow_area"
             return self.important_positions["CowAreaMarker"]
 
     def routine_action(self):
@@ -222,24 +250,42 @@ class Cow(NeutralMob):
                 self.routine_checklist[self.current_job] = False
                 if self.current_job == "pathing_origin":
                     self.current_job = "pathing_cow_inside"
-                else:  # self.current_job == "pathing_cow_inside"
+                elif self.current_job == "pathing_cow_inside":
                     self.current_job = "pathing_cow_area"
+                else:
+                    self.current_job = "pathing_inside_cow_area"
 
                 self.routine_checklist[self.current_job] = True
-                self.target_path = self.target_pathfind()
-            # else:
-            #
+                self.target_path = self.target_pathfind_morning()
+            else:
+                self.target_path = self.target_pathfind_morning()
+        else:
+            if not self.routine_checklist["pathing_origin"]:
+                self.routine_checklist[self.current_job] = False
+                if self.current_job == "pathing_inside_cow_area":
+                    self.current_job = "pathing_cow_area"
+                elif self.current_job == "pathing_cow_area":
+                    self.current_job = "pathing_cow_inside"
+                else:
+                    self.current_job = "pathing_origin"
+
+                self.routine_checklist[self.current_job] = True
+                self.target_path = self.target_pathfind_night()
+            else:
+                self.action_picker()
 
     def animate(self, dt: float):
         """
         Animates the cow
         :param dt: delta time
-        :return: None
         """
         self.frame_index += 0.75 * len(self.frames[self.status]) * dt
         if self.frame_index >= len(self.frames[self.status]):
             self.frame_index = 0
-            if not self.pathing:
+            self.times_complete += 1
+            if (self.routine_checklist["pathing_inside_cow_area"] or
+                self.routine_checklist["pathing_origin"]) \
+                    and "move" not in self.status:
                 self.action_picker()
 
         self.image = self.frames[self.status][int(self.frame_index)]
@@ -249,56 +295,75 @@ class Cow(NeutralMob):
 
         # Vertical Movement
         self.rect.y += self.direction.y * self.speed * dt
-        self.count = 0
 
     def action_picker(self):
         """
         Picks the next action for the cow to perform
         """
-        if self.times_left > 0:
-            self.times_left -= 1
+        if self.times_complete < 3:
+            self.times_complete += 1
+            return self.target_path
         else:
-            self.times_left = 3
             if self.current_time[0] < 10:  # earlier than 10
                 if self.status != "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
-                                            [1, 3, 1])[0]
+                                          [10, 10, 5])[0]
                 else:
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
-                                          [3, 1, 3])[0]
+                                          [10, 10, 1])[0]
+
+                if "move" in self.status:
+                    num = ((randint(-500, 500) + self.rect.centerx,
+                            randint(-500, 500) + self.rect.centery))
+                    while not self.collision_checker(num):
+                        num = ((randint(-500, 500) + self.rect.centerx,
+                                randint(-500, 500) + self.rect.centery))
+                    return num
+
             elif self.current_time[0] < 12:  # earlier than 12
                 self.status = choice(["idle", "munch"])
-            elif self.current_time[0] < 15: # earlier than 15
-                if self.status not in ["sit_idle", "sleep"]:
+            elif self.current_time[0] < 15:  # earlier than 15
+                if self.status not in ["sit_idle", "sleep", "sit"]:
                     self.status = "sit"
                 else:
                     self.status = choice(["sit_idle", "sleep"])
 
             elif self.current_time[0] < 18:
-                if self.status in ["sit_idle", "sleep"]:
+                if self.status in ["sit_idle", "sleep", "sit"]:
                     self.status = "stand_up"
                 elif self.status == "grass_find":
                     self.status = choices(["move_left", "move_right",
                                            "grass_find", "munch"],
-                                          [9, 9, 4, 1])[0]
+                                          [9, 9, 2, 1])[0]
                 else:  # cow finished munching
                     self.status = choices(["move_left", "move_right",
                                            "grass_find"],
-                                            [1, 3, 1])[0]
+                                          [1, 3, 1])[0]
+
+                if "move" in self.status:
+                    return ((randint(-250, 250) + self.rect.centerx,
+                             randint(-250, 250) + self.rect.centery))
+
+            elif self.current_time[0] >= 18:
+                if self.status not in ["sit", "sleep"]:
+                    self.status = "sit"
+                else:
+                    self.status = "sleep"
+            return self.target_path
 
     def move(self):
         """
         When the player approaches the cow, the cow begins pathing towards the
         player
-        :return: None
         """
         x = self.rect.centerx
         y = self.rect.centery
         margin = 30
         if x - margin < self.target_path[0] < x + margin \
-                and y - margin < self.target_path[1] < y + margin:
+                and y - margin < self.target_path[1] < y + margin and \
+                "move" in self.status:
             self.routine_action()
 
         if self.direction.magnitude() > 0:
@@ -325,6 +390,10 @@ class Cow(NeutralMob):
         else:  # cow is above the target
             self.direction.y = -1
 
+        if "move" not in self.status:
+            self.direction.x = 0
+            self.direction.y = 0
+
     def cow(self):
         """
         Added this function in order to see hitbox of cow
@@ -338,7 +407,6 @@ class Cow(NeutralMob):
         """
         Update method, which happens every frame
         :param dt: delta time
-        :return: None
         """
         # self.player_dmg_timer.update()
         self.move()
