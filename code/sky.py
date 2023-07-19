@@ -28,6 +28,8 @@ class Sky:
         self.night = False
         self.music_swap = False
 
+        # TODO add parameter to handle calculation of days since start
+
     def calculate_time(self, curr_time: float, seconds_in_day, starting_hour,
                        seconds_per_hour):
         """
@@ -48,6 +50,9 @@ class Sky:
             self.usable_time[0] = 23
             self.usable_time[1] = 59
 
+    def reset_time(self):
+        """Resets the time of the day"""
+        self.time = time.time()
     def display(self, dt: float):
         curr_time = time.time()
         seconds_in_day = 90

@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from settings import *
 from player import Player
@@ -478,6 +480,7 @@ class Level:
 
         # sky
         self.sky.start_color = [255, 255, 255]
+        self.sky.reset_time()
         # night to day
         self.active_music.stop()
         self.active_music = self.music
