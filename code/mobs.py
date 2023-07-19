@@ -343,11 +343,11 @@ class Cow(NeutralMob):
                                           [1, 3, 1])[0]
 
                 if "move" in self.status:
-                    num = ((randint(-500, 500) + self.rect.centerx,
-                            randint(-500, 500) + self.rect.centery))
+                    num = ((randint(-125, 125) + self.rect.centerx,
+                            randint(-125, 125) + self.rect.centery))
                     while not self.collision_checker(num):
-                        num = ((randint(-500, 500) + self.rect.centerx,
-                                randint(-500, 500) + self.rect.centery))
+                        num = ((randint(-125, 125) + self.rect.centerx,
+                                randint(-125, 125) + self.rect.centery))
                     return num
 
             elif self.current_time[0] >= 18:
