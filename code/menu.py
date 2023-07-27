@@ -176,7 +176,8 @@ class Menu:
 
     def display_money(self):
         """Displays the money that the player has."""
-        text_surf = self.font.render(f'${self.player.money}', False, 'Black')
+        text_surf = self.font.render(f'${self.player.player_stats["money"]}',
+                                     False, 'Black')
         text_rect = pygame.Rect(0, 0,
                                 text_surf.get_width(),
                                 text_surf.get_height())

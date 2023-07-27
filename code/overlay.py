@@ -4,6 +4,7 @@ from settings import *
 from player import Player
 from timer import Timer
 
+
 class Overlay:
     """
     This function is used to display the overlay, which includes the following:
@@ -48,8 +49,8 @@ class Overlay:
                                              'xp_bar.png')
         self.xp_bar_rect = self.xp_bar_surf.get_rect(midbottom=
                                                      self.overlay_rect.midtop)
-        self.xp_no_surf = self.font.render(f'{self.player.level}', False,
-                                           'Green')
+        self.xp_no_surf = self.font.render(
+            f'{self.player.player_stats["level"]}', False, 'Green')
         self.xp_no_rect = self.xp_no_surf.get_rect(midbottom=
                                                    self.xp_bar_rect.midtop)
         self.item_held = self.font.render(f'{items[0]}', False, 'Green')
@@ -81,8 +82,10 @@ class Overlay:
         self.gold_rect = self.gold_img.get_rect(bottomleft=
                                                 self.stats_overlay_rect.
                                                 bottomleft + Vector2(13, -11))
-        self.gold_txt_surf = self.font.render(f'{self.player.money}', False,
-                                              (182, 137, 98))
+        self.gold_txt_surf = self.font.render(
+            f'{self.player.player_stats["money"]}',
+            False,
+            (182, 137, 98))
         self.gold_txt_rect = self.gold_txt_surf.get_rect(midleft=
                                                          self.gold_rect.midright
                                                          + Vector2(5, 0))
@@ -167,14 +170,15 @@ class Overlay:
         self.display_surface.blit(self.xp_bar_surf, self.xp_bar_rect)
         num = 4
         topleft = self.xp_bar_rect.topleft + Vector2(num, num)
-        percent = self.player.xp / self.player.max_xp
+        percent = self.player.player_stats["xp"] / \
+                  self.player.player_stats["max_xp"]
         Rect = pygame.Rect(topleft, ((self.xp_bar_rect.width - num * 2) *
                                      percent,
                                      self.xp_bar_rect.height - num * 2))
         pygame.draw.rect(self.display_surface, 'Green',
                          Rect, 0, 0)
-        self.xp_no_surf = self.font.render(f'{self.player.level}', False,
-                                           'Green')
+        self.xp_no_surf = self.font.render(
+            f'{self.player.player_stats["level"]}',  False, 'Green')
         self.display_surface.blit(self.xp_no_surf, self.xp_no_rect)
 
     def heart_gold_display(self):
@@ -217,8 +221,10 @@ class Overlay:
                                       self.e_heart_rects[i])
 
         self.display_surface.blit(self.gold_img, self.gold_rect)
-        self.gold_txt_surf = self.font.render(f'{self.player.money}', False,
-                                              (182, 137, 98))
+        self.gold_txt_surf = self.font.render(
+            f'{self.player.player_stats["money"]}',
+            False,
+            (182, 137, 98))
         self.display_surface.blit(self.gold_txt_surf, self.gold_txt_rect)
 
     def stamina_bar_display(self):
@@ -233,7 +239,8 @@ class Overlay:
 
         Rect = pygame.Rect(top_left, (self.stamina_bar_img.get_width() // 2,
                                       self.stamina_bar_img.get_height() - 24))
-        percent_stamina = self.player.stamina / self.player.max_stamina
+        percent_stamina = self.player.player_stats["xp"] / \
+                          self.player.player_stats["max_stamina"]
         Rect = Rect.inflate(0, -(Rect.height - Rect.height * percent_stamina))
         result = self.threshold_marker(percent_stamina)
         pygame.draw.rect(self.display_surface,

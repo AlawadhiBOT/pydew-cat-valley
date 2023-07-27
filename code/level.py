@@ -137,7 +137,7 @@ class Level:
                            "soil_layer": self.soil_layer,
                            "slime_sprites": self.slime_sprites,
                            "cow_sprites": self.cow_sprites}
-
+            
             for obj in tmx_data.get_layer_by_name('Cow'):
                 if obj.name == "CowOrigin":
                     cow_frames = {"idle": import_folder('../graphics/big_cow/'
@@ -499,10 +499,15 @@ class Level:
                         plant.rect.colliderect(self.player.hitbox):
                     self.player_add(plant.plant_type)
                     plant.kill()
-                    Particle(plant.rect.topleft, plant.image, self.all_sprites,
-                             LAYERS['main'])
-                    x = plant.rect.centery // TILE_SIZE
-                    y = plant.rect.centerx // TILE_SIZE
+                    Particle(plant.rect.midbottom, plant.image,
+                             self.all_sprites, LAYERS['main'])
+                    if plant.plant_type != "corn":
+                        x = plant.rect.centery // TILE_SIZE
+                        y = plant.rect.centerx // TILE_SIZE
+                    else:
+                        mid_bottom = plant.rect.midbottom
+                        x = mid_bottom[0] // TILE_SIZE
+                        y = mid_bottom[1] // TILE_SIZE
                     self.soil_layer.grid[x][y].remove('P')
 
     def run(self, dt: float):

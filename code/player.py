@@ -1,3 +1,4 @@
+import json
 import random
 from typing import Callable
 
@@ -5,7 +6,6 @@ import pygame
 from settings import *
 from support import *
 from timer import Timer
-from support import get_stats
 from fishing import Fishing
 
 
@@ -72,33 +72,10 @@ class Player(pygame.sprite.Sprite):
         self.selected_hand = self.held_items[0]
 
         # STATS
-        stats = get_stats('../data/player_info.csv')
-        self.xp = stats[0][0]
-        self.level = stats[0][1]
-        self.max_xp = stats[0][2]
-        self.stamina = stats[0][3]
-        self.max_stamina = PLAYER_STAMINA_STATS['stamina']
-        self.money = stats[0][4]
-
-        # inventory
-        # manually initiate these, if other things need to be added,
-        # remember to adjust the csv accordingly
-        self.item_inventory = {
-            'wood': stats[1][0],
-            'fish': stats[1][1],
-            'apple': stats[1][2],
-            'orange': stats[1][3],
-            'pear': stats[1][4],
-            'peach': stats[1][5],
-        }
-        # now do loop for the rest
-        for ind, element in enumerate(self.seeds):
-            self.item_inventory[element] = stats[1][ind + 5]
-
-        # seed inventory
-        self.seed_inventory = {}
-        for ind, element in enumerate(self.seeds):
-            self.seed_inventory[element] = stats[2][ind]
+        player_info = self.read_save_file()
+        self.player_stats = player_info["player stats"]
+        self.item_inventory = player_info["player items"]
+        self.seed_inventory = player_info["player seeds"]
 
         # interaction
         self.tree_sprites = sprite_dict["tree_sprites"]
@@ -146,16 +123,16 @@ class Player(pygame.sprite.Sprite):
     def use_tool(self):
         if self.selected_hand == 'hoe':
             self.soil_layer.get_hit(self.target_pos)
-            self.stamina -= PLAYER_STAMINA_STATS['dig']
-            self.xp += PLAYER_LEVEL_STATS['dig']
+            self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['dig']
+            self.player_stats["xp"] += PLAYER_LEVEL_STATS['dig']
 
         if self.selected_hand == 'axe':
             for tree in self.tree_sprites.sprites():
                 if tree.rect.collidepoint(self.target_pos):
                     tree.damage()
                     if tree.health == 0:
-                        self.xp += PLAYER_LEVEL_STATS['wood']
-                    self.stamina -= PLAYER_STAMINA_STATS['tree']
+                        self.player_stats["xp"] += PLAYER_LEVEL_STATS['wood']
+                    self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['tree']
 
             for slime in self.slime_sprites.sprites():
                 slime.slime()
@@ -165,8 +142,8 @@ class Player(pygame.sprite.Sprite):
         if self.selected_hand == 'water':
             self.soil_layer.water(self.target_pos)
             self.watering.play()
-            self.xp += PLAYER_LEVEL_STATS['water']
-            self.stamina -= PLAYER_STAMINA_STATS['water']
+            self.player_stats["xp"] += PLAYER_LEVEL_STATS['water']
+            self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['water']
 
         if self.selected_hand == 'fishing':
             for water in self.water_sprites:
@@ -197,8 +174,8 @@ class Player(pygame.sprite.Sprite):
                 self.seed_inventory[self.selected_hand] > 0:
             if self.soil_layer.plant_seed(self.target_pos, self.selected_hand):
                 self.seed_inventory[self.selected_hand] -= 1
-                self.stamina -= PLAYER_STAMINA_STATS['plant']
-                self.xp += PLAYER_LEVEL_STATS['plant']
+                self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['plant']
+                self.player_stats["xp"] += PLAYER_LEVEL_STATS['plant']
 
     def import_assets(self):
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
@@ -363,13 +340,13 @@ class Player(pygame.sprite.Sprite):
         """
         # ['hoe', 'axe', 'water', 'fishing']
         if item in self.tools:
-            if item == self.tools[0] and self.level >= 0:
+            if item == self.tools[0] and self.player_stats["level"]>= 0:
                 return True
-            elif item == self.tools[1] and self.level >= 3:
+            elif item == self.tools[1] and self.player_stats["level"]>= 3:
                 return True
-            elif item == self.tools[2] and self.level >= 0:
+            elif item == self.tools[2] and self.player_stats["level"]>= 0:
                 return True
-            elif item == self.tools[3] and self.level >= 5:
+            elif item == self.tools[3] and self.player_stats["level"]>= 5:
                 return True
         else:
             return True
@@ -445,17 +422,17 @@ class Player(pygame.sprite.Sprite):
         if item_seed:  # this means it is an item
             if transact_shop:  # this means the player bought/sold this item
                 if bought_sold:  # item was bought
-                    self.xp += PLAYER_LEVEL_STATS['buy']
-                    self.stamina -= PLAYER_STAMINA_STATS['buy']
-                    self.money -= PURCHASE_PRICES[item]
+                    self.player_stats["xp"] += PLAYER_LEVEL_STATS['buy']
+                    self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['buy']
+                    self.player_stats["money"] -= PURCHASE_PRICES[item]
                 else:  # sold
-                    self.xp += PLAYER_LEVEL_STATS['sell']
-                    self.stamina -= PLAYER_STAMINA_STATS['sell']
-                    self.money += SALE_PRICES[item]
+                    self.player_stats["xp"] += PLAYER_LEVEL_STATS['sell']
+                    self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['sell']
+                    self.player_stats["money"] += SALE_PRICES[item]
             else:  # acquired without shop
                 if item == 'fish':
-                    self.xp += PLAYER_LEVEL_STATS['fish']
-                    self.stamina -= PLAYER_STAMINA_STATS['fish']
+                    self.player_stats["xp"] += PLAYER_LEVEL_STATS['fish']
+                    self.player_stats["stamina"] -= PLAYER_STAMINA_STATS['fish']
 
     def update_timers(self):
         for timer in self.timers.values():
@@ -500,35 +477,50 @@ class Player(pygame.sprite.Sprite):
         self.collision('vertical')
 
     def check_level_stamina(self):
-        if self.xp >= self.max_xp:
-            self.xp = self.max_xp - self.xp
-            self.max_xp = round(1.2 * self.max_xp)
-            self.level += 1
-        if self.stamina <= 0:
+        if self.player_stats["xp"] >= self.player_stats["max_xp"]:
+            self.player_stats["xp"] = self.player_stats["max_xp"] - \
+                                      self.player_stats["xp"]
+            self.player_stats["max_xp"] = round(1.2 * self.player_stats["max_xp"])
+            self.player_stats["level"]+= 1
+        if self.player_stats["stamina"] <= 0:
             self.speed = 50
 
     def auto_save_night(self):
+        """
+        Autosave function for the player.
+        :return: NoneType
+        """
         self.status = 'left_idle'
-        self.stamina = self.max_stamina
+        self.player_stats["stamina"] = self.player_stats["max_stamina"]
         self.speed = 200
-        f = open('../data/player_info.csv', 'w')
-        f.write('xp,level,max_xp,stamina,max_stamina,money\n')
 
-        items = "".join([f'{key},' for key in self.item_inventory.keys()])
-        f.write(items[:-1] + "\n")
-        seeds = "".join([f'{key} seed,' for key in self.seed_inventory.keys()])
-        f.write(seeds[:-1] + "\n")
+        with open('../data/player_info.json', 'w') as f:
+            d = {"player stats": {"xp": self.player_stats["xp"],
+                                  "level": self.level,
+                                  "max_xp": self.player_stats["max_xp"],
+                                  "stamina": self.player_stats["stamina"],
+                                  "max_stamina": self.player_stats["max_stamina"],
+                                  "money": self.player_stats["money"]},
+                 "player items": {key: value for key, value in
+                                  self.item_inventory.items()},
+                 "player seeds": {key: value for key, value in
+                                  self.seed_inventory.items()}}
 
-        f.write(f'{self.xp},{self.level},{self.max_xp},'
-                f'{self.stamina},{self.max_stamina},'
-                f'{self.money}\n')
+            jason_file = json.dumps(d, indent=4)
 
-        item_vals = "".join([f'{val},' for val in self.item_inventory.values()])
-        f.write(item_vals[:-1] + "\n")
-        seed_vals = "".join([f'{val},' for val in self.seed_inventory.values()])
-        f.write(seed_vals[:-1] + "\n")
+            f.write(jason_file)
 
-        f.close()
+    @staticmethod
+    def read_save_file():
+        """
+        Function serves to read the save file of player
+        :return: NoneType
+        """
+        with open('../data/player_info.json', 'r') as f:
+            file_content = f.read()
+            d = json.loads(file_content)
+
+        return d
 
     def update(self, dt):
         if self.fishing.fishing_status:
