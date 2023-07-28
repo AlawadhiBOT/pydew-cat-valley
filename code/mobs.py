@@ -1,8 +1,9 @@
 from typing import Callable
 
 import pygame
-from timer import Timer
+from code.timer import Timer
 from random import choice, randint, choices
+from code.settings import CURR_PATH
 
 
 class NeutralMob(pygame.sprite.Sprite):
@@ -45,7 +46,7 @@ class Slime(NeutralMob):
         self.reduce_player_hp = reduce_player_hp
 
         # sounds
-        self.axe_sound = pygame.mixer.Sound('../audio/axe.mp3')
+        self.axe_sound = pygame.mixer.Sound(CURR_PATH + '\\audio\axe.mp3')
 
     def animate(self, dt: float):
         self.frame_index += 5 * dt

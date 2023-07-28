@@ -1,9 +1,9 @@
 # added because I am not sure how complicated fishing can get
 from typing import Callable
 import pygame.key
-from timer import Timer
+from code.timer import Timer
 from random import randint
-
+from code.settings import CURR_PATH
 
 class Fishing:
     """
@@ -24,7 +24,7 @@ class Fishing:
         self.extra_time = Timer(500)
 
         # splash sound
-        self.splash = pygame.mixer.Sound('../audio/fish flap.wav')
+        self.splash = pygame.mixer.Sound(CURR_PATH + '\\audio\\fish flap.wav')
 
         self.fishing_theme = fishing_theme
 

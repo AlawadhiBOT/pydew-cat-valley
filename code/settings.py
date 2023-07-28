@@ -1,11 +1,15 @@
 import pygame.display
 from pygame.math import Vector2
+import os
 
 # SCREEN
 infoObject = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
 TILE_SIZE = 64
 del infoObject
+
+# current path
+CURR_PATH = os.getcwd()
 
 # General overlay
 OVERLAY_POSITIONS = {

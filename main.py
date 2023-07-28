@@ -12,7 +12,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
-        from level import Level
+        from code.level import Level
         self.level = Level()
 
     def run(self):

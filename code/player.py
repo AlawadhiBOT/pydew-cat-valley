@@ -3,11 +3,10 @@ import random
 from typing import Callable
 
 import pygame
-from settings import *
-from support import *
-from timer import Timer
-from fishing import Fishing
-
+from code.settings import *
+from code.support import *
+from code.timer import Timer
+from code.fishing import Fishing
 
 class Player(pygame.sprite.Sprite):
 
@@ -40,7 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = sprite_dict["collision_sprites"]
 
         # text for player
-        self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
+        self.font = pygame.font.Font(CURR_PATH + '\\font\LycheeSoda.ttf', 30)
 
         self.get_map_level = get_map_level
         self.set_map_level = set_map_level
@@ -88,9 +87,9 @@ class Player(pygame.sprite.Sprite):
         self.toggle_inventory = toggle_inventory
 
         # sound
-        self.watering = pygame.mixer.Sound('../audio/water.mp3')
+        self.watering = pygame.mixer.Sound(CURR_PATH + '\\audio\water.mp3')
         self.watering.set_volume(0.2)
-        self.throw_bob = pygame.mixer.Sound('../audio/fishing.wav')
+        self.throw_bob = pygame.mixer.Sound(CURR_PATH + '\\audio\\fishing.wav')
         self.throw_bob.set_volume(0.2)
 
     def map_swap(self, pos, sprite_dict):
@@ -191,7 +190,7 @@ class Player(pygame.sprite.Sprite):
                            'up_fishing': [], 'down_fishing': []}
 
         for animation in self.animations.keys():
-            full_path = '../graphics/character/' + animation
+            full_path = CURR_PATH + '\graphics\character\\' + animation
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt):
@@ -494,7 +493,7 @@ class Player(pygame.sprite.Sprite):
         self.player_stats["stamina"] = self.player_stats["max_stamina"]
         self.speed = 200
 
-        with open('../data/player_info.json', 'w') as f:
+        with open(CURR_PATH + '\data\player_info.json', 'w') as f:
             d = {"player stats": {"xp": self.player_stats["xp"],
                                   "level": self.player_stats["level"],
                                   "max_xp": self.player_stats["max_xp"],
@@ -516,7 +515,7 @@ class Player(pygame.sprite.Sprite):
         Function serves to read the save file of player
         :return: NoneType
         """
-        with open('../data/player_info.json', 'r') as f:
+        with open(CURR_PATH + '\data\player_info.json', 'r') as f:
             file_content = f.read()
             d = json.loads(file_content)
 

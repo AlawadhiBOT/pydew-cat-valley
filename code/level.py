@@ -1,19 +1,19 @@
 import time
-
+import os
 import pygame
-from settings import *
-from player import Player
-from overlay import Overlay
-from sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
-from mobs import Slime, Cow
+from code.settings import *
+from code.player import Player
+from code.overlay import Overlay
+from code.sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
+from code.mobs import Slime, Cow
 from pytmx.util_pygame import load_pygame
-from support import *
-from transition import Transition
-from soil import SoilLayer
-from sky import Rain, Sky
+from code.support import *
+from code.transition import Transition
+from code.soil import SoilLayer
+from code.sky import Rain, Sky
 from random import randint
-from menu import Menu, Inventory
-from timer import Timer
+from code.menu import Menu, Inventory
+from code.timer import Timer
 
 
 class Level:
@@ -41,14 +41,17 @@ class Level:
         self.autosave_timer = Timer(120000, self.auto_save)
 
         # music
-        self.success = pygame.mixer.Sound('../audio/success.wav')
+        self.success = pygame.mixer.Sound(CURR_PATH + '\\audio\success.wav')
         self.success.set_volume(0.3)
-        self.music = pygame.mixer.Sound('../audio/music.mp3')
+        self.music = pygame.mixer.Sound(CURR_PATH + '\\audio\music.mp3')
         self.music.set_volume(0.3)
         self.music.play(loops=-1)
-        self.night_music = pygame.mixer.Sound('../audio/nighttime.wav')
-        self.fishing_theme = pygame.mixer.Sound('../audio/fishing theme.mp3')
-        self.forest_theme = pygame.mixer.Sound('../audio/bg.mp3')
+        self.night_music = pygame.mixer.Sound(CURR_PATH +
+                                              '\\audio\\nighttime.wav')
+        self.fishing_theme = pygame.mixer.Sound(CURR_PATH +
+                                                '\\audio\\fishing theme.mp3')
+        self.forest_theme = pygame.mixer.Sound(CURR_PATH +
+                                               '\\audio\\bg.mp3')
         self.active_music = self.music
         self.fishing_theme_on = False
 
@@ -77,7 +80,7 @@ class Level:
             self.soil_layer = SoilLayer(self.all_sprites,
                                         self.collision_sprites)
 
-            tmx_data = load_pygame('../data/map.tmx')
+            tmx_data = load_pygame(CURR_PATH + '\data\map.tmx')
 
             # house
             for layer in ['HouseFloor', 'HouseFurnitureBottom']:
@@ -99,7 +102,7 @@ class Level:
                         [self.all_sprites, self.collision_sprites])
 
             # Water
-            water_frames = import_folder('../graphics/water')
+            water_frames = import_folder(CURR_PATH + '\graphics\water')
             for x, y, surf in tmx_data.get_layer_by_name('Water').tiles():
                 Water((x * TILE_SIZE, y * TILE_SIZE), water_frames,
                       [self.all_sprites, self.water_sprites])
@@ -140,31 +143,33 @@ class Level:
             
             for obj in tmx_data.get_layer_by_name('Cow'):
                 if obj.name == "CowOrigin":
-                    cow_frames = {"idle": import_folder('../graphics/big_cow/'
+                    cow_frames = {"idle": import_folder(CURR_PATH + '\graphics'
+                                                                    '\\big_cow'
+                                                                    '\\'
                                                         'idle'),
                                   "move_left": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'move_left'),
                                   "move_right": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'move_right'),
                                   "sit": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'sit'),
                                   "sit_idle": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'sit_idle'),
                                   "sleep": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'sleep'),
                                   "stand_up": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'stand_up'),
                                   "grass_find": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'grass_find'),
                                   "munch": import_folder(
-                                      '../graphics/big_cow/'
+                                      CURR_PATH + '\graphics\\big_cow\\'
                                       'munch'),
                                   }
 
@@ -225,7 +230,7 @@ class Level:
             Generic(
                 pos=(0, 0),
                 surf=pygame.image.load(
-                    '../graphics/world/ground 2.png').convert_alpha(),
+                    CURR_PATH + '\graphics\world\\ground 2.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
 
             self.active_music.stop()
@@ -254,7 +259,7 @@ class Level:
                                        self.player.held_items)
 
         else:
-            tmx_data = load_pygame('../data/Tilesets/Forest.tmx')
+            tmx_data = load_pygame(CURR_PATH + '\data\Tilesets\Forest.tmx')
 
             self.all_sprites = CameraGroup()
             self.collision_sprites.empty()
@@ -326,18 +331,24 @@ class Level:
                                              sprite_dict=sprite_dict)
 
                 elif obj.name == 'Slime':
-                    slime_frames = {"death": import_folder('../graphics/slime/'
+                    slime_frames = {"death": import_folder(CURR_PATH +
+                                                           '\graphics\slime\\'
                                                            'death'),
-                                    "hit": import_folder('../graphics/slime/'
+                                    "hit": import_folder(CURR_PATH +
+                                                         '\graphics\slime\\'
                                                          'hit'),
-                                    "hit_p": import_folder('../graphics/slime/'
+                                    "hit_p": import_folder(CURR_PATH +
+                                                           '\graphics\slime\\'
                                                            'hit-landing'),
-                                    "idle": import_folder('../graphics/slime'
-                                                          '/idle'),
-                                    "jump": import_folder('../graphics/slime/'
-                                                          '/jump'),
-                                    "move": import_folder('../graphics/slime/'
-                                                          '/move')}
+                                    "idle": import_folder(CURR_PATH +
+                                                          '\graphics\slime\\'
+                                                          'idle'),
+                                    "jump": import_folder(CURR_PATH +
+                                                          '\graphics\slime\\'
+                                                          'jump'),
+                                    "move": import_folder(CURR_PATH +
+                                                          '\graphics\slime\\'
+                                                          'move')}
 
                     Slime(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
                           frames=slime_frames,
@@ -355,7 +366,7 @@ class Level:
             Generic(
                 pos=(0, 0),
                 surf=pygame.image.load(
-                    '../graphics/world/Forest.png').convert_alpha(),
+                    CURR_PATH + '\graphics\world\Forest.png').convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
 
             self.active_music.stop()

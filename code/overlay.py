@@ -1,8 +1,8 @@
 import pygame
-from support import import_folder_dict2
-from settings import *
-from player import Player
-from timer import Timer
+from code.support import import_folder_dict2
+from code.settings import *
+from code.player import Player
+from code.timer import Timer
 
 
 class Overlay:
@@ -20,8 +20,8 @@ class Overlay:
         self.items = items
 
         # imports
-        overlay_path = '../graphics/overlay/'
-        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}tools/'
+        overlay_path = CURR_PATH + '\graphics\overlay\\'
+        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}tools\\'
                                                    f'{tool}.png'
                                                    ).convert_alpha()
                            for tool in player.tools}
@@ -29,23 +29,26 @@ class Overlay:
                                                    f'.png').convert_alpha()
                            for seed in player.seeds}
 
-        self.font = pygame.font.Font('../font/LycheeSoda.ttf', 30)
+        self.font = pygame.font.Font(CURR_PATH + '\\font\LycheeSoda.ttf', 30)
 
         # toolbox overlay
-        self.overlay_surf = pygame.image.load('../graphics/overlay/tools/'
+        self.overlay_surf = pygame.image.load(CURR_PATH + '\graphics\overlay\\'
+                                                          'tools\\'
                                               'tools.png').convert_alpha()
         self.overlay_rect = self.overlay_surf.get_rect(midbottom=
                                                        OVERLAY_POSITIONS
                                                        ['inven'])
 
-        self.box_img = pygame.image.load('../graphics/overlay/tools/'
+        self.box_img = pygame.image.load(CURR_PATH + '\graphics\overlay\\tools'
+                                                     '\\'
                                          'selector.png')
         self.box_rect = self.box_img.get_rect(topleft=
                                               self.overlay_rect.topleft +
                                               Vector2(26, 25))
 
         # xp and level and held item overlay
-        self.xp_bar_surf = pygame.image.load('../graphics/overlay/stats/'
+        self.xp_bar_surf = pygame.image.load(CURR_PATH + '\graphics\overlay\\'
+                                                         'stats\\'
                                              'xp_bar.png')
         self.xp_bar_rect = self.xp_bar_surf.get_rect(midbottom=
                                                      self.overlay_rect.midtop)
@@ -57,27 +60,32 @@ class Overlay:
         self.display_item_held_timer = Timer(500)
 
         # health and gold section overlay
-        self.stats_overlay_surf = pygame.image.load('../graphics/overlay/stats'
-                                                    '/hp_gold.png'
+        self.stats_overlay_surf = pygame.image.load(CURR_PATH + '\graphics\\'
+                                                                'overlay\stats'
+                                                    '\hp_gold.png'
                                                     ).convert_alpha()
         self.stats_overlay_rect = self.stats_overlay_surf.get_rect(topleft=
                                                                    (0, 0))
         # heart surf
-        self.f_heart_surfs = [pygame.image.load('../graphics/overlay/stats/'
+        self.f_heart_surfs = [pygame.image.load(CURR_PATH + '\graphics\overlay'
+                                                            '\stats\\'
                                                 'heart.png').convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.f_heart_rects = [heart.get_rect() for heart in self.f_heart_surfs]
-        self.h_heart_surfs = [pygame.image.load('../graphics/overlay/stats/half'
+        self.h_heart_surfs = [pygame.image.load(CURR_PATH + '\graphics\overlay'
+                                                            '\stats\half'
                                                 '_heart.png').convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.h_heart_rects = [heart.get_rect() for heart in self.h_heart_surfs]
-        self.e_heart_surfs = [pygame.image.load('../graphics/overlay/stats/'
+        self.e_heart_surfs = [pygame.image.load(CURR_PATH + '\graphics\overlay'
+                                                            '\stats\\'
                                                 'empty_heart.png'
                                                 ).convert_alpha()
                               for _ in range(self.player.max_hp)]
         self.e_heart_rects = [heart.get_rect() for heart in self.e_heart_surfs]
         # gold overlay
-        self.gold_img = pygame.image.load('../graphics/overlay/stats/'
+        self.gold_img = pygame.image.load(CURR_PATH + '\graphics\overlay\stats'
+                                                      '\\'
                                           'gold.png').convert_alpha()
         self.gold_rect = self.gold_img.get_rect(bottomleft=
                                                 self.stats_overlay_rect.
@@ -91,22 +99,24 @@ class Overlay:
                                                          + Vector2(5, 0))
 
         # stamina bar overlay
-        self.stamina_bar_img = pygame.image.load('../graphics/overlay/'
-                                                 'stats/stamina_bar.png'
+        self.stamina_bar_img = pygame.image.load(CURR_PATH + '\graphics\overlay'
+                                                             '\\'
+                                                 'stats\stamina_bar.png'
                                                  ).convert_alpha()
         self.stamina_bar_rect = self.stamina_bar_img.get_rect(bottomright=
                                                               OVERLAY_POSITIONS
                                                               ['stamina'])
 
         # character box
-        self.chara_box_surf = pygame.image.load('../graphics/overlay/stats/'
+        self.chara_box_surf = pygame.image.load(CURR_PATH + '\graphics\overlay'
+                                                            '\stats\\'
                                                 'character_box.png'
                                                 ).convert_alpha()
         self.chara_box_rect = self.chara_box_surf.get_rect(bottomleft=
                                                            OVERLAY_POSITIONS
                                                            ['character_box'])
         # character emote imports
-        path = "../graphics/overlay/teemo_emotes"
+        path = CURR_PATH + "\graphics\overlay\\teemo_emotes"
         self.teemo_emotes = import_folder_dict2(path)
         self.frame_index = 0
         self.actions_index = 0
