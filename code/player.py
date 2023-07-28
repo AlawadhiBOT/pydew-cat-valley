@@ -496,7 +496,7 @@ class Player(pygame.sprite.Sprite):
 
         with open('../data/player_info.json', 'w') as f:
             d = {"player stats": {"xp": self.player_stats["xp"],
-                                  "level": self.level,
+                                  "level": self.player_stats["level"],
                                   "max_xp": self.player_stats["max_xp"],
                                   "stamina": self.player_stats["stamina"],
                                   "max_stamina": self.player_stats["max_stamina"],

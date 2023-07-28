@@ -95,7 +95,7 @@ MAP_NUMBERS = {
 PLANT_OFFSET = {
     'wheat': -16,
     'tomato': -8,
-    'corn': -16,
+    'corn': -8,
     'cabbage': -16,
     'carrot': -16,
     'overgine': -16,
@@ -113,7 +113,7 @@ PLANT_OFFSET = {
 BIG_PLANT_OFFSET = {
     'wheat': 0,
     'tomato': 0,
-    'corn': 16,
+    'corn': 0,
     'cabbage': 0,
     'carrot': 0,
     'overgine': 0,
