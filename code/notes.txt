@@ -1,3 +1,3 @@
 Move inventory to its own file.
 
-Add attributes to cow to know if they are IN or out the fence maybe. Need to find out a way to path find. The cow should have a point at which they will pathfind towards at night time. They should have certain tasks done at every time of the day.
+Add last place player was to map.
