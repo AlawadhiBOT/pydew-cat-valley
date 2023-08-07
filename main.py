@@ -1,7 +1,9 @@
 import pygame
+import pytmx
 import sys
 import importlib
 import subprocess
+import asyncio
 
 
 class Game:
@@ -16,7 +18,7 @@ class Game:
         from code.level import Level
         self.level = Level()
 
-    def run(self):
+    async def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -37,15 +39,17 @@ class Game:
             self.level.run(dt)
             pygame.display.update()
 
+            await asyncio.sleep(0)
+
 
 def check_dependencies(dependencies):
-    missing_dependencies = []
-    for dependency in dependencies:
+    missing_dependend = []
+    for depend in dependencies:
         try:
-            importlib.import_module(dependency)
+            importlib.import_module(depend)
         except ImportError:
-            missing_dependencies.append(dependency)
-    return missing_dependencies
+            missing_dependend.append(depend)
+    return missing_dependend
 
 
 def install_dependencies(dependencies):
@@ -72,4 +76,4 @@ if __name__ == '__main__':
         install_dependencies(missing_dependencies)
         print("Dependencies installed successfully.")
     game = Game()
-    game.run()
+    asyncio.run(game.run())
