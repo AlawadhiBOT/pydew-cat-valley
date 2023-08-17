@@ -75,14 +75,18 @@ class Tree(Generic):
         # tree attributes
         self.health = 5
         self.alive = True
-        stump_path = f'{CURR_PATH}\graphics\stumps\\' \
-                     f'{"small" if name == "Small" else "large"}.png'
-        self.stump_surf = pygame.image.load(stump_path).convert_alpha()
+        norm = os.path.normpath
+        if name == "Small":
+            stump_path = f'{CURR_PATH}/graphics/stumps/small.png'
+        else:
+            stump_path = f'{CURR_PATH}/graphics/stumps/large.png'
+        self.stump_surf = pygame.image.load(norm(stump_path)).convert_alpha()
 
         # apples
         self.fruit_type = choice(["apple", "orange", "pear", "peach"])
-        self.apple_surf = pygame.image.load(f'{CURR_PATH}\graphics\\fruit\\'
+        self.apple_surf = pygame.image.load(norm(f'{CURR_PATH}/graphics/fruit/'
                                             f'{self.fruit_type}.png')
+                                            ).convert_alpha()
         self.apple_pos = APPLE_POS[name]
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
@@ -91,7 +95,7 @@ class Tree(Generic):
         self.death_timer = None
 
         # sounds
-        self.axe_sound = pygame.mixer.Sound(CURR_PATH + '\\audio\\axe.mp3')
+        self.axe_sound = pygame.mixer.Sound(norm(CURR_PATH + '/audio/axe.mp3'))
 
         # og_info
         self.og_image = self.image

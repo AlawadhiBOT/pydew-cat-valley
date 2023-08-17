@@ -41,17 +41,19 @@ class Level:
         self.autosave_timer = Timer(120000, self.auto_save)
 
         # music
-        self.success = pygame.mixer.Sound(CURR_PATH + '\\audio\success.wav')
+        norm = os.path.normpath
+        self.success = pygame.mixer.Sound(norm(CURR_PATH +
+                                               '/audio/success.wav'))
         self.success.set_volume(0.3)
-        self.music = pygame.mixer.Sound(CURR_PATH + '\\audio\music.mp3')
+        self.music = pygame.mixer.Sound(norm(CURR_PATH + '/audio/music.mp3'))
         self.music.set_volume(0.3)
         self.music.play(loops=-1)
-        self.night_music = pygame.mixer.Sound(CURR_PATH +
-                                              '\\audio\\nighttime.wav')
-        self.fishing_theme = pygame.mixer.Sound(CURR_PATH +
-                                                '\\audio\\fishing theme.mp3')
-        self.forest_theme = pygame.mixer.Sound(CURR_PATH +
-                                               '\\audio\\bg.mp3')
+        self.night_music = pygame.mixer.Sound(norm(CURR_PATH +
+                                              '/audio/nighttime.wav'))
+        self.fishing_theme = pygame.mixer.Sound(norm(CURR_PATH +
+                                                '/audio/fishing theme.mp3'))
+        self.forest_theme = pygame.mixer.Sound(norm(CURR_PATH +
+                                               '/audio/bg.mp3'))
         self.active_music = self.music
         self.fishing_theme_on = False
 

@@ -18,24 +18,28 @@ class Menu:
         self.player = player
         self.toggle_menu = toggle_menu
         self.display_surface = pygame.display.get_surface()
-        self.font = pygame.font.Font(CURR_PATH + '\\font\LycheeSoda.ttf', 30)
+        norm = os.path.normpath
+        self.font = pygame.font.Font(norm(CURR_PATH + '/font/LycheeSoda.ttf'),
+                                     30)
         self.topleft_offset = 128
 
         # menu image
-        self.menu_image = \
-            pygame.image.load(CURR_PATH + '\graphics\menus\shop_2.png').convert_alpha()
+        self.menu_image = pygame.image.load(norm(CURR_PATH +
+                                                 '/graphics/menus/shop_2.png')
+                                            ).convert_alpha()
         self.menu_rect = self.menu_image.get_rect(
             center=OVERLAY_POSITIONS['shop'])
         # status rects
         self.status_imgs = {
-            "tools": pygame.image.load(CURR_PATH + '\graphics\menus\shop\\'
-                                       'tools.png').convert_alpha(),
-            "unplantables": pygame.image.load(CURR_PATH + '\graphics\menus\shop'
-                                                          '\\'
-                                              'unplantables.'
-                                              'png').convert_alpha(),
-            "plants": pygame.image.load(CURR_PATH + '\graphics\menus\shop\\'
-                                        'plants.png').convert_alpha()
+            "tools": pygame.image.load(norm(CURR_PATH + '/graphics/menus/shop/'
+                                                        'tools.png')).convert_alpha(),
+            "unplantables": pygame.image.load(norm(CURR_PATH + '/graphics/menus'
+                                                               '/shop'
+                                                               '/unplantables.'
+                                                               'png')
+                                              ).convert_alpha(),
+            "plants": pygame.image.load(norm(CURR_PATH + '/graphics/menus/shop/'
+                                                         'plants.png')).convert_alpha()
         }
         self.status_rects = {
             "tools": self.status_imgs["tools"].get_rect(
@@ -51,31 +55,33 @@ class Menu:
             )
         }
         # menu arrows
-        path = CURR_PATH + "\graphics\menus\shop\\"
+        path = CURR_PATH + "/graphics/menus/shop/"
         self.shop_imgs = {
-            "left": pygame.image.load(f'{path}left_arrow.png').convert_alpha(),
-            "left_p": pygame.image.load(f'{path}left_arrow_pressed.png'
-                                        ).convert_alpha(),
-            "right": pygame.image.load(f'{path}right_arrow.png'
-                                       ).convert_alpha(),
-            "right_p": pygame.image.load(f'{path}right_'
-                                         'arrow_pressed.'
-                                         'png').convert_alpha(),
-            "plus": pygame.image.load(f'{path}plus.png').convert_alpha(),
-            "plus_p": pygame.image.load(f'{path}plus_pressed.png'
-                                        ).convert_alpha(),
-            "minus": pygame.image.load(f'{path}minus.png').convert_alpha(),
-            "minus_p": pygame.image.load(f'{path}minus_pressed.png'
-                                         ).convert_alpha(),
-            "exit": pygame.image.load(f'{path}exit_shop.png'
+            "left": pygame.image.load(norm(f'{path}left_arrow.png')
                                       ).convert_alpha(),
-            "exit_p": pygame.image.load(f'{path}exit_shop_pressed.png'
+            "left_p": pygame.image.load(norm(f'{path}left_arrow_pressed.png')
+                                        ).convert_alpha(),
+            "right": pygame.image.load(norm(f'{path}right_arrow.png')
+                                       ).convert_alpha(),
+            "right_p": pygame.image.load(norm(f'{path}right_arrow_pressed.png')
+                                         ).convert_alpha(),
+            "plus": pygame.image.load(norm(f'{path}plus.png')
+                                      ).convert_alpha(),
+            "plus_p": pygame.image.load(norm(f'{path}plus_pressed.png')
+                                        ).convert_alpha(),
+            "minus": pygame.image.load(norm(f'{path}minus.png')
+                                       ).convert_alpha(),
+            "minus_p": pygame.image.load(norm(f'{path}minus_pressed.png')
+                                         ).convert_alpha(),
+            "exit": pygame.image.load(norm(f'{path}exit_shop.png')
+                                      ).convert_alpha(),
+            "exit_p": pygame.image.load(norm(f'{path}exit_shop_pressed.png')
                                         ).convert_alpha()
         }
         calc_height_diff = self.shop_imgs["left"].get_height() \
                            - self.shop_imgs["left_p"].get_height()
         height_diff_exit = self.shop_imgs["exit"].get_height() - \
-                                self.shop_imgs["exit_p"].get_height()
+                           self.shop_imgs["exit_p"].get_height()
         self.shop_imgs_rects = {
             "left": self.shop_imgs["left"].get_rect(
                 bottomleft=self.menu_rect.bottomleft +
@@ -439,32 +445,37 @@ class Inventory:
         self.held_items = held_items
 
         self.display_surface = pygame.display.get_surface()
-        self.font = pygame.font.Font(CURR_PATH + '\\font\LycheeSoda.ttf', 30)
+        norm = os.path.normpath
+        self.font = pygame.font.Font(norm(CURR_PATH +
+                                          '/font/LycheeSoda.ttf'), 30)
 
         # imports
-        self.item_surfs = {item: pygame.image.load(f'{CURR_PATH}\graphics\menus'
-                                                   f'\\inventory\{item}.png')
+        self.item_surfs = {item: pygame.image.load(norm(
+            f'{CURR_PATH}/graphics/menus/inventory/{item}.png')).convert_alpha()
                            for item in player.item_inventory}
 
-        overlay_path = CURR_PATH + '\graphics\overlay\\'
+        overlay_path = CURR_PATH + '/graphics/overlay/'
 
-        self.tools_surf = {tool: pygame.image.load(f'{overlay_path}tools\\'
-                                                   f'{tool}.png'
+        self.tools_surf = {tool: pygame.image.load(norm(f'{overlay_path}tools/'
+                                                        f'{tool}.png')
                                                    ).convert_alpha()
                            for tool in player.tools}
-        self.seeds_surf = {seed: pygame.image.load(f'{overlay_path}{seed}'
-                                                   f'.png').convert_alpha()
+        self.seeds_surf = {seed: pygame.image.load(norm(f'{overlay_path}{seed}'
+                                                        f'.png')).convert_alpha()
                            for seed in player.seeds}
 
-        self.inventory_image = pygame.image.load(CURR_PATH + '\graphics\\'
-                                                 'menus\extended UI'
-                                                 '.png').convert_alpha()
+        self.inventory_image = pygame.image.load(norm(CURR_PATH + '/graphics/'
+                                                                  'menus/'
+                                                                  'extended UI'
+                                                                  '.png')
+                                                 ).convert_alpha()
         self.inventory_rect = self.inventory_image.get_rect(midbottom=
                                                             OVERLAY_POSITIONS
                                                             ['inven'])
         # selection rectangle
-        self.box_img = pygame.image.load(CURR_PATH + '\graphics\menus'
-                                         '\selector.png')
+        self.box_img = pygame.image.load(norm(CURR_PATH + '/graphics/menus'
+                                                          '/selector.png')
+                                         ).convert_alpha()
         self.box_rect = self.box_img.get_rect(topleft=
                                               self.inventory_rect.topleft +
                                               Vector2(26, 25))

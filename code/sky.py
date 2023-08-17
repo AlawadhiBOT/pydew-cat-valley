@@ -19,7 +19,9 @@ class Sky:
         self.end_color = (38, 101, 189)
         self.time = time.time()
         self.usable_time = [77, 777]
-        self.font = pygame.font.Font(CURR_PATH + '\\font\LycheeSoda.ttf', 30)
+        norm = os.path.normpath
+        self.font = pygame.font.Font(norm(CURR_PATH + '/font/LycheeSoda.ttf'),
+                                     30)
         self.text = self.font.render(f"{self.usable_time[0]}"
                                      f":{self.usable_time[1]}", False,
                                      "Black")
@@ -115,10 +117,13 @@ class Rain:
 
     def __init__(self, all_sprites: pygame.sprite.Group):
         self.all_sprites = all_sprites
-        self.rain_drops = import_folder(CURR_PATH + '\graphics\\rain\drops\\')
-        self.rain = import_folder(CURR_PATH + '\graphics\\rain\\floor\\')
-        self.floor_w, self.floor_h = pygame.image.load(
-            CURR_PATH + '\graphics\world\ground.png').get_size()
+        norm = os.path.normpath
+        self.rain_drops = import_folder(norm(CURR_PATH +
+                                             '/graphics/rain/drops/'))
+        self.rain = import_folder(norm(CURR_PATH +
+                                       '/graphics/rain/floor/'))
+        self.floor_w, self.floor_h = pygame.image.load(norm(
+            CURR_PATH + '/graphics/world/ground.png')).get_size()
 
     def create_floor(self):
         Drop(surf=choice(self.rain),

@@ -33,7 +33,9 @@ class Plant(pygame.sprite.Sprite):
 
         # setup
         self.plant_type = plant_type
-        self.frames = import_folder(f'{CURR_PATH}\graphics\\fruit\\{plant_type}'
+        norm = os.path.normpath
+        self.frames = import_folder(norm(f'{CURR_PATH}/graphics/fruit/'
+                                         f'{plant_type}')
                                     )
         self.soil = soil
         self.check_watered = check_watered
@@ -97,8 +99,10 @@ class SoilLayer:
         self.plant_sprites = pygame.sprite.Group()
 
         # graphics
-        self.soil_surfs = import_folder_dict(CURR_PATH + '\graphics\soil')
-        self.water_surfs = import_folder(CURR_PATH + '\graphics\soil_water')
+        norm = os.path.normpath
+        self.soil_surfs = import_folder_dict(norm(CURR_PATH + '/graphics/soil'))
+        self.water_surfs = import_folder(norm(CURR_PATH +
+                                              '/graphics/soil_water'))
 
         self.create_soil_grid()
         self.create_hit_rects()
@@ -108,24 +112,26 @@ class SoilLayer:
 
         # sounds
         self.hoe_sound = pygame.mixer.Sound(CURR_PATH +
-                                            '\\audio\hoe.wav')
+                                            '/audio/hoe.wav')
         self.hoe_sound.set_volume(0.1)
         self.plant_sound = pygame.mixer.Sound(CURR_PATH +
-                                              '\\audio\plant.wav')
+                                              '/audio/plant.wav')
         self.plant_sound.set_volume(0.2)
 
         # read saved data
         self.read_soil_state()
 
     def create_soil_grid(self):
-        ground = pygame.image.load(CURR_PATH +
-                                   '\graphics\world\ground 2.png')
+        norm = os.path.normpath
+        ground = pygame.image.load(norm(CURR_PATH +
+                                   '/graphics/world/ground 2.png')
+                                   ).convert_alpha()
         h_tiles = ground.get_width() // TILE_SIZE
         v_tiles = ground.get_height() // TILE_SIZE
 
         self.grid = [[[] for col in range(h_tiles)] for row in range(v_tiles)]
-        for x, y, _ in load_pygame(CURR_PATH +
-                                   '\data\map.tmx').get_layer_by_name(
+        for x, y, _ in load_pygame(norm(CURR_PATH +
+                                   '/data/map.tmx')).get_layer_by_name(
                 'Farmable').tiles():
             self.grid[y][x].append('F')
         # for row in self.grid:
@@ -146,7 +152,8 @@ class SoilLayer:
         Function written to save state of soil tiles
         :return: NoneType
         """
-        with open(CURR_PATH + "\data\\farmed_land.txt", "w") as file:
+        norm = os.path.normpath
+        with open(norm(CURR_PATH + "/data/farmed_land.txt"), "w") as file:
             for row in self.grid:
                 ln = ""
                 for cell in row:
@@ -161,7 +168,7 @@ class SoilLayer:
         lst = [[str(plant)] for plant in self.plant_sprites]
         jason_file = json.dumps(lst, indent=4)
 
-        with open(CURR_PATH + "\data\\plant_in_soil.json", "w") as f:
+        with open(norm(CURR_PATH + "/data/plant_in_soil.json"), "w") as f:
             f.write(jason_file)
 
     def read_soil_state(self):
@@ -169,7 +176,8 @@ class SoilLayer:
         Function written to read save state of soil tiles
         :return: NoneType
         """
-        with open(CURR_PATH + "\data\\farmed_land.txt", "r") as file:
+        norm = os.path.normpath
+        with open(norm(CURR_PATH + "/data/farmed_land.txt"), "r") as file:
             ctr = 0
             for line in file:
                 arr_line = line.split("|")[:-1]
@@ -178,7 +186,7 @@ class SoilLayer:
                 ctr += 1
         self.create_soil_tiles()
 
-        with open(CURR_PATH + "\data\\plant_in_soil.json", "r") as file:
+        with open(norm(CURR_PATH + "/data/plant_in_soil.json"), "r") as file:
             lst = []
             for entry in json.load(file):
                 lst.append(entry[0].split(','))
