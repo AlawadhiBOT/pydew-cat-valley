@@ -1,6 +1,3 @@
-import time
-import os
-import pygame
 from code.settings import *
 from code.player import Player
 from code.overlay import Overlay
