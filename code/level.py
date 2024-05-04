@@ -11,6 +11,7 @@ from code.sky import Rain, Sky
 from random import randint
 from code.menu import Menu, Inventory
 from code.timer import Timer
+from os import path
 
 
 class Level:
@@ -46,11 +47,11 @@ class Level:
         self.music.set_volume(0.3)
         self.music.play(loops=-1)
         self.night_music = pygame.mixer.Sound(norm(CURR_PATH +
-                                              '/audio/nighttime.wav'))
+                                                   '/audio/nighttime.wav'))
         self.fishing_theme = pygame.mixer.Sound(norm(CURR_PATH +
-                                                '/audio/fishing theme.mp3'))
+                                                     '/audio/fishing theme.mp3'))
         self.forest_theme = pygame.mixer.Sound(norm(CURR_PATH +
-                                               '/audio/bg.mp3'))
+                                                    '/audio/bg.mp3'))
         self.active_music = self.music
         self.fishing_theme_on = False
 
@@ -79,7 +80,7 @@ class Level:
             self.soil_layer = SoilLayer(self.all_sprites,
                                         self.collision_sprites)
 
-            tmx_data = load_pygame(CURR_PATH + '\data\map.tmx')
+            tmx_data = load_pygame(path.join(CURR_PATH, 'data', 'map.tmx'))
 
             # house
             for layer in ['HouseFloor', 'HouseFurnitureBottom']:
@@ -101,7 +102,7 @@ class Level:
                         [self.all_sprites, self.collision_sprites])
 
             # Water
-            water_frames = import_folder(CURR_PATH + '\graphics\water')
+            water_frames = import_folder(path.join(CURR_PATH + '\graphics\water'))
             for x, y, surf in tmx_data.get_layer_by_name('Water').tiles():
                 Water((x * TILE_SIZE, y * TILE_SIZE), water_frames,
                       [self.all_sprites, self.water_sprites])
@@ -139,44 +140,44 @@ class Level:
                            "soil_layer": self.soil_layer,
                            "slime_sprites": self.slime_sprites,
                            "cow_sprites": self.cow_sprites}
-            
+
             for obj in tmx_data.get_layer_by_name('Cow'):
                 if obj.name == "CowOrigin":
-                    cow_frames = {"idle": import_folder(CURR_PATH + '\graphics'
-                                                                    '\\big_cow'
-                                                                    '\\'
-                                                        'idle'),
+                    cow_frames = {"idle": import_folder(path.join(CURR_PATH,
+                                                                  'graphics',
+                                                                  'big_cow',
+                                                                  'idle')),
                                   "move_left": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'move_left'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'move_left')),
                                   "move_right": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'move_right'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'move_right')),
                                   "sit": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'sit'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'sit')),
                                   "sit_idle": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'sit_idle'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'sit_idle')),
                                   "sleep": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'sleep'),
+                                      path.join(CURR_PATH, 'graphics'
+                                                           'big_cow', 'sleep')),
                                   "stand_up": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'stand_up'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'stand_up')),
                                   "grass_find": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'grass_find'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'grass_find')),
                                   "munch": import_folder(
-                                      CURR_PATH + '\graphics\\big_cow\\'
-                                      'munch'),
+                                      path.join(CURR_PATH, 'graphics',
+                                                'big_cow', 'munch')),
                                   }
 
                     cow_variable = Cow(pos=(obj.x + TILE_SIZE // 4,
-                                   obj.y + TILE_SIZE // 4),
-                               frames=cow_frames,
-                               groups=[self.all_sprites, self.cow_sprites],
-                               z=LAYERS['main'])
+                                            obj.y + TILE_SIZE // 4),
+                                       frames=cow_frames,
+                                       groups=[self.all_sprites, self.cow_sprites],
+                                       z=LAYERS['main'])
 
                 if obj.name == "CowInside":
                     cow_inside_var = [obj.x, obj.y]
@@ -195,7 +196,7 @@ class Level:
                         (TILE_SIZE, TILE_SIZE)), collision_cow_sprites)
 
             cow_variable.setup_cow_collision_tiles(collision_cow_sprites)
-            
+
             for obj in tmx_data.get_layer_by_name('Player'):
                 if obj.name == 'Start':
                     if self.initial_set_up:
@@ -225,11 +226,11 @@ class Level:
                     Interaction((obj.x, obj.y), (obj.width, obj.height),
                                 self.interaction_sprites, obj.name)
 
-
             Generic(
                 pos=(0, 0),
                 surf=pygame.image.load(
-                    CURR_PATH + '\graphics\world\\ground 2.png').convert_alpha(),
+                    path.join(CURR_PATH, 'graphics', 'world',
+                              'ground 2.png')).convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
 
             self.active_music.stop()
@@ -258,7 +259,8 @@ class Level:
                                        self.player.held_items)
 
         else:
-            tmx_data = load_pygame(CURR_PATH + '\data\Tilesets\Forest.tmx')
+            tmx_data = load_pygame(path.join(CURR_PATH,
+                                             'data', 'Tilesets', 'Forest.tmx'))
 
             self.all_sprites = CameraGroup()
             self.collision_sprites.empty()
@@ -330,24 +332,32 @@ class Level:
                                              sprite_dict=sprite_dict)
 
                 elif obj.name == 'Slime':
-                    slime_frames = {"death": import_folder(CURR_PATH +
-                                                           '\graphics\slime\\'
-                                                           'death'),
-                                    "hit": import_folder(CURR_PATH +
-                                                         '\graphics\slime\\'
-                                                         'hit'),
-                                    "hit_p": import_folder(CURR_PATH +
-                                                           '\graphics\slime\\'
-                                                           'hit-landing'),
-                                    "idle": import_folder(CURR_PATH +
-                                                          '\graphics\slime\\'
-                                                          'idle'),
-                                    "jump": import_folder(CURR_PATH +
-                                                          '\graphics\slime\\'
-                                                          'jump'),
-                                    "move": import_folder(CURR_PATH +
-                                                          '\graphics\slime\\'
-                                                          'move')}
+                    slime_frames = {
+                        "death": import_folder(path.join(CURR_PATH,
+                                                         'graphics',
+                                                         'slime',
+                                                         'death')),
+                        "hit": import_folder(path.join(CURR_PATH,
+                                                       'graphics',
+                                                       'slime',
+                                                       'hit')),
+                        "hit_p": import_folder(path.join(CURR_PATH,
+                                                         'graphics',
+                                                         'slime',
+                                                         'hit-landing')),
+                        "idle": import_folder(path.join(CURR_PATH,
+                                                        'graphics',
+                                                        'slime',
+                                                        'idle')),
+                        "jump": import_folder(path.join(CURR_PATH,
+                                                        'graphics',
+                                                        'slime',
+                                                        'jump')),
+                        "move": import_folder(path.join(CURR_PATH,
+                                                        'graphics',
+                                                        'slime',
+                                                        'move'))
+                    }
 
                     Slime(pos=(obj.x + TILE_SIZE // 4, obj.y + TILE_SIZE // 4),
                           frames=slime_frames,
@@ -365,7 +375,8 @@ class Level:
             Generic(
                 pos=(0, 0),
                 surf=pygame.image.load(
-                    CURR_PATH + '\graphics\world\Forest.png').convert_alpha(),
+                    path.join(CURR_PATH, 'graphics', 'world',
+                              'Forest.png')).convert_alpha(),
                 groups=self.all_sprites, z=LAYERS['ground'])
 
             self.active_music.stop()
