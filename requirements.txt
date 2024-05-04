@@ -1,2 +1,2 @@
-pygame~=2.4.0
+pygame~=2.5.2
 PyTMX~=3.31
