@@ -5,7 +5,6 @@ import importlib
 import subprocess
 import asyncio
 
-
 class Game:
     def __init__(self):
         pygame.init()
@@ -15,14 +14,24 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
+        from code.titlescreen import TitleScreen
+        self.title_screen = TitleScreen()
+
         from code.level import Level
         self.level = Level()
 
     def run(self):
-        while True:
+        while self.title_screen.status != "play":
+
             for event in pygame.event.get():
-                ...
-            break
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            dt = self.clock.tick(60) / 1000
+            self.title_screen.run(dt)
+            pygame.display.update()
+
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
