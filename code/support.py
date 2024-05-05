@@ -1,5 +1,4 @@
-from os import walk
-from os import path
+from os import walk, path
 from os import name as os_name
 import pygame
 
@@ -16,7 +15,7 @@ def import_folder(input_path):
         for image in img_files:
             # print(image)
             full_path = path.join(input_path, image)
-            print(full_path)
+            # print(full_path)
             paths_list.append(full_path)
             # image_surf = pygame.image.load(full_path).convert_alpha()
             # surface_list.append(image_surf)

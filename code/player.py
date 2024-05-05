@@ -362,7 +362,7 @@ class Player(pygame.sprite.Sprite):
         Reduces hp of the player by 1.
         This function was originally created for the slime
         """
-        self.hp -= 1
+        self.hp = max(self.hp - 1, 0)
 
     def player_add(self, item: str, sign: int = 1, transact_shop: bool = False):
         """

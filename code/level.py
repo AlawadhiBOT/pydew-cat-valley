@@ -161,7 +161,7 @@ class Level:
                                       path.join(CURR_PATH, 'graphics',
                                                 'big_cow', 'sit_idle')),
                                   "sleep": import_folder(
-                                      path.join(CURR_PATH, 'graphics'
+                                      path.join(CURR_PATH, 'graphics',
                                                            'big_cow', 'sleep')),
                                   "stand_up": import_folder(
                                       path.join(CURR_PATH, 'graphics',
@@ -184,7 +184,6 @@ class Level:
                     cow_inside_var = [obj.x, obj.y]
                 if obj.name == "CowAreaMarker":
                     cow_area_marker_var = [obj.x, obj.y]
-
             cow_variable.setup_important_positions("CowInside",
                                                    cow_inside_var)
             cow_variable.setup_important_positions("CowAreaMarker",
