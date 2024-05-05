@@ -2,3 +2,4 @@
 code/__pycache__/*
 /output/
 /build/
+/.idea/*

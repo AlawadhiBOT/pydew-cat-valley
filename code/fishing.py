@@ -1,5 +1,5 @@
 # added because I am not sure how complicated fishing can get
-import os
+from os import path
 from typing import Callable
 import pygame.key
 from code.timer import Timer
@@ -25,8 +25,8 @@ class Fishing:
         self.extra_time = Timer(500)
 
         # splash sound
-        path = os.path.normpath(CURR_PATH+"/audio/fish flap.wav")
-        self.splash = pygame.mixer.Sound(path)
+        curr_path = path.join(CURR_PATH, "audio", "fish flap.wav")
+        self.splash = pygame.mixer.Sound(curr_path)
 
         self.fishing_theme = fishing_theme
 

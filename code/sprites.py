@@ -1,7 +1,7 @@
 import pygame
 from code.settings import *
 from random import randint, choice
-
+from os import path
 
 class Generic(pygame.sprite.Sprite):
 
@@ -75,16 +75,17 @@ class Tree(Generic):
         # tree attributes
         self.health = 5
         self.alive = True
-        norm = os.path.normpath
         if name == "Small":
-            stump_path = f'{CURR_PATH}/graphics/stumps/small.png'
+            stump_path = path.join(CURR_PATH, 'graphics', 'stumps', 'small.png')
         else:
-            stump_path = f'{CURR_PATH}/graphics/stumps/large.png'
-        self.stump_surf = pygame.image.load(norm(stump_path)).convert_alpha()
+            stump_path = path.join(CURR_PATH, 'graphics', 'stumps', 'large.png')
+        self.stump_surf = pygame.image.load(stump_path).convert_alpha()
 
         # apples
         self.fruit_type = choice(["apple", "orange", "pear", "peach"])
-        self.apple_surf = pygame.image.load(norm(f'{CURR_PATH}/graphics/fruit/'
+        self.apple_surf = pygame.image.load(path.join(CURR_PATH,
+                                                      'graphics',
+                                                      'fruit',
                                             f'{self.fruit_type}.png')
                                             ).convert_alpha()
         self.apple_pos = APPLE_POS[name]
@@ -95,7 +96,8 @@ class Tree(Generic):
         self.death_timer = None
 
         # sounds
-        self.axe_sound = pygame.mixer.Sound(norm(CURR_PATH + '/audio/axe.mp3'))
+        self.axe_sound = pygame.mixer.Sound(path.join(CURR_PATH, 'audio',
+                                                      'axe.mp3'))
 
         # og_info
         self.og_image = self.image

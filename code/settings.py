@@ -3,10 +3,16 @@ from pygame.math import Vector2
 import os
 
 # SCREEN
-infoObject = pygame.display.Info()
-SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
+try:
+    infoObject = pygame.display.Info()
+    SCREEN_WIDTH, SCREEN_HEIGHT = infoObject.current_w, infoObject.current_h
+    del infoObject
+except pygame.error:
+    print("InfoObject not found, setting to 1920x1080")
+    SCREEN_WIDTH, SCREEN_HEIGHT = 1920, 1080
+
 TILE_SIZE = 64
-del infoObject
+
 
 # current path
 CURR_PATH = os.getcwd()
