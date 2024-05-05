@@ -1,4 +1,4 @@
-import os.path
+from  os import path
 from typing import Callable
 
 import pygame
@@ -47,9 +47,8 @@ class Slime(NeutralMob):
         self.reduce_player_hp = reduce_player_hp
 
         # sounds
-        norm = os.path.normpath
-        self.axe_sound = pygame.mixer.Sound(norm(CURR_PATH +
-                                                 '/audio/axe.mp3'))
+        self.axe_sound = pygame.mixer.Sound(path.join(CURR_PATH, 'audio',
+                                                      'axe.mp3'))
 
     def animate(self, dt: float):
         self.frame_index += 5 * dt

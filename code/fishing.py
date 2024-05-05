@@ -25,7 +25,7 @@ class Fishing:
         self.extra_time = Timer(500)
 
         # splash sound
-        curr_path = path.join(CURR_PATH, "audio", "fish\ flap.wav")
+        curr_path = path.join(CURR_PATH, "audio", "fish flap.wav")
         self.splash = pygame.mixer.Sound(curr_path)
 
         self.fishing_theme = fishing_theme

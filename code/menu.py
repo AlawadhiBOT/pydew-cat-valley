@@ -24,7 +24,7 @@ class Menu:
         self.topleft_offset = 128
 
         # menu image
-        self.menu_image = pygame.image.load(path.join(CURR_PATH + 'graphics',
+        self.menu_image = pygame.image.load(path.join(CURR_PATH, 'graphics',
                                                       'menus', 'shop_2.png')
                                             ).convert_alpha()
         self.menu_rect = self.menu_image.get_rect(
@@ -453,12 +453,12 @@ class Inventory:
         # imports
         self.item_surfs = {
             item: pygame.image.load(path.join(
-                CURR_PATH, 'graphics', 'menus', 'inventory' f'{item}.png')
+                CURR_PATH, 'graphics', 'menus', 'inventory', f'{item}.png')
             ).convert_alpha()
             for item in player.item_inventory
         }
 
-        overlay_path = path.join(CURR_PATH + 'graphics', 'overlay')
+        overlay_path = path.join(CURR_PATH, 'graphics', 'overlay')
 
         self.tools_surf = {
             tool: pygame.image.load(path.join(overlay_path, 'tools',
@@ -474,7 +474,7 @@ class Inventory:
         self.inventory_image = pygame.image.load(path.join(CURR_PATH,
                                                            'graphics',
                                                            'menus',
-                                                           'extended\ UI.png')
+                                                           'extended UI.png')
                                                  ).convert_alpha()
         self.inventory_rect = self.inventory_image.get_rect(midbottom=
                                                             OVERLAY_POSITIONS

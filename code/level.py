@@ -102,7 +102,8 @@ class Level:
                         [self.all_sprites, self.collision_sprites])
 
             # Water
-            water_frames = import_folder(path.join(CURR_PATH + '\graphics\water'))
+            water_frames = import_folder(path.join(CURR_PATH, 'graphics',
+                                                   'water'))
             for x, y, surf in tmx_data.get_layer_by_name('Water').tiles():
                 Water((x * TILE_SIZE, y * TILE_SIZE), water_frames,
                       [self.all_sprites, self.water_sprites])
