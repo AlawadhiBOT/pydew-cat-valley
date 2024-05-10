@@ -2,9 +2,9 @@ from  os import path
 from typing import Callable
 
 import pygame
-from code.timer import Timer
+from game_code.timer import Timer
 from random import choice, randint, choices
-from code.settings import CURR_PATH
+from game_code.settings import CURR_PATH
 
 
 class NeutralMob(pygame.sprite.Sprite):

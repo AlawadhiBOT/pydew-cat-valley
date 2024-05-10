@@ -1,5 +1,5 @@
-from code.settings import *
-from code.support import *
+from game_code.settings import *
+from game_code.support import *
 
 
 class TitleScreen:

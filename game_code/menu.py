@@ -1,9 +1,9 @@
 from typing import Callable
 
 import pygame
-from code.settings import *
-from code.timer import Timer
-from code.player import Player
+from game_code.settings import *
+from game_code.timer import Timer
+from game_code.player import Player
 from os import path
 
 

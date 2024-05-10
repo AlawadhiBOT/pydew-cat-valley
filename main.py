@@ -1,11 +1,11 @@
 import pygame
-# import pytmx
+import pytmx
 import sys
 import importlib
 import subprocess
 import asyncio
-from code import titlescreen
-from code.level import Level
+from game_code.titlescreen import TitleScreen
+from game_code.level import Level
 
 class Game:
     def __init__(self):
@@ -20,7 +20,7 @@ class Game:
 
         self.level = Level()
 
-    async def run(self):
+    def run(self):
 
         while True:
 
@@ -37,6 +37,8 @@ class Game:
                 pygame.display.update()
             
             else:
+                # pygame.quit()
+                # sys.exit()
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -57,7 +59,7 @@ class Game:
                 self.level.run(dt)
                 pygame.display.update()
 
-            await asyncio.sleep(0)
+            # await asyncio.sleep(0)
 
 
 def check_dependencies(dependencies):
@@ -82,17 +84,17 @@ def install_dependencies(dependencies):
 
 
 if __name__ == '__main__':
-    # required_dependencies = ['pygame',
-    #                          'pytmx']  # Add other dependencies as needed
+    required_dependencies = ['pygame',
+                             'pytmx']  # Add other dependencies as needed
 
-    # missing_dependencies = check_dependencies(required_dependencies)
-    # if missing_dependencies:
-    #     print("Error: The following dependencies are missing:")
-    #     for dependency in missing_dependencies:
-    #         print(f"- {dependency}")
-    #     print("Attempting to install missing dependencies...")
-    #     install_dependencies(missing_dependencies)
-    #     print("Dependencies installed successfully.")
+    missing_dependencies = check_dependencies(required_dependencies)
+    if missing_dependencies:
+        print("Error: The following dependencies are missing:")
+        for dependency in missing_dependencies:
+            print(f"- {dependency}")
+        print("Attempting to install missing dependencies...")
+        install_dependencies(missing_dependencies)
+        print("Dependencies installed successfully.")
     game = Game()
-    asyncio.run(game.run())
-    # game.run()
+    # asyncio.run(game.run())
+    game.run()

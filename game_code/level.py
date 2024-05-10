@@ -1,16 +1,16 @@
-from code.settings import *
-from code.player import Player
-from code.overlay import Overlay
-from code.sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
-from code.mobs import Slime, Cow
+from game_code.settings import *
+from game_code.player import Player
+from game_code.overlay import Overlay
+from game_code.sprites import Generic, Water, WildFlower, Tree, Interaction, Particle
+from game_code.mobs import Slime, Cow
 from pytmx.util_pygame import load_pygame
-from code.support import *
-from code.transition import Transition
-from code.soil import SoilLayer
-from code.sky import Rain, Sky
+from game_code.support import *
+from game_code.transition import Transition
+from game_code.soil import SoilLayer
+from game_code.sky import Rain, Sky
 from random import randint
-from code.menu import Menu, Inventory
-from code.timer import Timer
+from game_code.menu import Menu, Inventory
+from game_code.timer import Timer
 from os import path
 
 

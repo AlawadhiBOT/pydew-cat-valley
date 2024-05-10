@@ -3,10 +3,10 @@ import random
 from typing import Callable
 
 import pygame
-from code.settings import *
-from code.support import *
-from code.timer import Timer
-from code.fishing import Fishing
+from game_code.settings import *
+from game_code.support import *
+from game_code.timer import Timer
+from game_code.fishing import Fishing
 from os import path
 
 class Player(pygame.sprite.Sprite):

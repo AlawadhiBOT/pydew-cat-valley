@@ -1,5 +1,5 @@
 import pygame
-from code.settings import *
+from game_code.settings import *
 
 class Transition:
     def __init__(self, reset, player):

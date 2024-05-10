@@ -1,8 +1,8 @@
 from typing import Callable
 
-from code.settings import *
+from game_code.settings import *
 from pytmx.util_pygame import load_pygame
-from code.support import *
+from game_code.support import *
 from random import choice
 import json
 from pygame.math import Vector2

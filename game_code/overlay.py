@@ -1,8 +1,8 @@
 import pygame
-from code.support import import_folder_dict2
-from code.settings import *
-from code.player import Player
-from code.timer import Timer
+from game_code.support import import_folder_dict2
+from game_code.settings import *
+from game_code.player import Player
+from game_code.timer import Timer
 from os import path
 
 
