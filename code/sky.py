@@ -1,9 +1,9 @@
 import time
 
 import pygame
-from code.settings import *
-from code.support import import_folder
-from code.sprites import Generic
+from game_code.settings import *
+from game_code.support import import_folder
+from game_code.sprites import Generic
 from random import randint, choice
 from os import path
 

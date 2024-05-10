@@ -4,3 +4,10 @@ code/__pycache__/*
 /build/
 /.idea/*
 .venv/*
+*.wav
+*.mp3
+*.pyc
+*.egg-info
+*/*-pygbag.*
+/build
+/dist
