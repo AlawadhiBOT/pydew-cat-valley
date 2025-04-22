@@ -245,6 +245,8 @@ class Level:
             self.rain = Rain(self.all_sprites)
             self.raining = randint(0, 10) > -1
             self.soil_layer.raining = self.raining
+            if (self.raining):
+                self.soil_layer.water_all()
             self.sky = Sky()
             # adjust cow stuffs
             cow_variable.setup_time(self.sky.usable_time)

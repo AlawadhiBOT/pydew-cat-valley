@@ -7,6 +7,7 @@ from random import choice
 import json
 from pygame.math import Vector2
 from os import path
+import sqlite3
 
 
 class SoilTile(pygame.sprite.Sprite):
@@ -56,6 +57,14 @@ class Plant(pygame.sprite.Sprite):
     def __str__(self):
         return f'{self.plant_type},{self.age},' \
                f'{self.rect.left},{self.rect.top}'
+
+    def plant_info(self):
+        return {
+            "plant_type": self.plant_type,
+            "age": self.age,
+            "left": self.rect.left,
+            "top": self.rect.top
+        }
 
     def grow(self):
         if self.check_watered(self.rect.center):
@@ -151,51 +160,78 @@ class SoilLayer:
         Function written to save state of soil tiles
         :return: NoneType
         """
-        with open(path.join(CURR_PATH, 'data', 'farmed_land.txt'), "w") as file:
-            for row in self.grid:
-                ln = ""
-                for cell in row:
-                    mini_ln = ""
-                    for item in cell:
-                        if item not in "WP":
-                            mini_ln += str(item)
-                    ln += mini_ln + "|"
-                ln += '\n'
-                file.write(ln)
+        conn = sqlite3.connect(path.join(CURR_PATH, 'data', 'farming_data.db'))
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM farmableData')
+        cursor.execute('DELETE FROM plantedData')
+        cursor.execute('DELETE FROM plantData')
 
-        lst = [[str(plant)] for plant in self.plant_sprites]
-        jason_file = json.dumps(lst, indent=4)
+        for i, row in enumerate(self.grid):
+            ln = ""
+            for j, cell in enumerate(row):
+                mini_ln = ""
+                for item in cell:
+                    
+                    if item == 'F':
+                        cursor.execute(
+                            'INSERT INTO farmableData VALUES (?, ?)',
+                            (i, j)
+                        )
+                    elif item == 'X':
 
-        with open(path.join(CURR_PATH, 'data', 'plant_in_soil.json'), "w") as f:
-            f.write(jason_file)
+                        print("Found tilled tiles.")
+                        cursor.execute(
+                            'INSERT INTO plantedData VALUES (?, ?)',
+                            (i, j)
+                        )
+
+        for plant in self.plant_sprites:
+            plant_data = plant.plant_info()
+            curson.execute(
+                'INSERT INTO soilData VALUES (?, ?, ?, ?)',
+                (
+                    plant_data['plant_data'],
+                    plant_data['age'],
+                    plant_data['left'],
+                    plant_data['top']
+                )
+            )
+        conn.commit()
+        conn.close()
 
     def read_soil_state(self):
         """
         Function written to read save state of soil tiles
         :return: NoneType
         """
-        with open(path.join(CURR_PATH, 'data', 'farmed_land.txt'), "r") as file:
-            ctr = 0
-            for line in file:
-                arr_line = line.split("|")[:-1]
-                self.grid[ctr] = [[state for state in item] for
-                                  item in arr_line]
-                ctr += 1
+        conn = sqlite3.connect(path.join(CURR_PATH, 'data', 'farming_data.db'))
+        cursor = conn.cursor()
+
+        for i in range(len(self.grid)):
+            for j in range(len(self.grid[i])):
+                self.grid[i][j] = []  # Clear existing cell content
+        
+        # Read farmable tiles (F)
+        cursor.execute('SELECT i, j FROM farmableData')
+        for i, j in cursor.fetchall():
+            self.grid[i][j].append('F')
+        
+        # Read planted tiles (X)
+        cursor.execute('SELECT i, j FROM plantedData')
+        for i, j in cursor.fetchall():
+            self.grid[i][j].append('X')
+        
         self.create_soil_tiles()
 
-        with open(path.join(CURR_PATH, 'data', 'plant_in_soil.json'), "r") as f:
-            lst = []
-            for entry in json.load(f):
-                lst.append(entry[0].split(','))
-
-        for item in lst:
+        cursor.execute('SELECT plant_type, age, left, top FROM plantData')
+        for selected_seed, age, left, top in cursor.fetchall():
             selected_seed = item[0]
-            age = int(item[1])
-            target_pos = (int(item[2]) + TILE_SIZE // 2,
-                          int(item[3]) + TILE_SIZE // 2)
+            target_pos = (left + TILE_SIZE // 2, top + TILE_SIZE // 2)
             self.plant_seed(target_pos, selected_seed, age)
 
+        conn.close()
         if self.raining:
+            self.remove_water()
             self.water_all()
 
     def get_hit(self, point):
@@ -209,7 +245,7 @@ class SoilLayer:
                     self.grid[y][x].append('X')
                     self.create_soil_tiles()
                     if self.raining:
-                        self.water_all()
+                        self.water(point)
 
     def water(self, target_pos):
         for soil_sprite in self.soil_sprites:
@@ -217,10 +253,12 @@ class SoilLayer:
                 # add tree to soil grid
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
-                self.grid[y][x].append('W')
+                pos = soil_sprite.rect.topleft
+
+                if self.check_watered(pos):
+                    self.grid[y][x].append('W')
 
                 # water sprite
-                pos = soil_sprite.rect.topleft
                 surf = choice(self.water_surfs)
                 WaterTile(pos, surf, [self.all_sprites, self.water_sprites])
 

@@ -11,3 +11,4 @@ code/__pycache__/*
 */*-pygbag.*
 /build
 /dist
+.python-version
