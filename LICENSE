@@ -1,4 +1,18 @@
-Please do not modify or re-distribute anything inside audio or graphics
-directory. This game is here to be cloned only, not really to be forked, but
-feel free to add on it with the permission of CubNooble
-(link in data/licenses.txt).
+# License
+
+This project was initially based on a tutorial. The tutorial video can be found here: 
+[https://www.youtube.com/watch?v=T4IX36sP_0c](https://www.youtube.com/watch?v=T4IX36sP_0c).
+Note that the tutorial itself may be subject to its own licensing terms.
+
+## Code License
+
+Any code changes made, including new files or modifications to the original tutorial code, are licensed under the AGPLv3. 
+You can find more details on the AGPLv3 license in the file `agplv3.txt`.
+
+## Asset Restrictions
+
+Please do not modify or redistribute anything inside the `audio/` or `graphics/` directories. 
+These assets are copyrighted by the original creators, and redistribution or modification is prohibited. 
+The original artist for most of these assets is CupNooble. Other artists and their respective licensing terms are listed in `data/licenses.txt`.
+
+

@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Your Name
+# Licensed under the AGPLv3 License. See LICENSE file for details.
+#
+# This project is based on a tutorial (link: https://www.youtube.com/watch?v=T4IX36sP_0c).
+# You can redistribute and/or modify it under the terms of the AGPLv3.
+#
+# This software comes with no warranty. See the LICENSE file for more information.
+
 from typing import Callable
 
 import pygame
